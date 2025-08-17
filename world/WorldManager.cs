@@ -1,7 +1,7 @@
 
 
 using System.Collections.Generic;
-using Glee.Engine.Behaviour;
+using Glee.Behaviours;
 using Glee.Engine;
 using Microsoft.Xna.Framework;
 

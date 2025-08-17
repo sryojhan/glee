@@ -2,7 +2,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace Glee.Engine.Behaviour;
+namespace Glee.Behaviours;
 
 
 public interface IUpdatable

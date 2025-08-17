@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 using Glee.Engine;
-using Glee.Engine.Behaviour;
+using Glee.Behaviours;
 
 namespace Glee;
 

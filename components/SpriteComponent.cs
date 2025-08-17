@@ -1,5 +1,6 @@
 using Glee;
-using Glee.Engine.Behaviour;
+using Glee.Behaviours;
+
 
 
 namespace Glee.Components;
@@ -8,6 +9,5 @@ public class SpriteComponent : Component, IRenderizable
 {
     public void Render()
     {
-        
     }
 }

@@ -1,4 +1,4 @@
-using Glee.Engine.Behaviour;
+using Glee.Behaviours;
 
 
 namespace Glee.Components;
