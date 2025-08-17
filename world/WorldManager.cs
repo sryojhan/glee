@@ -1,12 +1,11 @@
 
 
 using System.Collections.Generic;
-using Glee.ECS;
-using Glee.ECS.Behaviour;
+using Glee.Engine.Behaviour;
 using Glee.Engine;
 using Microsoft.Xna.Framework;
 
-namespace Glee.ECS;
+namespace Glee;
 
 
 public class WorldManager

@@ -1,3 +1,3 @@
 
 
-namespace Glee;
+namespace Glee.Components;

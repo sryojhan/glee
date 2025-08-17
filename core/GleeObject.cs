@@ -9,8 +9,6 @@ public class GleeObject
     public UID UID { get; private set; }
 
 
-
-
     public static implicit operator UID(GleeObject obj)
     {
         return obj.UID;

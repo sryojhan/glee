@@ -1,14 +1,10 @@
-
-
 using Glee.Engine;
 using Microsoft.Xna.Framework;
 
-namespace Glee.ECS;
+
+namespace Glee;
 
 
-/// <summary>
-/// 
-/// </summary>
 public abstract class Entity : GleeObject
 {
     public string Name { get; set; }
@@ -18,6 +14,12 @@ public abstract class Entity : GleeObject
 
     public World World { get; protected set; }
 
+
+    public Entity(World world)
+    {
+        Name = "New entity";
+        World = world;
+    }
 
     public Entity(string name, World world)
     {

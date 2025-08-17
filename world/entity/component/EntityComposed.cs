@@ -1,21 +1,20 @@
-using System;
 using System.Collections.Generic;
+
 using Glee.Engine;
-using Glee.ECS.Behaviour;
+using Glee.Engine.Behaviour;
 
-namespace Glee.ECS;
+namespace Glee;
 
 
-
-public class ComposedEntity : Entity, IUpdatable, IRenderizable
+public class EntityComposed : Entity, IUpdatable, IRenderizable
 {
     GleeContainer components;
 
-    List<IUpdatable> updatables;
-    List<IRenderizable> renderizables;
+    readonly List<IUpdatable> updatables;
+    readonly List<IRenderizable> renderizables;
 
 
-    public ComposedEntity(string name, World world) : base(name, world)
+    public EntityComposed(string name, World world) : base(name, world)
     {
         components = [];
 
@@ -23,7 +22,7 @@ public class ComposedEntity : Entity, IUpdatable, IRenderizable
         renderizables = [];
     }
 
-    public ComposedEntity(string name, Entity parent, World world) : base(name, parent, world)
+    public EntityComposed(string name, Entity parent, World world) : base(name, parent, world)
     {
     }
 

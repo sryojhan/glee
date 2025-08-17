@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using Glee.Engine;
-using Glee.ECS.Behaviour;
+using Glee.Engine.Behaviour;
 
-namespace Glee.ECS;
+namespace Glee;
 
 
 /// <summary>
@@ -87,7 +87,7 @@ public abstract class World : GleeObject
 
     public Entity CreateComposedEntity(string name, Entity parent = null)
     {
-        Entity newEntity = new ComposedEntity(name, parent, this);
+        Entity newEntity = new EntityComposed(name, parent, this);
 
         worldElements.Add(newEntity);
 

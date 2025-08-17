@@ -1,10 +1,7 @@
 
-using System;
 using Glee.Engine;
-using Microsoft.Xna.Framework;
 
-namespace Glee.ECS;
-
+namespace Glee;
 
 
 public abstract class Component: GleeObject
