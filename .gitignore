@@ -1,0 +1,35 @@
+*.sdf
+*.cache
+*.lib
+*.sbr
+*.ide
+*.ide-shm
+*.ide-wal
+*~
+*.log
+*.pidb
+*.pidb.md5
+*.sln.docstates
+*.config
+
+# Archivos de la solución
+[Dd]ebug/
+[Rr]elease/
+
+# Archivos de la herramienta Content Pipeline (mgcb)
+Content/bin/
+Content/obj/
+
+/obj
+
+# Otros archivos
+*.DS_Store
+Thumbs.db
+
+# MonoGame específica
+# Los archivos de MonoGame se pueden ignorar ya que se reconstruyen automáticamente
+# Dependiendo de tu configuración de Content Pipeline, puede que quieras
+# incluir ciertos archivos compilados si no quieres que el equipo los reconstruya
+# en cada 'pull'. Sin embargo, la mejor práctica es ignorarlos.
+#*.xnb
+#*.mgcbx
