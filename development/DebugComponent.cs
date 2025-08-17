@@ -1,4 +1,5 @@
 using Glee.Behaviours;
+using Glee.Engine;
 
 
 namespace Glee.Debug;
@@ -16,6 +17,6 @@ public class DebugComponent : Component, IInitializable, IUpdatable
 
     public void Update()
     {
-        Print(counter++);
+        Print(1.0f / GleeCore.Time.ElapsedGameTime.TotalSeconds);
     }
 }

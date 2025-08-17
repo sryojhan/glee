@@ -31,7 +31,10 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public ComponentType CreateComponent<ComponentType>() where ComponentType : Component, new()
     {
-        ComponentType comp = new();
+        ComponentType comp = new()
+        {
+            Owner = this
+        };
         components.Add(comp);
 
 

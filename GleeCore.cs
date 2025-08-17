@@ -61,6 +61,10 @@ public class GleeCore : Game
     /// </summary>
     public static AudioController Audio { get; private set; }
 
+
+    public static GameTime Time { get; private set; }
+
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -86,6 +90,13 @@ public class GleeCore : Game
         Graphics.PreferredBackBufferWidth = width;
         Graphics.PreferredBackBufferHeight = height;
         Graphics.IsFullScreen = fullScreen;
+
+
+        //Target frame rate
+        IsFixedTimeStep = true;
+        TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+        Graphics.SynchronizeWithVerticalRetrace = true;
+
 
         // Apply the graphic presentation changes.
         Graphics.ApplyChanges();
@@ -145,6 +156,7 @@ public class GleeCore : Game
 
     protected override void Update(GameTime gameTime)
     {
+        Time = gameTime;
         // Update the input manager.
         Input.Update(gameTime);
 
@@ -156,7 +168,7 @@ public class GleeCore : Game
             Exit();
         }
 
-        WorldManager.Udpate(gameTime);
+        WorldManager.Udpate();
 
         //TODO: remove elements
 
@@ -167,7 +179,7 @@ public class GleeCore : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        WorldManager.Render(gameTime);
+        WorldManager.Render();
 
         base.Draw(gameTime);
     }

@@ -64,7 +64,7 @@ public abstract class World : GleeObject
         InitialiseObjects();
     }
 
-    public void Udpate(GameTime gameTime)
+    public void Udpate()
     {
         
         if (this is IUpdatable updatable)
@@ -80,7 +80,7 @@ public abstract class World : GleeObject
     }
 
 
-    public void Render(GameTime gameTime)
+    public void Render()
     {
         GleeCore.GraphicsDevice.Clear(backgroundColor);
         GleeCore.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);

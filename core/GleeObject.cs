@@ -14,6 +14,16 @@ public class GleeObject
         return obj.UID;
     }
 
+    public static bool operator true(GleeObject obj)
+    {
+        return obj != null;
+    }
+
+    public static bool operator false(GleeObject obj)
+    {
+        return obj == null;
+    }
+
 
     private void PrintInternal(string message)
     {

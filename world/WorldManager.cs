@@ -105,14 +105,14 @@ public class WorldManager
         deleteAll = true;
     }
 
-    public void Udpate(GameTime gameTime)
+    public void Udpate()
     {
-        Spotlight.Udpate(gameTime);
+        Spotlight.Udpate();
     }
 
-    public void Render(GameTime gameTime)
+    public void Render()
     {
-        Spotlight.Render(gameTime);
+        Spotlight.Render();
     }
 
 

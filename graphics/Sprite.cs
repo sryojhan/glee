@@ -112,7 +112,7 @@ public class Sprite
     /// <param name="position">The xy-coordinate position to render this sprite at.</param>
     public void Render(SpriteBatch spriteBatch, Vector2 position)
     {
-        Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+        Region.Render(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
     }
 
 

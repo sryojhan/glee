@@ -54,9 +54,9 @@ public class TextureRegion
     /// <param name="spriteBatch">The spritebatch instance used for batching draw calls.</param>
     /// <param name="position">The xy-coordinate location to draw this texture region on the screen.</param>
     /// <param name="color">The color mask to apply when drawing this texture region on screen.</param>
-    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+    public void Render(SpriteBatch spriteBatch, Vector2 position, Color color)
     {
-        Draw(spriteBatch, position, color, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0f);
+        Render(spriteBatch, position, color, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0f);
     }
 
     /// <summary>
@@ -70,9 +70,9 @@ public class TextureRegion
     /// <param name="scale">The scale factor to apply when drawing this texture region on screen.</param>
     /// <param name="effects">Specifies if this texture region should be flipped horizontally, vertically, or both when drawing on screen.</param>
     /// <param name="layerDepth">The depth of the layer to use when drawing this texture region on screen.</param>
-    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+    public void Render(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
     {
-        Draw(
+        Render(
             spriteBatch,
             position,
             color,
@@ -95,7 +95,7 @@ public class TextureRegion
     /// <param name="scale">The amount of scaling to apply to the x- and y-axes when drawing this texture region on screen.</param>
     /// <param name="effects">Specifies if this texture region should be flipped horizontally, vertically, or both when drawing on screen.</param>
     /// <param name="layerDepth">The depth of the layer to use when drawing this texture region on screen.</param>
-    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+    public void Render(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
     {
         spriteBatch.Draw(
             Texture,
