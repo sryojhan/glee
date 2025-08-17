@@ -6,24 +6,25 @@ using Glee.Behaviours;
 namespace Glee;
 
 
-public class EntityComposed : Entity, IUpdatable, IRenderizable
+public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 {
-    GleeContainer components;
+    readonly GleeContainer components;
 
     readonly List<IUpdatable> updatables;
     readonly List<IRenderizable> renderizables;
 
 
-    public EntityComposed(string name, World world) : base(name, world)
+    public EntityComposed(string name, World world) : this(name, null, world)
+    {
+        
+    }
+
+    public EntityComposed(string name, Entity parent, World world) : base(name, parent, world)
     {
         components = [];
 
         updatables = [];
         renderizables = [];
-    }
-
-    public EntityComposed(string name, Entity parent, World world) : base(name, parent, world)
-    {
     }
 
 
@@ -47,7 +48,35 @@ public class EntityComposed : Entity, IUpdatable, IRenderizable
         return comp;
     }
 
-    
+
+    public ComponentType GetComponent<ComponentType>() where ComponentType : Component
+    {
+        foreach (Component comp in components)
+        {
+            if (comp is ComponentType found)
+            {
+                return found;
+            }
+        }
+
+
+        return null;
+    }
+
+    public void Initialize()
+    {
+        //TODO: Manage dependencies first
+
+
+        foreach (Component comp in components)
+        {
+            if (comp is IInitializable initializable)
+            {
+                initializable.Initialize();
+            }
+        }
+    }
+
     public void Update()
     {
         foreach (IUpdatable updatable in updatables)

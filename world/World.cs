@@ -20,7 +20,7 @@ public abstract class World : GleeObject
 {
     protected ContentManager Content { get; }
 
-    public GleeContainer worldElements;
+    public GleeContainer worldObjects;
     public List<IUpdatable> updatables;
     public List<IRenderizable> renderizables;
 
@@ -35,6 +35,9 @@ public abstract class World : GleeObject
             RootDirectory = GleeCore.Content.RootDirectory
         };
 
+
+        worldObjects = [];
+
         updatables = [];
         renderizables = [];
     }
@@ -43,10 +46,22 @@ public abstract class World : GleeObject
 
     public abstract void CreateWorld();
 
+    private void InitialiseObjects()
+    {
+        foreach (GleeObject gleeObj in worldObjects)
+        {
+            if (gleeObj is IInitializable initializable)
+            {
+                initializable.Initialize();
+            }
+        }
+    }
+
     public void Initialize()
     {
         LoadResources();
         CreateWorld();
+        InitialiseObjects();
     }
 
     public void Udpate(GameTime gameTime)
@@ -85,18 +100,32 @@ public abstract class World : GleeObject
 
 
 
-    public Entity CreateComposedEntity(string name, Entity parent = null)
+    public EntityComposed CreateComposedEntity(string name, Entity parent = null)
     {
-        Entity newEntity = new EntityComposed(name, parent, this);
+        EntityComposed newEntity = new EntityComposed(name, parent, this);
 
-        worldElements.Add(newEntity);
+        worldObjects.Add(newEntity);
+        
+        updatables.Add(newEntity);
+        renderizables.Add(newEntity);
 
         return newEntity;
     }
 
     public Entity AddEntity(Entity entity)
     {
-        worldElements.Add(entity);
+        worldObjects.Add(entity);
+
+        if(entity is IUpdatable updatable)
+        {
+            updatables.Add(updatable);
+        }
+
+        if(entity is IRenderizable renderizable)
+        {
+            renderizables.Add(renderizable);
+        }
+
         return entity;
     }
 }

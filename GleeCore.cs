@@ -126,6 +126,13 @@ public class GleeCore : Game
 
 
         WorldManager = new WorldManager();
+
+
+        //TODO: Remove Debug behaviours
+
+        WorldManager.StackWorld(new Debug.DebugWorld());
+        WorldManager.UpdateStack();
+
     }
 
     protected override void UnloadContent()
@@ -150,7 +157,10 @@ public class GleeCore : Game
         }
 
         WorldManager.Udpate(gameTime);
-        
+
+        //TODO: remove elements
+
+        WorldManager.UpdateStack();
 
         base.Update(gameTime);
     }

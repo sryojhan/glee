@@ -6,7 +6,7 @@ namespace Glee.Engine;
 
 public class GleeObject
 {
-    public UID UID { get; private set; }
+    public UID UID { get; private set; } = new UID();
 
 
     public static implicit operator UID(GleeObject obj)
@@ -18,7 +18,7 @@ public class GleeObject
     private void PrintInternal(string message)
     {
         //TODO: add time stamps
-        Console.WriteLine($"{0000}: {GetType()}: {message}");
+        Console.WriteLine($"{"0000"}: {GetType()}: {message}");
     }
 
     protected void Print(object message)

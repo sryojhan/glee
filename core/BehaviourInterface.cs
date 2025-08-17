@@ -5,6 +5,11 @@ using Microsoft.Xna.Framework;
 namespace Glee.Behaviours;
 
 
+public interface IInitializable
+{
+    void Initialize();
+}
+
 public interface IUpdatable
 {
     void Update();
@@ -15,6 +20,12 @@ public interface IRenderizable
 {
     void Render();
 }
+
+public interface IRemovable
+{
+    void Remove();
+}
+
 
 public interface IPhysicsUpdatable
 {

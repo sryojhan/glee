@@ -8,7 +8,11 @@ namespace Glee;
 public abstract class Entity : GleeObject
 {
     public string Name { get; set; }
-    public Vector2 Position { get; protected set; }
+    public Vector2 Position { get; set; } = Vector2.Zero;
+    public Vector2 Scale { get; set; } = Vector2.One;
+    public float UniformScale { set { Scale = new Vector2(value, value); }}
+    public float Rotation { get; protected set; } = 0;
+
     public Entity Parent { get; protected set; }
 
 
