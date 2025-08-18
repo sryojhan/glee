@@ -5,18 +5,14 @@ using Glee.Engine;
 namespace Glee.Debug;
 
 
-public class DebugComponent : Component, IInitializable, IUpdatable
+public class DebugComponent : Component, IUpdatable
 {
-    private int counter;
-
-    public void Initialize()
-    {
-        Print("initialising");
-        counter = 0;
-    }
-
     public void Update()
     {
-        Print(1.0f / GleeCore.Time.ElapsedGameTime.TotalSeconds);
+
+
+        Entity.Position += new Vector2(1, 0);
+
+        //Print(1.0f / GleeCore.Time.ElapsedGameTime.TotalSeconds);
     }
 }

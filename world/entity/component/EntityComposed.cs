@@ -33,7 +33,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     {
         ComponentType comp = new()
         {
-            Owner = this
+            Entity = this
         };
         components.Add(comp);
 

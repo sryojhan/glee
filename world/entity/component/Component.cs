@@ -7,6 +7,6 @@ namespace Glee;
 public abstract class Component: GleeObject
 {
     public bool Enabled { get; set; } = true;
-    public Entity Owner { get; internal set; } = null;
-
+    public Entity Entity { get; internal set; } = null;
+    public World World => Entity.World;
 }

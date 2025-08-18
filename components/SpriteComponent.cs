@@ -18,7 +18,7 @@ public class SpriteComponent : Component, IRenderizable
     {
         if (Sprite == null) return;
 
-        Entity entity = Owner;
+        Entity entity = Entity;
         SpriteBatch batch = GleeCore.SpriteBatch;
 
         //TODO: refactor this
@@ -43,5 +43,7 @@ public class SpriteComponent : Component, IRenderizable
             SpriteEffects.None,
             0
         );
+
+
     }
 }
