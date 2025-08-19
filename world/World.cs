@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Glee.Behaviours;
 using Glee.Engine;
+using Glee.Graphics;
 
 namespace Glee;
 
@@ -82,8 +83,8 @@ public abstract class World : GleeObject
 
     public void Render()
     {
-        GleeCore.GraphicsDevice.Clear(backgroundColor);
-        GleeCore.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Renderer.Clear(backgroundColor);
+        Renderer.BeginBatch();
 
         foreach (IRenderizable entity in renderizables)
         {
@@ -95,7 +96,7 @@ public abstract class World : GleeObject
             renderizable.Render();
         }
 
-        GleeCore.SpriteBatch.End();
+        Renderer.EndBatch();
     }
 
 

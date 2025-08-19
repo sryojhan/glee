@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 using Glee.Audio;
 using Glee.Input;
+using Glee.Graphics;
 
 
 namespace Glee.Engine;
@@ -27,19 +28,9 @@ public class GleeCore : Game
     public static WorldManager WorldManager { get; private set; }
 
     /// <summary>
-    /// Gets the graphics device manager to control the presentation of graphics.
-    /// </summary>
-    public static GraphicsDeviceManager Graphics { get; private set; }
-
-    /// <summary>
-    /// Gets the graphics device used to create graphical resources and perform primitive rendering.
-    /// </summary>
-    public static new GraphicsDevice GraphicsDevice { get; private set; }
-
-    /// <summary>
     /// Gets the sprite batch used for all 2D rendering.
     /// </summary>
-    public static SpriteBatch SpriteBatch { get; private set; }
+    public static Renderer Renderer { get; private set; }
 
     /// <summary>
     /// Gets the content manager used to load global assets.
@@ -83,26 +74,10 @@ public class GleeCore : Game
         // Store reference to engine for global member access.
         s_instance = this;
 
-        // Create a new graphics device manager.
-        Graphics = new GraphicsDeviceManager(this);
-
-        // Set the graphics defaults
-        Graphics.PreferredBackBufferWidth = width;
-        Graphics.PreferredBackBufferHeight = height;
-        Graphics.IsFullScreen = fullScreen;
-
-
-        //Target frame rate
-        IsFixedTimeStep = true;
-        TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-        Graphics.SynchronizeWithVerticalRetrace = true;
-
-
-        // Apply the graphic presentation changes.
-        Graphics.ApplyChanges();
-
         // Set the window title
         Window.Title = title;
+
+        Renderer = new Renderer(width, height, fullScreen, 60.0f);
 
         // Set the core's content manager to a reference of the base Game's
         // content manager.
@@ -122,12 +97,7 @@ public class GleeCore : Game
     {
         base.Initialize();
 
-        // Set the core's graphics device to a reference of the base Game's
-        // graphics device.
-        GraphicsDevice = base.GraphicsDevice;
-
-        // Create the sprite batch instance.
-        SpriteBatch = new SpriteBatch(GraphicsDevice);
+        Renderer.Initialise();
 
         // Create a new input manager.
         Input = new InputManager();
@@ -143,7 +113,6 @@ public class GleeCore : Game
 
         WorldManager.StackWorld(new Debug.DebugWorld());
         WorldManager.UpdateStack();
-
     }
 
     protected override void UnloadContent()

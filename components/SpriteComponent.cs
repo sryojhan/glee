@@ -19,7 +19,6 @@ public class SpriteComponent : Component, IRenderizable
         if (Sprite == null) return;
 
         Entity entity = Entity;
-        SpriteBatch batch = GleeCore.SpriteBatch;
 
         //TODO: refactor this
 
@@ -32,18 +31,7 @@ public class SpriteComponent : Component, IRenderizable
         //TODO: Add layer depth 
 
 
-        batch.Draw(
-            Sprite,
-            entity.Position,
-            null,
-            Color.White,
-            entity.Rotation,
-            Vector2.Zero,
-            Vector2.One,
-            SpriteEffects.None,
-            0
-        );
 
-
+        Renderer.Render(Sprite, entity.Position, entity.Rotation);
     }
 }
