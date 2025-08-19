@@ -32,6 +32,6 @@ public class SpriteComponent : Component, IRenderizable
 
 
 
-        Renderer.Render(Sprite, entity.Position, entity.Rotation);
+        Renderer.Render(Sprite, entity.Position, entity.Size, Entity.Rotation);
     }
 }

@@ -128,6 +128,17 @@ public abstract class World : GleeObject
 
     public EntityComposed CreateComposedEntity(string name, Entity parent = null)
     {
+        return CreateComposedEntity(name, parent, Vector2.Zero, Vector2.One);
+    }
+
+
+    public EntityComposed CreateComposedEntity(string name, Vector2 position, Vector2 size)
+    {
+        return CreateComposedEntity(name, null, position, size);
+    }
+
+    public EntityComposed CreateComposedEntity(string name, Entity parent, Vector2 position, Vector2 size)
+    {
         EntityComposed newEntity = new EntityComposed(name, parent, this);
 
         worldObjects.Add(newEntity);
@@ -135,19 +146,23 @@ public abstract class World : GleeObject
         updatables.Add(newEntity);
         renderizables.Add(newEntity);
 
+        newEntity.Position = position;
+        newEntity.Size = size;
+
         return newEntity;
     }
+
 
     public Entity AddEntity(Entity entity)
     {
         worldObjects.Add(entity);
 
-        if(entity is IUpdatable updatable)
+        if (entity is IUpdatable updatable)
         {
             updatables.Add(updatable);
         }
 
-        if(entity is IRenderizable renderizable)
+        if (entity is IRenderizable renderizable)
         {
             renderizables.Add(renderizable);
         }

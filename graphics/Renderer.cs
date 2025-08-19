@@ -67,25 +67,36 @@ public class Renderer
         Clear(Color.Black);
     }
 
-
-    public static void Present()
-    {
-
-    }
-
-    public static void Render(Texture2D texture, Vector2 position, float rotation = 0)
+    public static void Render(Texture2D texture, Vector2 position, Vector2 size, float rotation)
     {
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
 
+        //TODO: el inverso de la textura se puede guardar en la clase para evitar tener que hacer esto en cada frame
+
+        float targetSizeX = size.X / texture.Width;
+        float targetSizeY = size.Y / texture.Height;
+
         instance.spriteBatch.Draw(
 
-            texture, position, null, Color.White, rotation, centerPoint, Vector2.One, SpriteEffects.None, 0
+            texture, position, null, Color.White, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
+        );
+    }
+
+    public static void Render(Texture2D texture, Vector2 position, Vector2 size)
+    {
+        Rectangle destinationRect = new(position.ToPoint(), size.ToPoint());
+
+        instance.spriteBatch.Draw(
+
+            texture,
+            destinationRect,
+            Color.White
         );
     }
 
     public static void RenderAbsolute()
     {
-
+        //TODO
     }
 
 }

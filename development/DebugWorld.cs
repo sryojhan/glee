@@ -17,7 +17,7 @@ public class DebugWorld : World
 
     public override void CreateWorld()
     {
-        EntityComposed entity = CreateComposedEntity("Debug element");
+        EntityComposed entity = CreateComposedEntity("Debug element", new Vector2(100, 100), new Vector2(100, 100));
         entity.CreateComponent<DebugComponent>();
 
         Texture2D animeGirl = Content.Load<Texture2D>("images/anime-girl");
