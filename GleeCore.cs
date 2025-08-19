@@ -16,7 +16,7 @@ namespace Glee.Engine;
     Glee: Graphic lightweight Extensible engine
 */
 
-public class GleeCore : Game
+public abstract class GleeCore : Game
 {
     internal static GleeCore s_instance;
 
@@ -114,9 +114,11 @@ public class GleeCore : Game
 
         //TODO: Remove Debug behaviours
 
-        WorldManager.StackWorld(new Debug.DebugWorld());
+        WorldManager.StackWorld(LoadInitialWorld());
         WorldManager.UpdateStack();
     }
+
+    protected abstract World LoadInitialWorld();
 
     protected override void UnloadContent()
     {
