@@ -20,6 +20,9 @@ namespace Glee;
 public abstract class World : GleeObject
 {
     protected ContentManager Content { get; }
+    private readonly Time worldTimeInstance;
+
+    public Time Time => worldTimeInstance;
 
     public GleeContainer worldObjects;
     public List<IUpdatable> updatables;
@@ -41,6 +44,8 @@ public abstract class World : GleeObject
 
         updatables = [];
         renderizables = [];
+
+        worldTimeInstance = new Time();
     }
 
     public virtual void LoadResources() { }
@@ -65,9 +70,10 @@ public abstract class World : GleeObject
         InitialiseObjects();
     }
 
-    public void Udpate()
+    public void ProcessFrame()
     {
-        
+        UpdateTime();
+
         if (this is IUpdatable updatable)
         {
             updatable.Update();
@@ -78,10 +84,30 @@ public abstract class World : GleeObject
             entity.Update();
         }
         
+        //TODO: physics loop
+
+        //TODO: remove elements
     }
 
 
-    public void Render()
+    private void UpdateTime()
+    {
+        float speed = worldTimeInstance.speed;
+        float deltaTime = (float)GleeCore.Time.ElapsedGameTime.TotalSeconds;
+
+        worldTimeInstance.realDeltaTime = deltaTime;
+        worldTimeInstance.deltaTime = deltaTime * speed;
+
+        worldTimeInstance.activeTime += worldTimeInstance.deltaTime;
+        worldTimeInstance.realActiveTime += worldTimeInstance.realDeltaTime;
+
+
+        worldTimeInstance.frameCounter++;
+
+        //TODO: physics time
+    }
+
+    public void RenderFrame()
     {
         Renderer.Clear(backgroundColor);
         Renderer.BeginBatch();
@@ -100,13 +126,12 @@ public abstract class World : GleeObject
     }
 
 
-
     public EntityComposed CreateComposedEntity(string name, Entity parent = null)
     {
         EntityComposed newEntity = new EntityComposed(name, parent, this);
 
         worldObjects.Add(newEntity);
-        
+
         updatables.Add(newEntity);
         renderizables.Add(newEntity);
 

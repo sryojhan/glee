@@ -105,14 +105,14 @@ public class WorldManager
         deleteAll = true;
     }
 
-    public void Udpate()
+    public void ProcessFrame()
     {
-        Spotlight.Udpate();
+        Spotlight.ProcessFrame();
     }
 
     public void Render()
     {
-        Spotlight.Render();
+        Spotlight.RenderFrame();
     }
 
 

@@ -13,7 +13,7 @@ namespace Glee.Engine;
 
 
 /*
-    Glee: Graphic lightweight ECS engine
+    Glee: Graphic lightweight Extensible engine
 */
 
 public class GleeCore : Game
@@ -56,6 +56,9 @@ public class GleeCore : Game
     public static GameTime Time { get; private set; }
 
 
+    public static float TargetFrameRate { get; } = 60.0f;
+
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -77,7 +80,7 @@ public class GleeCore : Game
         // Set the window title
         Window.Title = title;
 
-        Renderer = new Renderer(width, height, fullScreen, 60.0f);
+        Renderer = new Renderer(width, height, fullScreen, TargetFrameRate);
 
         // Set the core's content manager to a reference of the base Game's
         // content manager.
@@ -137,9 +140,8 @@ public class GleeCore : Game
             Exit();
         }
 
-        WorldManager.Udpate();
+        WorldManager.ProcessFrame();
 
-        //TODO: remove elements
 
         WorldManager.UpdateStack();
 

@@ -18,7 +18,7 @@ public class Entity : GleeObject
     public float Rotation { get; protected set; } = 0;
     public Entity Parent { get; protected set; }
     public World World { get; protected set; }
-
+    public Time Time => World.Time;
 
     public Entity(World world)
     {
