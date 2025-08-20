@@ -18,8 +18,6 @@ public class SpriteComponent : Component, IRenderizable
     {
         if (Sprite == null) return;
 
-        Entity entity = Entity;
-
         //TODO: refactor this
 
         //TODO: Add color
@@ -32,6 +30,13 @@ public class SpriteComponent : Component, IRenderizable
 
 
 
-        Renderer.Render(Sprite, entity.Position, entity.Size, Entity.Rotation);
+        Renderer.Render(Sprite, entity.Position, entity.Size, entity.Rotation);
     }
+
+
+    public void SetNativeSize()
+    {
+        entity.Size = new Vector2(Sprite.Width, Sprite.Height);
+    }
+
 }

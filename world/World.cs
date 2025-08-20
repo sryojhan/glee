@@ -31,6 +31,8 @@ public abstract class World : GleeObject
 
     protected Color backgroundColor = Color.CornflowerBlue;
 
+    public bool HasInitialisedEntities { get; private set; } = false;
+
 
     public World()
     {
@@ -52,6 +54,14 @@ public abstract class World : GleeObject
 
     public abstract void CreateWorld();
 
+
+    public void Initialize()
+    {
+        LoadResources();
+        CreateWorld();
+        InitialiseObjects();
+    }
+
     private void InitialiseObjects()
     {
         foreach (GleeObject gleeObj in worldObjects)
@@ -61,13 +71,8 @@ public abstract class World : GleeObject
                 initializable.Initialize();
             }
         }
-    }
 
-    public void Initialize()
-    {
-        LoadResources();
-        CreateWorld();
-        InitialiseObjects();
+        HasInitialisedEntities = true;
     }
 
     public void ProcessFrame()
@@ -83,7 +88,7 @@ public abstract class World : GleeObject
         {
             entity.Update();
         }
-        
+
         //TODO: physics loop
 
         //TODO: remove elements
@@ -102,7 +107,7 @@ public abstract class World : GleeObject
         worldTimeInstance.realActiveTime += worldTimeInstance.realDeltaTime;
 
 
-        worldTimeInstance.frameCounter++;
+        worldTimeInstance.frame++;
 
         //TODO: physics time
     }
@@ -112,14 +117,14 @@ public abstract class World : GleeObject
         Renderer.Clear(backgroundColor);
         Renderer.BeginBatch();
 
-        foreach (IRenderizable entity in renderizables)
-        {
-            entity.Render();
-        }
-
         if (this is IRenderizable renderizable)
         {
             renderizable.Render();
+        }
+
+        foreach (IRenderizable entity in renderizables)
+        {
+            entity.Render();
         }
 
         Renderer.EndBatch();

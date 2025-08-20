@@ -28,7 +28,7 @@ public class GleeObject
     private void PrintInternal(string message)
     {
         //TODO: add time stamps
-        Console.WriteLine($"{"0000"}: {GetType()}: {message}");
+        Console.WriteLine($"{GleeCore.WorldManager.Spotlight.Time.frame}: {GetType()}: {message}");
     }
 
     protected void Print(object message)

@@ -17,19 +17,19 @@ public class Entity : GleeObject
     public float UniformScale { set { Scale = new Vector2(value, value); }}
     public float Rotation { get; protected set; } = 0;
     public Entity Parent { get; protected set; }
-    public World World { get; protected set; }
-    public Time Time => World.Time;
+    public World world { get; protected set; }
+    public Time Time => world.Time;
 
     public Entity(World world)
     {
         Name = "New entity";
-        World = world;
+        this.world = world;
     }
 
     public Entity(string name, World world)
     {
         Name = name;
-        World = world;
+        this.world = world;
     }
 
     public Entity(string name, Entity parent, World world) : this(name, world)

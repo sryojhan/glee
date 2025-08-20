@@ -17,8 +17,8 @@ public class Time
     public float realActiveTime { get; internal set; } = 0;
 
 
-    public uint frameCounter { get; internal set; } = 0;
-    public uint physicsFrameCounter { get; internal set; } = 0;
+    public uint frame { get; internal set; } = 0;
+    public uint physicsFrame { get; internal set; } = 0;
 
 
     public float fps
