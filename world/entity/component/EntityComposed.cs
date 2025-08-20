@@ -67,7 +67,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
         foreach (object obj in component.GetCustomAttributes(false))
         {
-            if (obj is Attributes.RequireAttribute requirement)
+            if (obj is Attributes.DependsOnAttribute requirement)
             {
                 if (HasComponent(requirement.Value)) continue;
 

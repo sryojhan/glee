@@ -14,7 +14,7 @@ public class UniqueAttribute : Attribute
 
 
 [AttributeUsage(AttributeTargets.Class)]
-public class RequireAttribute(Type componentType) : Attribute
+public class DependsOnAttribute(Type componentType) : Attribute
 {
     public Type Value { get; private set; } = componentType;
 }
