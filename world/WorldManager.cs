@@ -13,12 +13,12 @@ public class WorldManager
 {
     //TODO: cambiar world manager para que acepte un delegado que construya una clase y no se cree la clase hasta el final del bucle de juego
     // Lo que se puede hacer es tener una referencia al spotlight actual. Al terminar el frame anular esa referencia y poner la nueva. Asi no hay problema de modificar la pila de escenas durante la aplicacion
-    private LinkedList<World> loadedWorlds;
+    private readonly LinkedList<World> loadedWorlds;
 
     private World spotlight;
-    private Queue<World> worldsToBeAddedOnTop;
-    private Queue<World> worldsToBeAddedOnBottom;
-    private Queue<World> worldsToBeRemoved;
+    private readonly Queue<World> worldsToBeAddedOnTop;
+    private readonly Queue<World> worldsToBeAddedOnBottom;
+    private readonly Queue<World> worldsToBeRemoved;
 
     private bool deleteAll = false;
 
@@ -29,21 +29,12 @@ public class WorldManager
         worldsToBeAddedOnBottom = new Queue<World>();
         worldsToBeRemoved = new Queue<World>();
 
-
-
-        loadedWorlds.AddLast(new DefaultWorld());
-        spotlight = loadedWorlds.Last();
+        spotlight = null;
     }
 
     //TODO: world manager
 
-    public World Spotlight
-    {
-        get
-        {
-            return spotlight;
-        }
-    }
+    public World Spotlight => spotlight;
 
     public bool LiftWorld(World world)
     {
@@ -147,6 +138,8 @@ public class WorldManager
 
         foreach (World world in worldsToBeAddedOnBottom)
         {
+            spotlight = world;
+
             loadedWorlds.AddFirst(world);
             world.Initialize();
         }
@@ -154,6 +147,8 @@ public class WorldManager
 
         foreach (World world in worldsToBeAddedOnTop)
         {
+            spotlight = world;
+
             loadedWorlds.AddLast(world);
             world.Initialize();   
         }
@@ -165,13 +160,5 @@ public class WorldManager
     }
 
 }
-
-
-
-class DefaultWorld : World
-{
-    public override void CreateWorld(){ }
-}
-
 
 

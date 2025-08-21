@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Glee.Behaviours;
 using Glee.Engine;
 using Glee.Graphics;
+using Glee.Physics;
 
 namespace Glee;
 
@@ -25,11 +26,14 @@ public abstract class World : GleeObject
     public Time Time => worldTimeInstance;
 
     public GleeContainer worldObjects;
+    public PhysicsWorld physicsWorld;
     public List<IUpdatable> updatables;
     public List<IRenderizable> renderizables;
 
 
     protected Color backgroundColor = Color.CornflowerBlue;
+
+    public float PixelsPerUnit { get; protected set; } = 100;
 
     public bool HasInitialisedEntities { get; private set; } = false;
 
@@ -48,6 +52,7 @@ public abstract class World : GleeObject
         renderizables = [];
 
         worldTimeInstance = new Time();
+        physicsWorld = new(this);
     }
 
     public virtual void LoadResources() { }
@@ -84,6 +89,15 @@ public abstract class World : GleeObject
             updatable.Update();
         }
 
+        if (physicsWorld.ShouldUpdatePhysics())
+        {
+            float deltaTime = physicsWorld.UpdatePhysicsTime();
+
+            physicsWorld.PhysicsStep();
+
+            Time.deltaTime = deltaTime;
+        }
+
         foreach (IUpdatable entity in updatables)
         {
             entity.Update();
@@ -98,7 +112,7 @@ public abstract class World : GleeObject
     private void UpdateTime()
     {
         float speed = worldTimeInstance.speed;
-        float deltaTime = (float)GleeCore.Time.ElapsedGameTime.TotalSeconds;
+        float deltaTime = (float)GleeCore.GameTime.ElapsedGameTime.TotalSeconds;
 
         worldTimeInstance.realDeltaTime = deltaTime;
         worldTimeInstance.deltaTime = deltaTime * speed;
@@ -109,7 +123,7 @@ public abstract class World : GleeObject
 
         worldTimeInstance.frame++;
 
-        //TODO: physics time
+        //Physics time are updated
     }
 
     public void RenderFrame()

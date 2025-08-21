@@ -9,14 +9,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Glee.Components;
 
-public class SpriteComponent : Component, IRenderizable
+public class TextureDrawer : Component, IRenderizable
 {
-    public Texture2D Sprite { get; set; }
+    public Texture2D Texture { get; set; }
 
 
     public void Render()
     {
-        if (Sprite == null) return;
+        if (Texture == null) return;
 
         //TODO: refactor this
 
@@ -30,13 +30,13 @@ public class SpriteComponent : Component, IRenderizable
 
 
 
-        Renderer.Render(Sprite, entity.Position, entity.Size, entity.Rotation);
+        Renderer.Render(Texture, entity.Position, entity.Size);
     }
 
 
     public void SetNativeSize()
     {
-        entity.Size = new Vector2(Sprite.Width, Sprite.Height);
+        entity.Size = new Vector2(Texture.Width, Texture.Height);
     }
 
 }

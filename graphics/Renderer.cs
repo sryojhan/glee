@@ -69,6 +69,8 @@ public class Renderer
 
     public static void Render(Texture2D texture, Vector2 position, Vector2 size, float rotation)
     {
+        //TODO!: invert y and center the world so 0,0 by default is the center of the screen
+
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
 
         //TODO: el inverso de la textura se puede guardar en la clase para evitar tener que hacer esto en cada frame
@@ -84,7 +86,7 @@ public class Renderer
 
     public static void Render(Texture2D texture, Vector2 position, Vector2 size)
     {
-        Rectangle destinationRect = new(position.ToPoint(), size.ToPoint());
+        Rectangle destinationRect = new(position.ToPoint() - (size * 0.5f).ToPoint(), size.ToPoint());
 
         instance.spriteBatch.Draw(
 

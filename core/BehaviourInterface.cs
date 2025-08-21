@@ -21,6 +21,7 @@ public interface IRenderizable
     void Render();
 }
 
+//TODO: a lo mejor cambiar el nombre de esta interfaz
 public interface IRemovable
 {
     void Remove();

@@ -13,11 +13,13 @@ namespace Glee.Engine;
 
 
 /*
-    Glee: Graphic lightweight Extensible engine
+    Glee: Graphic lightweight extensible engine
 */
 
 public abstract class GleeCore : Game
 {
+    public const string EngineVersion = "1.0";
+
     internal static GleeCore s_instance;
 
     /// <summary>
@@ -53,7 +55,7 @@ public abstract class GleeCore : Game
     public static AudioController Audio { get; private set; }
 
 
-    public static GameTime Time { get; private set; }
+    public static GameTime GameTime { get; private set; }
 
 
     public static float TargetFrameRate { get; } = 60.0f;
@@ -130,11 +132,11 @@ public abstract class GleeCore : Game
 
     protected override void Update(GameTime gameTime)
     {
-        Time = gameTime;
-        // Update the input manager.
-        Input.Update(gameTime);
+        //TODO: quitar la tasa de frameRate fija y calcularlo todo yo mismo
 
-        // Update the audio controller.
+        GameTime = gameTime;
+
+        Input.Update(gameTime);
         Audio.Update();
 
         if (ExitOnEscape && Input.Keyboard.WasKeyJustPressed(Keys.Escape))
@@ -143,8 +145,6 @@ public abstract class GleeCore : Game
         }
 
         WorldManager.ProcessFrame();
-
-
         WorldManager.UpdateStack();
 
         base.Update(gameTime);
@@ -153,6 +153,7 @@ public abstract class GleeCore : Game
     protected override void Draw(GameTime gameTime)
     {
         WorldManager.Render();
+
 
         base.Draw(gameTime);
     }
