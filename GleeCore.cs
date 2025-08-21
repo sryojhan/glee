@@ -16,6 +16,7 @@ namespace Glee.Engine;
     Glee: Graphic lightweight extensible engine
 */
 
+//TODO: utils class. Utils for math, utils for vector2 (like vector2.right), conversion from float to vector2...
 public abstract class GleeCore : Game
 {
     public const string EngineVersion = "1.0";

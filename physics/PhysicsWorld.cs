@@ -13,8 +13,8 @@ public class PhysicsWorld
 
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
-    private readonly HashSet<Collider> colliders;
-    private readonly HashSet<DynamicBody> bodies;
+    internal readonly HashSet<Collider> colliders;
+    internal readonly HashSet<Body> bodies;
 
     private float lastPhysicsUpdate;
 
@@ -96,7 +96,7 @@ public class PhysicsWorld
     internal void PhysicsStep()
     {
 
-        foreach (DynamicBody body in bodies)
+        foreach (Body body in bodies)
         {
             Vector2 previousPosition = body.entity.Position;
 
@@ -114,7 +114,7 @@ public class PhysicsWorld
 
 
 
-    public bool CheckCollision(DynamicBody body)
+    public bool CheckCollision(Body body)
     {
         Type bodyType = body.collider.bounds.GetType();
         foreach (Collider collider in colliders)
@@ -152,12 +152,12 @@ public class PhysicsWorld
         collider.world.physicsWorld.colliders.Remove(collider);
     }
 
-    public static void RegisterBody(DynamicBody body)
+    public static void RegisterBody(Body body)
     {
         body.world.physicsWorld.bodies.Add(body);
     }
 
-    public static void UnregisterBody(DynamicBody body)
+    public static void UnregisterBody(Body body)
     {
         body.world.physicsWorld.bodies.Remove(body);
     }

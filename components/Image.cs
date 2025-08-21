@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Glee.Components;
 
-public class TextureDrawer : Component, IRenderizable
+public class Image : Component, IRenderizable
 {
     public Texture2D Texture { get; set; }
 

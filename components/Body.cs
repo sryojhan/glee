@@ -6,8 +6,7 @@ namespace Glee.Components;
 
 
 
-[DependsOn(typeof(Collider))]
-public class DynamicBody : Component, IInitializable, IRemovable
+public class Body : Component, IInitializable, IRemovable
 {
     public Vector2 Velocity { get; set; }
     //TODO: mass

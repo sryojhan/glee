@@ -26,7 +26,7 @@ public class RectRectCollisionResolver : ICollisionResolver
 {
     public bool Resolve(Bounds A, Bounds B)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }
 
@@ -35,7 +35,7 @@ public class CircleRectCollisionResolver : ICollisionResolver
 {
     public bool Resolve(Bounds A, Bounds B)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }
 
