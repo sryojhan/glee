@@ -4,7 +4,7 @@ using Glee.Physics;
 namespace Glee.Components;
 
 
-public class Collider : Component, IInitializable, IRemovable
+public class Collider : Component, IInitializable, IRemovableObserver
 {
     public Bounds bounds { get; set; }
 
@@ -19,7 +19,7 @@ public class Collider : Component, IInitializable, IRemovable
         PhysicsWorld.RegisterCollider(this);
     }
 
-    public void Remove()
+    public void OnRemove()
     {
         PhysicsWorld.UnregisterCollider(this);
     }

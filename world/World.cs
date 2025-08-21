@@ -15,9 +15,6 @@ namespace Glee;
 /// <summary>
 /// Class that manages all the active entities in the game
 /// </summary>
-/// 
-///TODO: Unique element in world with Attributes: Attribute.IsDefined()
-/// 
 public abstract class World : GleeObject
 {
     protected ContentManager Content { get; }
@@ -102,10 +99,6 @@ public abstract class World : GleeObject
         {
             entity.Update();
         }
-
-        //TODO: physics loop
-
-        //TODO: remove elements
     }
 
 

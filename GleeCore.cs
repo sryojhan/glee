@@ -16,7 +16,6 @@ namespace Glee.Engine;
     Glee: Graphic lightweight extensible engine
 */
 
-//TODO: utils class. Utils for math, utils for vector2 (like vector2.right), conversion from float to vector2...
 public abstract class GleeCore : Game
 {
     public const string EngineVersion = "1.0";
@@ -114,8 +113,7 @@ public abstract class GleeCore : Game
 
         WorldManager = new WorldManager();
 
-
-        //TODO: Remove Debug behaviours
+        GameTime = new GameTime();
 
         WorldManager.StackWorld(LoadInitialWorld());
         WorldManager.UpdateStack();
@@ -133,8 +131,6 @@ public abstract class GleeCore : Game
 
     protected override void Update(GameTime gameTime)
     {
-        //TODO: quitar la tasa de frameRate fija y calcularlo todo yo mismo
-
         GameTime = gameTime;
 
         Input.Update(gameTime);

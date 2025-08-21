@@ -105,9 +105,6 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public void Initialize()
     {
-        //TODO: Manage dependencies first
-
-
         foreach (Component comp in components)
         {
             if (comp is IInitializable initializable)

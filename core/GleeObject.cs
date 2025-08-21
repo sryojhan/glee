@@ -27,8 +27,7 @@ public class GleeObject
 
     private void PrintInternal(string message)
     {
-        //TODO: change total game time representation to maybe a frame counter or something
-        Console.WriteLine($"{(GleeCore.GameTime != null ? GleeCore.GameTime.TotalGameTime.ToString() : 0)}: {GetType()}: {message}");
+        Console.WriteLine($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
     }
 
     protected void Print(object message)

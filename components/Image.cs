@@ -13,21 +13,10 @@ public class Image : Component, IRenderizable
 {
     public Texture2D Texture { get; set; }
 
-
+    
     public void Render()
     {
         if (Texture == null) return;
-
-        //TODO: refactor this
-
-        //TODO: Add color
-        //TODO: Add Origin
-        //TODO: Add Scale
-        //TODO: Add effects
-        //TODO: Set as fixed size, not as a scale
-        //TODO: Add effects
-        //TODO: Add layer depth 
-
 
 
         Renderer.Render(Texture, entity.Position, entity.Size);

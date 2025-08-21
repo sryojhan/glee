@@ -65,12 +65,8 @@ public class PhysicsWorld
     {
         currentEnlapsedTime = world.Time.realActiveTime - lastPhysicsUpdate;
 
-
-        //TODO: esto no funciona porque solo podra ser una subdivision del framerate original
-        // Habria que llamarlo directamente desde el Update central y quitanlo la limitación de fotogramas
+        // This is done like this for a future enhancement. Right now physics and logic run at the same fixed frameRate
         return true;
-
-        //return currentEnlapsedTime > targetPhysicsEnlapsedTime;
     }
 
 

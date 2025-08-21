@@ -11,7 +11,6 @@ namespace Glee;
 
 public class WorldManager
 {
-    //TODO: cambiar world manager para que acepte un delegado que construya una clase y no se cree la clase hasta el final del bucle de juego
     // Lo que se puede hacer es tener una referencia al spotlight actual. Al terminar el frame anular esa referencia y poner la nueva. Asi no hay problema de modificar la pila de escenas durante la aplicacion
     private readonly LinkedList<World> loadedWorlds;
 
@@ -32,7 +31,6 @@ public class WorldManager
         spotlight = null;
     }
 
-    //TODO: world manager
 
     public World Spotlight => spotlight;
 
@@ -117,10 +115,8 @@ public class WorldManager
 
             foreach (World world in loadedWorlds.Reverse())
             {
-                //TODO: check that deletion is in reverse order
-
-                if (world is IRemovable removable)
-                    removable.Remove();
+                if (world is IRemovableObserver removable)
+                    removable.OnRemove();
             }
             return true;
         }
@@ -129,9 +125,9 @@ public class WorldManager
         {
             loadedWorlds.Remove(world);
 
-            if (world is IRemovable removable)
+            if (world is IRemovableObserver removable)
             {
-                removable.Remove();
+                removable.OnRemove();
             }
         }
         worldsToBeRemoved.Clear();

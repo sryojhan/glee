@@ -4,7 +4,6 @@ namespace Glee.Physics;
 
 
 
-//TODO: add collider from the collision
 public readonly struct RaycastHit(Vector2 origin, Vector2 direction, Vector2 hitPosition)
 {
     public Vector2 Origin { get; } = origin;

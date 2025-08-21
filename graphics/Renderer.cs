@@ -8,7 +8,6 @@ namespace Glee.Graphics;
 
 public class Renderer
 {
-    //TODO: support to render in a texture
     private GraphicsDeviceManager graphics;
     private GraphicsDevice graphicsDevice;
     private SpriteBatch spriteBatch;
@@ -17,7 +16,6 @@ public class Renderer
     private static Renderer instance => GleeCore.Renderer;
 
 
-    //TODO: read all this from a file
     public Renderer(int width, int height, bool fullScreen, float targetFrameRate)
     {
         graphics = new GraphicsDeviceManager(GleeCore.Instance);
@@ -72,8 +70,6 @@ public class Renderer
         //TODO!: invert y and center the world so 0,0 by default is the center of the screen
 
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
-
-        //TODO: el inverso de la textura se puede guardar en la clase para evitar tener que hacer esto en cada frame
 
         float targetSizeX = size.X / texture.Width;
         float targetSizeY = size.Y / texture.Height;

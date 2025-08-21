@@ -14,10 +14,6 @@ public static class Physics
         return Raycast(world, origin, direction, distance);
     }
 
-
-    //TODO: variation that gives the RaycastHit
-    //TODO: variation with collision layes
-    //TODO: variation with entity exclusion list
     public static bool Raycast(World world, Vector2 origin, Vector2 direction, float distance = float.MaxValue)
     {
         PhysicsWorld physicsWorld = world.physicsWorld;

@@ -6,12 +6,9 @@ namespace Glee.Components;
 
 
 
-public class Body : Component, IInitializable, IRemovable
+public class Body : Component, IInitializable, IRemovableObserver
 {
     public Vector2 Velocity { get; set; }
-    //TODO: mass
-    //TODO: drag
-    //TODO: gravity scale
     public float GravityMultiplier { get; set; } = 1;
 
     public  Collider collider { get; set; }
@@ -23,7 +20,7 @@ public class Body : Component, IInitializable, IRemovable
         PhysicsWorld.RegisterBody(this);
     }
 
-    public void Remove()
+    public void OnRemove()
     {
         PhysicsWorld.UnregisterBody(this);
     }
