@@ -64,7 +64,7 @@ public class Renderer
     }
 
 
-    public static void Render(Texture2D texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, Color? color = null, float rotation = 0)
+    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, Color? color = null, float rotation = 0)
     {
         if (!color.HasValue) color = Color.White;
 
@@ -75,7 +75,7 @@ public class Renderer
 
         instance.spriteBatch.Draw(
 
-            texture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
+            texture.BaseTexture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
         );
     }
 }

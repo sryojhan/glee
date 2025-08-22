@@ -17,7 +17,7 @@ namespace Glee;
 /// </summary>
 public abstract class World : GleeObject
 {
-    protected ContentManager Content { get; }
+    public ContentManager Content { get; private set; }
     private readonly Time worldTimeInstance;
 
     public Time Time => worldTimeInstance;

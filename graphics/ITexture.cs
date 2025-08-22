@@ -7,6 +7,7 @@ namespace Glee.Graphics;
 
 public interface ITexture
 {
+    public string Name { get; }
     public Texture2D BaseTexture { get; }
     public Vector2 Size { get; }
     public float Width { get; }
