@@ -11,15 +11,14 @@ namespace Glee.Components;
 
 public class Image : Component, IRenderizable
 {
-    public Texture2D Texture { get; set; }
+    public ITexture Texture { get; set; }
 
-    
+
     public void Render()
     {
         if (Texture == null) return;
 
-
-        Renderer.Render(Texture, entity.Position, entity.Size);
+        Texture.Render(entity.Position, entity.Size, entity.Rotation);
     }
 
 

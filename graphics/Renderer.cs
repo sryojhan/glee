@@ -43,8 +43,6 @@ public class Renderer
         spriteBatch = new SpriteBatch(graphicsDevice);
     }
 
-
-
     public static void BeginBatch()
     {
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -65,9 +63,10 @@ public class Renderer
         Clear(Color.Black);
     }
 
-    public static void Render(Texture2D texture, Vector2 position, Vector2 size, float rotation)
+
+    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, Color? color = null, float rotation = 0)
     {
-        //TODO!: invert y and center the world so 0,0 by default is the center of the screen
+        if (!color.HasValue) color = Color.White;
 
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
 
@@ -76,25 +75,7 @@ public class Renderer
 
         instance.spriteBatch.Draw(
 
-            texture, position, null, Color.White, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
+            texture.BaseTexture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
         );
     }
-
-    public static void Render(Texture2D texture, Vector2 position, Vector2 size)
-    {
-        Rectangle destinationRect = new(position.ToPoint() - (size * 0.5f).ToPoint(), size.ToPoint());
-
-        instance.spriteBatch.Draw(
-
-            texture,
-            destinationRect,
-            Color.White
-        );
-    }
-
-    public static void RenderAbsolute()
-    {
-        //TODO
-    }
-
 }
