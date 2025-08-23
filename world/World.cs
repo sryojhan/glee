@@ -28,7 +28,7 @@ public abstract class World : GleeObject
     public List<IRenderizable> renderizables;
 
 
-    protected Color backgroundColor = Color.CornflowerBlue;
+    public Color BackgroundColor { get; set; } = Color.CornflowerBlue;
 
     public float PixelsPerUnit { get; protected set; } = 100;
 
@@ -121,7 +121,7 @@ public abstract class World : GleeObject
 
     public void RenderFrame()
     {
-        Renderer.Clear(backgroundColor);
+        Renderer.Clear(BackgroundColor);
         Renderer.BeginBatch();
 
         if (this is IRenderizable renderizable)
