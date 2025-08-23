@@ -78,6 +78,8 @@ public class GamePadInfo
                 StopVibration();
             }
         }
+
+        UpdateTriggers();
     }
 
 
@@ -121,6 +123,90 @@ public class GamePadInfo
         return CurrentState.IsButtonUp(button) && PreviousState.IsButtonDown(button);
     }
 
+
+
+
+    public static class Trigger {
+        public const float PRESSED_THRESHOLD = 0.5f;
+        public const float RELEASED_THRESHOLD = 0.2f;
+    }
+
+    //To avoid a 'spam' of the trigger, we implement a lock mechanism
+    private struct TriggerLock()
+    {
+        //TODO: Maybe: read this values from a file
+        public enum TriggerValue
+        {
+            None, JustDown, JustUp
+        }
+
+        public TriggerValue value = TriggerValue.None;
+        public bool locked = false;
+
+
+
+        public void Update(float current, float previous)
+        {
+            bool isJustDown = current > Trigger.PRESSED_THRESHOLD && previous <= Trigger.PRESSED_THRESHOLD;
+            bool isJustUp = current < Trigger.RELEASED_THRESHOLD && previous >= Trigger.RELEASED_THRESHOLD;
+
+
+            if (locked)
+            {
+                if (isJustUp)
+                {
+                    locked = false;
+                    value = TriggerValue.JustUp;
+                }
+            }
+            else
+            {
+
+                if (isJustDown)
+                {
+                    locked = true;
+                    value = TriggerValue.JustDown;
+                }
+
+            }
+        }
+    }
+
+
+    TriggerLock triggerLeft = new();
+    TriggerLock triggerRight = new();
+
+
+    public bool WasLeftTriggerJustDown()
+    {
+        return triggerLeft.value == TriggerLock.TriggerValue.JustDown;
+    }
+
+    public bool WasLeftTriggerJustUp()
+    {
+        return triggerLeft.value == TriggerLock.TriggerValue.JustUp;
+    }
+
+    public bool WasRightTriggerJustDown()
+    {
+        return triggerRight.value == TriggerLock.TriggerValue.JustDown;
+    }
+
+    public bool WasRightTriggerJustUp()
+    {
+        return triggerRight.value == TriggerLock.TriggerValue.JustUp;
+    }
+
+
+
+    private void UpdateTriggers()
+    {
+        triggerLeft.Update(CurrentState.Triggers.Left, PreviousState.Triggers.Left);
+        triggerRight.Update(CurrentState.Triggers.Right, PreviousState.Triggers.Right);
+    }
+
+
+
     /// <summary>
     /// Sets the vibration for all motors of this gamepad.
     /// </summary>
@@ -139,4 +225,6 @@ public class GamePadInfo
     {
         GamePad.SetVibration(PlayerIndex, 0.0f, 0.0f);
     }
+
+
 }
