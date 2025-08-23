@@ -1,6 +1,7 @@
+using Glee.Graphics;
 using Glee.Behaviours;
 
-namespace Glee.Graphics;
+namespace Glee.Components;
 
 
 
@@ -11,9 +12,11 @@ public class Text : Component, IRenderizable
 
     public Font font { get; set; }
 
-    public void Render()
+    public virtual void Render()
     {
         if (font == null || string.IsNullOrWhiteSpace(Content)) return;
+
+    
 
         Renderer.RenderText(Content, font, entity.Position);
     }
