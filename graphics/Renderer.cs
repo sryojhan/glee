@@ -48,6 +48,11 @@ public class Renderer
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp);
     }
 
+    public static void BeginBatchWithCustomShader(Material material)
+    {
+        instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: material.ShaderSource.effect);
+    }
+
     public static void EndBatch()
     {
         instance.spriteBatch.End();
@@ -64,19 +69,33 @@ public class Renderer
     }
 
 
-    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, Color? color = null, float rotation = 0)
+    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, float rotation = 0, Material material = null)
     {
-        if (!color.HasValue) color = Color.White;
+        Color color = material != null ? material.MainColor : Color.White;
 
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
 
         float targetSizeX = size.X / texture.Width;
         float targetSizeY = size.Y / texture.Height;
 
+        bool hasShader = material != null && material.HasCustomShader;
+
+        if (hasShader)
+        {
+            EndBatch();
+            BeginBatchWithCustomShader(material);
+        }
+
         instance.spriteBatch.Draw(
 
-            texture.BaseTexture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
+            texture.BaseTexture, position, sourceRectangle, color, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
         );
+
+        if (hasShader)
+        {
+            EndBatch();
+            BeginBatch();
+        }
     }
 
     public static void RenderText(string text, Font font, Vector2 position, float rotation = 0)

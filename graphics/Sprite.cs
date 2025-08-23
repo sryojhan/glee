@@ -31,9 +31,9 @@ public class Sprite : ITexture
     }
 
 
-    public void Render(Vector2 position, Vector2 size, float rotation = 0)
+    public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
     {
-        Renderer.Render(this, position, size, sourceRectangle, Color.White, rotation);
+        Renderer.Render(this, position, size, sourceRectangle, rotation, material);
     }
 
     public static Sprite Create(Texture texture, string name) {
