@@ -14,5 +14,5 @@ public interface ITexture
     public float Height { get; }
 
 
-    public void Render(Vector2 position, Vector2 size, float rotation = 0);
+    public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null);
 }

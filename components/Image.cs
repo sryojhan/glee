@@ -11,20 +11,20 @@ namespace Glee.Components;
 
 public class Image : Component, IRenderizable
 {
-    public ITexture Texture { get; set; }
-
+    public ITexture texture { get; set; }
+    public Material material { get; set; }
 
     public void Render()
     {
-        if (Texture == null) return;
+        if (texture == null) return;
 
-        Texture.Render(entity.Position, entity.Size, entity.Rotation);
+        texture.Render(entity.Position, entity.Size, entity.Rotation, material);
     }
 
 
     public void SetNativeSize()
     {
-        entity.Size = new Vector2(Texture.Width, Texture.Height);
+        entity.Size = new Vector2(texture.Width, texture.Height);
     }
 
 }

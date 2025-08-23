@@ -29,9 +29,9 @@ public class Texture : ITexture, IDisposable
         }
     }
 
-    public void Render(Vector2 position, Vector2 size, float rotation = 0)
+    public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
     {
-        Renderer.Render(this, position, size, null, null, rotation);
+        Renderer.Render(this, position, size, null, rotation, material);
     }
 
     public void Dispose()

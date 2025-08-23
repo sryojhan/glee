@@ -64,9 +64,9 @@ public class Renderer
     }
 
 
-    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, Color? color = null, float rotation = 0)
+    public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, float rotation = 0, Material material = null)
     {
-        if (!color.HasValue) color = Color.White;
+        Color color = material != null ? material.MainColor : Color.White;
 
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
 
@@ -75,7 +75,7 @@ public class Renderer
 
         instance.spriteBatch.Draw(
 
-            texture.BaseTexture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
+            texture.BaseTexture, position, sourceRectangle, color, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
         );
     }
 
