@@ -78,4 +78,22 @@ public class Renderer
             texture.BaseTexture, position, sourceRectangle, color.Value, rotation, centerPoint, new Vector2(targetSizeX, targetSizeY), SpriteEffects.None, 0
         );
     }
+
+    public static void RenderText(string text, Font font, Vector2 position, float rotation = 0)
+    {
+        Vector2 size = font.CalculateWidth(text);
+
+        instance.spriteBatch.DrawString(
+            spriteFont: font.font,
+            text: text,
+            position: position,
+            color: Color.White,
+            rotation: rotation,
+            origin: size * 0.5f,
+            scale: Vector2.One,
+            effects: SpriteEffects.None,
+            layerDepth: 0
+        );
+    }
+
 }
