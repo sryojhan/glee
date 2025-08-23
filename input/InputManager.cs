@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Glee.Engine;
 using Microsoft.Xna.Framework;
 
 namespace Glee.Input;
@@ -50,4 +52,19 @@ public class InputManager
         }
     }
 
+
+
+    readonly Dictionary<string, InputBinding> bindings = [];
+
+    public static void Bind(string name, InputBinding bind)
+    {
+        GleeCore.Input.bindings.Add(name, bind);
+    }
+
+    public static bool IsDown(string name) => GleeCore.Input.bindings[name].IsDown;
+    public static bool IsUp(string name) => GleeCore.Input.bindings[name].IsUp;
+    public static bool IsJustDown(string name) => GleeCore.Input.bindings[name].IsJustDown;
+    public static bool IsJustUp(string name) => GleeCore.Input.bindings[name].IsJustUp;
+    public static float Value(string name) => GleeCore.Input.bindings[name].Value;
+    public static Vector2 Value2D(string name) => GleeCore.Input.bindings[name].Value2D;
 }
