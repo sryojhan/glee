@@ -187,6 +187,17 @@ public class GamePadInfo
         return triggerLeft.value == TriggerLock.TriggerValue.JustUp;
     }
 
+    public bool WasRightTriggerJustDown()
+    {
+        return triggerRight.value == TriggerLock.TriggerValue.JustDown;
+    }
+
+    public bool WasRightTriggerJustUp()
+    {
+        return triggerRight.value == TriggerLock.TriggerValue.JustUp;
+    }
+
+
 
     private void UpdateTriggers()
     {
