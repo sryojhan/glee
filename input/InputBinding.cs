@@ -18,6 +18,12 @@ public class InputBinding
     private List<GenericButton> negativeAlternative = negativeAlternative != null ? [.. negativeAlternative] : new();
 
 
+
+    //Processors
+    private bool normalize = false;
+    private bool clamp = true;
+    private bool invertY = false;
+
     public InputBinding Bind(GenericButton button)
     {
         positive.Add(button);
@@ -42,6 +48,22 @@ public class InputBinding
         return this;
     }
 
+    public InputBinding NormalizeOutput(bool value = true)
+    {
+        normalize = value;
+        return this;
+    }
+
+    public InputBinding ClampOutput(bool value = true)
+    {
+        clamp = value;
+        return this;
+    }
+    public InputBinding InvertY(bool value = true)
+    {
+        invertY = value;
+        return this;
+    }
 
 
 
@@ -68,7 +90,9 @@ public class InputBinding
                 output -= button.Value;
             }
 
-            output = MathHelper.Clamp(output, -1, 1);
+
+            if(clamp)
+                output = MathHelper.Clamp(output, -1, 1);
 
             return output;
         }
@@ -102,7 +126,13 @@ public class InputBinding
                 output.Y -= button.Value;
             }
 
-            return output.Normalized();
+            if (invertY)
+                output.Y *= -1;
+
+            if (normalize)
+                return output.Normalized();
+
+            return output;
         }
     }
 
