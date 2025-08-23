@@ -6,11 +6,10 @@ namespace Glee.Input;
 
 
 
-public class GenericButton
+public class GenericButton : IEquatable<GenericButton>
 {
     private GenericButton() { }
 
-    //Binary inputs
     private Keys key = Keys.None;
     private MouseButton mouse = MouseButton.None;
     private Buttons gamepad = Buttons.None;
@@ -205,7 +204,7 @@ public class GenericButton
 
     public Vector2 Value2D
     {
-         get
+        get
         {
             return buttonType switch
             {
@@ -225,6 +224,24 @@ public class GenericButton
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
             };
         }
+    }
+
+    
+    public bool Equals(GenericButton other)
+    {
+        return buttonType == other.buttonType && key == other.key && mouse == other.mouse && gamepad == other.gamepad && continousButton == other.continousButton;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (this is not GenericButton a || obj is not GenericButton b) return false;
+
+        return a.Equals(b);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }
 
