@@ -8,13 +8,10 @@ namespace Glee.Input;
 
 public class InputBinding
 (
-    string name,
     ICollection<GenericButton> positive = null, ICollection<GenericButton> negative = null,
     ICollection<GenericButton> positiveAlternative = null, ICollection<GenericButton> negativeAlternative = null
 )
 {
-    public string Name { get; private set; } = name;
-
     private List<GenericButton> positive = positive != null ? [.. positive] : new();
     private List<GenericButton> negative = negative != null ? [.. negative] : new();
     private List<GenericButton> positiveAlternative = positiveAlternative != null ? [.. positiveAlternative] : new();
@@ -71,7 +68,7 @@ public class InputBinding
                 output -= button.Value;
             }
 
-            output = MathHelper.Clamp(output, 0, 1);
+            output = MathHelper.Clamp(output, -1, 1);
 
             return output;
         }
@@ -87,16 +84,25 @@ public class InputBinding
             foreach (GenericButton button in positive)
             {
                 output += button.Value2D;
+                output.X += button.Value;
             }
 
             foreach (GenericButton button in negative)
             {
-                output -= button.Value2D;
+                output.X -= button.Value;
             }
 
-            output = Vector2.Clamp(output, Vector2.Zero, Vector2.One);
+            foreach (GenericButton button in positiveAlternative)
+            {
+                output.Y += button.Value;
+            }
 
-            return output;
+            foreach (GenericButton button in negativeAlternative)
+            {
+                output.Y -= button.Value;
+            }
+
+            return output.Normalized();
         }
     }
 
