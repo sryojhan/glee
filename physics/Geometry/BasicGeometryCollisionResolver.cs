@@ -26,8 +26,21 @@ public class RectRectCollisionResolver : ICollisionResolver
 {
     public bool Resolve(Bounds A, Bounds B)
     {
-        throw new NotImplementedException();
+        (Rect circleA, Rect circleB) = ICollisionResolver.BoundCast<Rect, Rect>(A, B);
+
+        Vector2 halfA = circleA.Size * 0.5f;
+        Vector2 halfB = circleB.Size * 0.5f;
+
+        Vector2 minA = circleA.Position - halfA;
+        Vector2 maxA = circleA.Position + halfA;
+
+        Vector2 minB = circleB.Position - halfB;
+        Vector2 maxB = circleB.Position + halfB;
+
+        return minA.X <= maxB.X && maxA.X >= minB.X &&
+               minA.Y <= maxB.Y && maxA.Y >= minB.Y;
     }
+
 }
 
 
