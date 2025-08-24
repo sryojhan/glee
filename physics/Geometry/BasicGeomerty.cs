@@ -4,7 +4,7 @@ using System;
 namespace Glee.Physics;
 
 
-public class Rect(Entity entity) : Bounds(entity)
+public class Rect : Bounds
 {
     public override bool Raycast(Vector2 origin, Vector2 direction, float distance)
     {
@@ -26,7 +26,7 @@ public class Rect(Entity entity) : Bounds(entity)
 }
 
 
-public class Circle(Entity entity) : Bounds(entity)
+public class Circle : Bounds
 {
     public float Radius => entity.Size.X * 0.5f;
 

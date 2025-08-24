@@ -6,11 +6,20 @@ namespace Glee.Components;
 
 public class Collider : Component, IInitializable, IRemovableObserver
 {
-    public Bounds bounds { get; set; }
+    private Bounds _bounds = null;
+    public Bounds bounds
+    {
+        get { return _bounds; }
+        set
+        {
+            _bounds = value;
+            _bounds.entity = entity;
+        }
+    }
 
     public Collider()
     {
-        bounds = new Rect(entity);
+        bounds = new Rect();
     }
 
 
