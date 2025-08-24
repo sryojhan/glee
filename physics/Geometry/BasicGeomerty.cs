@@ -15,12 +15,42 @@ public class Rect : Bounds
     {
         hit = new RaycastHit();
 
-        if (direction == Vector2.Zero)
+        Vector2 halfSize = Size * 0.5f;
+        Vector2 minPoint = Position - halfSize;
+        Vector2 maxPoint = Position + halfSize;
+
+
+        // Evitar división entre cero
+        Vector2 invDir = new Vector2(
+            direction.X != 0 ? 1f / direction.X : float.PositiveInfinity,
+            direction.Y != 0 ? 1f / direction.Y : float.PositiveInfinity
+        );
+
+        // Distancia paramétrica a cada borde
+        float t1 = (minPoint.X - origin.X) * invDir.X;
+        float t2 = (maxPoint.X - origin.X) * invDir.X;
+        float t3 = (minPoint.Y - origin.Y) * invDir.Y;
+        float t4 = (maxPoint.Y - origin.Y) * invDir.Y;
+
+        // Intervalo de entrada/salida
+        float tmin = MathF.Max(MathF.Min(t1, t2), MathF.Min(t3, t4));
+        float tmax = MathF.Min(MathF.Max(t1, t2), MathF.Max(t3, t4));
+
+        // No hay colisión
+        if (tmax < 0 || tmin > tmax)
             return false;
 
-        direction.Normalize();
+        // Primer punto válido
+        float t = tmin >= 0 ? tmin : tmax;
 
-        return false;
+        // Chequeamos que no exceda la distancia del rayo
+        if (t < 0 || t > distance)
+            return false;
+
+        // Punto de impacto
+        Vector2 hitPoint = origin + direction * t;
+        hit = new RaycastHit(origin, direction, hitPoint);
+        return true;
 
     }
 }
