@@ -20,7 +20,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
     public Mode PlayMode { get; set; } = Mode.Loop;
     public int CurrentFrame { get; set; }
     public int TotalFrames => animation.FrameCount;
-    public bool Playing { get; set; }
+    public bool Playing { get; set; } = true;
 
     public float SpeedMultiplier { get; set; } = 1;
 
@@ -63,6 +63,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
         {
             switch (PlayMode)
             {
+                case Mode.Reverse:
                 case Mode.Single:
                     {
                         if (CurrentFrame < TotalFrames - 1)
@@ -70,29 +71,13 @@ public class Flipbook : Component, IUpdatable, IInitializable
 
                         break;
                     }
+                case Mode.ReverseLoop:
                 case Mode.Loop:
                     {
                         CurrentFrame = (CurrentFrame + 1) % TotalFrames;
                         break;
                     }
-                case Mode.Reverse:
-                    {
-
-                        if (CurrentFrame > 0)
-                            CurrentFrame--;
-
-                        break;
-                    }
-                case Mode.ReverseLoop:
-                    {
-
-                        CurrentFrame--;
-
-                        if (CurrentFrame == 0)
-                            CurrentFrame = TotalFrames - 1;
-
-                        break;
-                    }
+                
                 case Mode.PingPong:
                     {
 
@@ -122,7 +107,10 @@ public class Flipbook : Component, IUpdatable, IInitializable
         }
 
 
-        target.texture = animation.Frames[CurrentFrame];
 
+        bool reversed = PlayMode == Mode.Reverse || PlayMode == Mode.ReverseLoop;
+
+        int targetFrame = !reversed ? CurrentFrame : TotalFrames - CurrentFrame - 1;
+        target.texture = animation.Frames[targetFrame];
     }
 }
