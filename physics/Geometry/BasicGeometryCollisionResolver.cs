@@ -48,7 +48,22 @@ public class CircleRectCollisionResolver : ICollisionResolver
 {
     public bool Resolve(Bounds A, Bounds B)
     {
-        throw new NotImplementedException();
+        (Circle circle, Rect rect) = ICollisionResolver.BoundCast<Circle, Rect>(A, B);
+
+        Vector2 half = rect.Size * 0.5f;
+        Vector2 min = rect.Position - half;
+        Vector2 max = rect.Position + half;
+
+        // Clamp: punto más cercano del rectángulo al círculo
+        float closestX = Math.Clamp(circle.Position.X, min.X, max.X);
+        float closestY = Math.Clamp(circle.Position.Y, min.Y, max.Y);
+        Vector2 closestPoint = new Vector2(closestX, closestY);
+
+        // Distancia del círculo al punto más cercano
+        Vector2 diff = circle.Position - closestPoint;
+        float distSq = diff.LengthSquared();
+
+        return distSq <= circle.Radius * circle.Radius;
     }
 }
 
