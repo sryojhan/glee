@@ -8,13 +8,17 @@ namespace Glee.Graphics;
 
 public class Renderer
 {
-    private GraphicsDeviceManager graphics;
-    private GraphicsDevice graphicsDevice;
-    private SpriteBatch spriteBatch;
+    internal GraphicsDeviceManager graphics;
+    internal GraphicsDevice graphicsDevice;
+    internal SpriteBatch spriteBatch;
 
+
+    private TargetTexture targetFront, targetBack;
 
     private static Renderer instance => GleeCore.Renderer;
 
+    //TODO: habria que hacer dos pasos para shaders: ScreenShaders y Post Processing pero que en el fondo sean un poco lo mismo
+    //TODO: a lo mejor es interesante guardar varios render targets con el render en cada paso del pipeline: world, ui, post processing
 
     public Renderer(int width, int height, bool fullScreen, float targetFrameRate)
     {
@@ -34,25 +38,35 @@ public class Renderer
         graphics.SynchronizeWithVerticalRetrace = true;
 
         graphics.ApplyChanges();
+
     }
 
     public void Initialise()
     {
         graphicsDevice = GleeCore.Instance.GraphicsDevice;
         spriteBatch = new SpriteBatch(graphicsDevice);
+
+
+        targetFront = new TargetTexture("Front target");
+        targetBack = new TargetTexture("Back target");
     }
+
+
+    internal void SwapTargetBuffer()
+    {
+        (targetFront, targetBack) = (targetBack, targetFront);
+    }
+
 
     public static void BeginBatch()
     {
         Camera current = GleeCore.WorldManager.Spotlight.Camera;
-
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: current.ViewMatrix);
     }
 
     public static void BeginBatchWithCustomShader(Material material)
     {
         Camera current = GleeCore.WorldManager.Spotlight.Camera;
-
         instance.spriteBatch.Begin(
             samplerState: SamplerState.PointClamp,
             effect: material.ShaderSource.effect,
@@ -87,6 +101,7 @@ public class Renderer
         float targetSizeX = size.X / texture.Width;
         float targetSizeY = size.Y / texture.Height;
 
+    
         bool hasShader = material != null && material.HasCustomShader;
 
         if (hasShader)
@@ -126,6 +141,47 @@ public class Renderer
             effects: SpriteEffects.None,
             layerDepth: 0
         );
+    }
+
+    public static void SetTargetTexture(TargetTexture texture)
+    {
+        instance.graphicsDevice.SetRenderTarget(texture.BaseTexture as RenderTarget2D);
+    }
+
+
+    public static void RemoveTargetTexture()
+    {
+        //instance.graphicsDevice.SetRenderTarget(null);
+        instance.graphicsDevice.SetRenderTarget(instance.targetFront.BaseTexture as RenderTarget2D);
+    }
+
+
+    public static void ApplyPostProcessing()
+    {
+        //TODO
+    }
+
+
+    public static void BeginFrame()
+    {
+        instance.graphicsDevice.SetRenderTarget(instance.targetFront.BaseTexture as RenderTarget2D);
+    }
+
+    public static void Present()
+    {
+        instance.graphicsDevice.SetRenderTarget(null);
+
+        instance.spriteBatch.Begin();
+        instance.spriteBatch.Draw(instance.targetFront.BaseTexture, instance.Viewport.Bounds, Color.White);
+        instance.spriteBatch.End();
+
+        instance.SwapTargetBuffer();
+    }
+
+
+    public static void CloneLastFrame(TargetTexture target)
+    {
+        target.CloneData(instance.targetBack);
     }
 
 

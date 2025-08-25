@@ -11,11 +11,11 @@ public class Sprite : ITexture
     public Texture2D BaseTexture => rawTexture.BaseTexture;
 
     //TODO: cambiar vector2 a point al manejar texturas
-    public Vector2 Size => sourceRectangle.Size.ToVector2();
+    public Point Size => sourceRectangle.Size;
 
-    public float Width => sourceRectangle.Width;
+    public int Width => sourceRectangle.Width;
 
-    public float Height => sourceRectangle.Height;
+    public int Height => sourceRectangle.Height;
 
     private readonly Texture rawTexture;
     private readonly Rectangle sourceRectangle;

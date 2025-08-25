@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Glee.Behaviours;
 using Glee.Engine;
+using Glee.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace Glee;
@@ -19,6 +20,8 @@ public class WorldManager
     private readonly Queue<World> worldsToBeAddedOnBottom;
     private readonly Queue<World> worldsToBeRemoved;
 
+    private readonly Queue<(World, Graphics.TargetTexture)> pendingScreenshots; //TODO: refactor screenshots
+
     private bool deleteAll = false;
 
     public WorldManager()
@@ -27,6 +30,8 @@ public class WorldManager
         worldsToBeAddedOnTop = new Queue<World>();
         worldsToBeAddedOnBottom = new Queue<World>();
         worldsToBeRemoved = new Queue<World>();
+
+        pendingScreenshots = new Queue<(World, Graphics.TargetTexture)>();
 
         spotlight = null;
     }
@@ -101,6 +106,13 @@ public class WorldManager
 
     public void Render()
     {
+        while (pendingScreenshots.Count > 0)
+        {
+            (World world, TargetTexture targetTexture) = pendingScreenshots.Dequeue();
+            
+            world.RenderToTexture(targetTexture);
+        }
+
         Spotlight.RenderFrame();
     }
 
@@ -111,7 +123,8 @@ public class WorldManager
     /// <returns>returns true if the stack is empty: close the app</returns>
     public bool UpdateStack()
     {
-        if (deleteAll) {
+        if (deleteAll)
+        {
 
             foreach (World world in loadedWorlds.Reverse())
             {
@@ -146,13 +159,19 @@ public class WorldManager
             spotlight = world;
 
             loadedWorlds.AddLast(world);
-            world.Initialize();   
+            world.Initialize();
         }
         worldsToBeAddedOnTop.Clear();
 
         spotlight = loadedWorlds.Last();
 
         return false;
+    }
+
+
+    public void Screenshot(World world, TargetTexture targetTexture)
+    {
+        pendingScreenshots.Enqueue((world, targetTexture));
     }
 
 }

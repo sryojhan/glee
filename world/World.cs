@@ -128,9 +128,11 @@ public abstract class World : GleeObject
 
     public void RenderFrame()
     {
+        Renderer.BeginFrame();
+        Renderer.Clear(BackgroundColor);
+
         Camera.UpdateMatrix();
 
-        Renderer.Clear(BackgroundColor);
         Renderer.BeginBatch();
 
         if (this is IRenderizable renderizable)
@@ -144,6 +146,8 @@ public abstract class World : GleeObject
         }
 
         Renderer.EndBatch();
+
+        Renderer.Present();
     }
 
 
@@ -189,5 +193,18 @@ public abstract class World : GleeObject
         }
 
         return entity;
+    }
+
+    public void Screenshot(TargetTexture texture)
+    {
+        GleeCore.WorldManager.Screenshot(this, texture);
+    }
+
+
+    internal void RenderToTexture(TargetTexture texture)
+    {
+        Renderer.SetTargetTexture(texture);
+        RenderFrame();
+        Renderer.RemoveTargetTexture();
     }
 }

@@ -11,9 +11,9 @@ public class Texture : ITexture, IDisposable
 {
     public Texture2D BaseTexture { get; set; }
 
-    public Vector2 Size => new(Width, Height);
-    public float Width => BaseTexture.Width;
-    public float Height => BaseTexture.Height;
+    public Point Size => new(Width, Height);
+    public int Width => BaseTexture.Width;
+    public int Height => BaseTexture.Height;
 
     public string Name { get; private set; }
 
@@ -27,6 +27,12 @@ public class Texture : ITexture, IDisposable
         {
             throw new Exception($"Can't load texture {name}");
         }
+    }
+
+
+    protected Texture(string name)
+    {
+        Name = name;
     }
 
     public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
