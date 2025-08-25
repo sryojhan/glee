@@ -9,7 +9,7 @@ namespace Glee.Physics;
 
 public class PhysicsWorld
 {
-    public Vector2 Gravity { get; set; } = new(0, 10.0f);
+    public Vector2 Gravity { get; set; } = new(0, -10.0f);
 
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
@@ -96,7 +96,7 @@ public class PhysicsWorld
         {
             Vector2 previousPosition = body.entity.Position;
 
-            body.Velocity += Gravity * body.GravityMultiplier;
+            body.Velocity += Gravity * body.GravityMultiplier * world.Time.deltaTime;
             body.entity.Position += body.Velocity * world.Time.deltaTime;
 
             if (CheckCollision(body))
