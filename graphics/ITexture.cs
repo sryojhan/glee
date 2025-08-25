@@ -9,9 +9,9 @@ public interface ITexture
 {
     public string Name { get; }
     public Texture2D BaseTexture { get; }
-    public Vector2 Size { get; }
-    public float Width { get; }
-    public float Height { get; }
+    public Point Size { get; }
+    public int Width { get; }
+    public int Height { get; }
 
 
     public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null);

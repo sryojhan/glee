@@ -11,9 +11,9 @@ public class Texture : ITexture, IDisposable
 {
     public Texture2D BaseTexture { get; set; }
 
-    public Vector2 Size => new(Width, Height);
-    public float Width => BaseTexture.Width;
-    public float Height => BaseTexture.Height;
+    public Point Size => new(Width, Height);
+    public int Width => BaseTexture.Width;
+    public int Height => BaseTexture.Height;
 
     public string Name { get; private set; }
 
