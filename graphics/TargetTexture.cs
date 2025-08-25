@@ -30,4 +30,21 @@ public class TargetTexture : Texture
     }
 
 
+    public void CloneData(TargetTexture original)
+    {
+        BaseTexture.Dispose();
+
+        BaseTexture = new RenderTarget2D(
+            graphicsDevice: GleeCore.Renderer.graphicsDevice,
+            width: original.Width,
+            height: original.Height,
+            mipMap: false,
+            preferredFormat: SurfaceFormat.Color,
+            preferredDepthFormat: DepthFormat.None
+        );
+
+        Color[] data = new Color[original.Width * original.Height];
+        original.BaseTexture.GetData(data);
+        BaseTexture.SetData(data);
+    }
 }
