@@ -23,7 +23,6 @@ public class Renderer
         graphicsDevice = null;
         spriteBatch = null;
 
-
         graphics.PreferredBackBufferWidth = width;
         graphics.PreferredBackBufferHeight = height;
 
@@ -115,4 +114,6 @@ public class Renderer
         );
     }
 
+
+    public Viewport Viewport => graphicsDevice.Viewport;
 }
