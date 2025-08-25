@@ -13,13 +13,26 @@ public class Camera
 
     public enum CameraScalingMode
     {
-        ViewportRelative, ConstantPixelsPerUnit
+        ConstantPixelsPerUnit, ViewportRelative
     }
 
     public CameraScalingMode ScalingMode { get; set; }
 
     public float PixelsPerUnit { get; set; } = 64;
     public float Size { get; set; } = 10;
+
+    public float ActiveCameraScale
+    {
+        get
+        {
+            float ppu = PixelsPerUnit;
+
+            if (ScalingMode == CameraScalingMode.ViewportRelative)
+                ppu = ScreenWidth / Size;
+
+            return ppu;
+        }
+    }
 
     public float ScreenWidth => viewport.Width;
     public float ScreenHeight => viewport.Height;
@@ -34,24 +47,19 @@ public class Camera
     public Camera(Viewport viewport)
     {
         this.viewport = viewport;
-        Size = 10;
     }
 
     public void UpdateMatrix()
     {
 
-        float ppu = PixelsPerUnit;
-
-        if (ScalingMode == CameraScalingMode.ViewportRelative)
-        {
-            ppu = ScreenWidth / Size;
-        }
+        float ppu = ActiveCameraScale;
 
 
         ViewMatrix =
-        Matrix.CreateTranslation(new Vector3(-Position, 0f)) *
-        Matrix.CreateRotationZ(Rotation) *
-        Matrix.CreateScale(ppu * Zoom, -ppu * Zoom, 1.0f) *
-        Matrix.CreateTranslation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0.0f);
+        Matrix.CreateTranslation(new Vector3(-Position, 0f))
+        * Matrix.CreateRotationZ(Rotation)
+        * Matrix.CreateScale(ppu * Zoom, ppu * Zoom, 1)
+        * Matrix.CreateTranslation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0.0f)
+        ;
     }
 }
