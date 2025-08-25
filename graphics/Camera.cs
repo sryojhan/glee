@@ -62,4 +62,15 @@ public class Camera
         * Matrix.CreateTranslation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0.0f)
         ;
     }
+
+    public Matrix GetMatrixWithoutUpdating()
+    {
+        float ppu = ActiveCameraScale;
+
+        return Matrix.CreateTranslation(new Vector3(-Position, 0f))
+        * Matrix.CreateRotationZ(Rotation)
+        * Matrix.CreateScale(ppu * Zoom, ppu * Zoom, 1)
+        * Matrix.CreateTranslation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0.0f)
+        ;
+    }
 }
