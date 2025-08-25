@@ -29,6 +29,12 @@ public class Texture : ITexture, IDisposable
         }
     }
 
+
+    protected Texture(string name)
+    {
+        Name = name;
+    }
+
     public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
     {
         Renderer.Render(this, position, size, null, rotation, material);

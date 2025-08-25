@@ -190,4 +190,17 @@ public abstract class World : GleeObject
 
         return entity;
     }
+
+    public void Screenshot(TargetTexture texture)
+    {
+        GleeCore.WorldManager.Screenshot(this, texture);
+    }
+
+
+    internal void RenderToTexture(TargetTexture texture)
+    {
+        Renderer.SetTargetTextureForScreenshot(texture);
+        RenderFrame();
+        Renderer.RemoveTargetTextureForScreenshot();
+    }
 }
