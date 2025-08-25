@@ -20,7 +20,7 @@ public class WorldManager
     private readonly Queue<World> worldsToBeAddedOnBottom;
     private readonly Queue<World> worldsToBeRemoved;
 
-    private readonly Queue<(World, Graphics.TargetTexture)> pendingScreenshots;
+    private readonly Queue<(World, Graphics.TargetTexture)> pendingScreenshots; //TODO: refactor screenshots
 
     private bool deleteAll = false;
 
