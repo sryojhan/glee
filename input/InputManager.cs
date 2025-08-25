@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Glee.Engine;
+using Glee.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace Glee.Input;
@@ -53,9 +54,11 @@ public class InputManager
     }
 
 
+    internal readonly Dictionary<string, InputBinding> bindings = [];
+}
 
-    readonly Dictionary<string, InputBinding> bindings = [];
-
+public static class Input
+{
     public static void Bind(string name, InputBinding bind)
     {
         GleeCore.Input.bindings.Add(name, bind);
@@ -67,4 +70,35 @@ public class InputManager
     public static bool IsJustUp(string name) => GleeCore.Input.bindings[name].IsJustUp;
     public static float Value(string name) => GleeCore.Input.bindings[name].Value;
     public static Vector2 Value2D(string name) => GleeCore.Input.bindings[name].Value2D;
+
+
+
+    //Mouse accessors
+    public static Vector2 MousePosition => GleeCore.Input.Mouse.Position.ToVector2();
+    public static Vector2 MouseDelta => GleeCore.Input.Mouse.PositionDelta.ToVector2();
+    public static Point MousePositionInt => GleeCore.Input.Mouse.Position;
+    public static Point MouseDeltaInt => GleeCore.Input.Mouse.PositionDelta;
+    public static int ScrollWheel => GleeCore.Input.Mouse.ScrollWheel;
+    public static int ScrollWheelDelta => GleeCore.Input.Mouse.ScrollWheelDelta;
+
+
+
+    public static Vector2 MousePositionRelative
+    {
+        get
+        {
+            return MousePosition / GleeCore.Renderer.Viewport.Width;
+        }
+    }
+
+    public static Vector2 MouseWorldPosition
+    {
+        get
+        {
+            Camera cam = GleeCore.WorldManager.Spotlight.Camera;
+            Matrix matrix = Matrix.Invert(cam.GetMatrixWithoutUpdating());
+
+            return Renderer.AdjustPosition(Vector2.Transform(MousePosition, matrix));
+        }
+    }
 }

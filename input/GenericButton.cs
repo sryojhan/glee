@@ -5,7 +5,7 @@ using Glee.Engine;
 namespace Glee.Input;
 
 
-
+//TODO: add mouse delta and scroll wheel
 public class GenericButton : IEquatable<GenericButton>
 {
     private GenericButton() { }
@@ -78,7 +78,7 @@ public class GenericButton : IEquatable<GenericButton>
     {
         return new GenericButton()
         {
-            buttonType = ButtonType.Key,
+            buttonType = ButtonType.Mouse,
             mouse = mouse
         };
     }

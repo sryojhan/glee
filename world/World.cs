@@ -17,6 +17,8 @@ namespace Glee;
 /// </summary>
 public abstract class World : GleeObject
 {
+    public Camera Camera { get; private set; }
+
     public ContentManager Content { get; private set; }
     private readonly Time worldTimeInstance;
 
@@ -50,6 +52,9 @@ public abstract class World : GleeObject
 
         worldTimeInstance = new Time();
         physicsWorld = new(this);
+
+
+        Camera = new Camera(GleeCore.Renderer.Viewport);
     }
 
     public virtual void LoadResources() { }
@@ -86,6 +91,12 @@ public abstract class World : GleeObject
             updatable.Update();
         }
 
+        foreach (IUpdatable entity in updatables)
+        {
+            entity.Update();
+        }
+
+
         if (physicsWorld.ShouldUpdatePhysics())
         {
             float deltaTime = physicsWorld.UpdatePhysicsTime();
@@ -95,10 +106,6 @@ public abstract class World : GleeObject
             Time.deltaTime = deltaTime;
         }
 
-        foreach (IUpdatable entity in updatables)
-        {
-            entity.Update();
-        }
     }
 
 
@@ -121,7 +128,11 @@ public abstract class World : GleeObject
 
     public void RenderFrame()
     {
+        Renderer.BeginFrame();
         Renderer.Clear(BackgroundColor);
+
+        Camera.UpdateMatrix();
+
         Renderer.BeginBatch();
 
         if (this is IRenderizable renderizable)
@@ -135,6 +146,8 @@ public abstract class World : GleeObject
         }
 
         Renderer.EndBatch();
+
+        Renderer.Present();
     }
 
 
@@ -180,5 +193,18 @@ public abstract class World : GleeObject
         }
 
         return entity;
+    }
+
+    public void Screenshot(TargetTexture texture)
+    {
+        GleeCore.WorldManager.Screenshot(this, texture);
+    }
+
+
+    internal void RenderToTexture(TargetTexture texture)
+    {
+        Renderer.SetTargetTexture(texture);
+        RenderFrame();
+        Renderer.RemoveTargetTexture();
     }
 }
