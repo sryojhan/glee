@@ -1,0 +1,89 @@
+using System.Collections.Generic;
+using Glee.Behaviours;
+using Glee.Engine;
+
+namespace Glee.Service;
+
+public class Service: GleeObject
+{ 
+    public bool Enabled { get; set; } = true;
+}
+
+public class Services
+{
+    readonly List<Service> services = [];
+
+    private static Services instance => GleeCore.Services;
+
+
+    public void UpdateServices()
+    {
+        foreach (Service service in services)
+        {
+            if (service.Enabled && service is IUpdatable updatable)
+            {
+                updatable.Update();
+            }
+        }
+    }
+
+    public void RenderServices()
+    {
+        foreach (Service service in services)
+        {
+            if (service.Enabled && service is IRenderizable renderizable)
+            {
+                renderizable.Render();
+            }
+        }
+    }
+
+
+    public static ServiceType Fetch<ServiceType>() where ServiceType : Service
+    {
+        foreach (Service service in instance.services)
+        {
+            if (service is ServiceType type)
+            {
+                return type;
+            }
+        }
+
+        return null;
+    }
+
+
+    public static void Append<ServiceType>(Service service) where ServiceType : Service
+    {
+        instance.services.Add(service);
+    }
+
+
+    public static ServiceType Run<ServiceType>() where ServiceType : Service, new()
+    {
+        ServiceType serv = new();
+        instance.services.Add(serv);
+
+        return serv;
+    }
+
+    public static void Shutdown<ServiceType>() where ServiceType : Service
+    {
+        ServiceType serv = Fetch<ServiceType>();
+
+        if (serv is IRemovableObserver removable)
+            removable.OnRemove();
+
+        instance.services.Remove(serv);
+    }
+
+    public static void Pause<ServiceType>() where ServiceType : Service
+    {
+        Fetch<ServiceType>().Enabled = false;
+    }
+
+    public static void Resume<ServiceType>() where ServiceType : Service
+    {
+        Fetch<ServiceType>().Enabled = true;
+    }
+}
