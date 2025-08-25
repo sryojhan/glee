@@ -23,7 +23,6 @@ public class Renderer
         graphicsDevice = null;
         spriteBatch = null;
 
-
         graphics.PreferredBackBufferWidth = width;
         graphics.PreferredBackBufferHeight = height;
 
@@ -45,12 +44,20 @@ public class Renderer
 
     public static void BeginBatch()
     {
-        instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Camera current = GleeCore.WorldManager.Spotlight.Camera;
+
+        instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: current.ViewMatrix);
     }
 
     public static void BeginBatchWithCustomShader(Material material)
     {
-        instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: material.ShaderSource.effect);
+        Camera current = GleeCore.WorldManager.Spotlight.Camera;
+
+        instance.spriteBatch.Begin(
+            samplerState: SamplerState.PointClamp,
+            effect: material.ShaderSource.effect,
+            transformMatrix: current.ViewMatrix
+        );
     }
 
     public static void EndBatch()
@@ -71,6 +78,8 @@ public class Renderer
 
     public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, float rotation = 0, Material material = null)
     {
+        position = AdjustPosition(position);
+
         Color color = material != null ? material.MainColor : Color.White;
 
         Vector2 centerPoint = new Vector2(texture.Width, texture.Height) * 0.5f;
@@ -100,6 +109,10 @@ public class Renderer
 
     public static void RenderText(string text, Font font, Vector2 position, float rotation = 0)
     {
+        position = AdjustPosition(position);
+
+        float scale = 1.0f / GleeCore.WorldManager.Spotlight.Camera.ActiveCameraScale;
+
         Vector2 size = font.CalculateWidth(text);
 
         instance.spriteBatch.DrawString(
@@ -109,10 +122,18 @@ public class Renderer
             color: Color.White,
             rotation: rotation,
             origin: size * 0.5f,
-            scale: Vector2.One,
+            scale: Vector2.One * scale,
             effects: SpriteEffects.None,
             layerDepth: 0
         );
     }
 
+
+    public static Vector2 AdjustPosition(Vector2 position)
+    {
+        position.Y *= -1;
+        return position;
+    }
+
+    public Viewport Viewport => graphicsDevice.Viewport;
 }
