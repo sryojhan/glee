@@ -17,14 +17,10 @@ public class Collider : Component, IInitializable, IRemovableObserver
         }
     }
 
-    public Collider()
-    {
-        bounds = new Rect();
-    }
-
-
     public void Initialize()
     {
+        bounds ??= new Rect();
+
         PhysicsWorld.RegisterCollider(this);
     }
 
