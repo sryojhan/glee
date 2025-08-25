@@ -13,9 +13,12 @@ public class Renderer
     internal SpriteBatch spriteBatch;
 
 
+    private TargetTexture targetFront, targetBack;
+
     private static Renderer instance => GleeCore.Renderer;
 
-    private TargetTexture currentTargetTexture = null;
+    //TODO: habria que hacer dos pasos para shaders: ScreenShaders y Post Processing pero que en el fondo sean un poco lo mismo
+    //TODO: a lo mejor es interesante guardar varios render targets con el render en cada paso del pipeline: world, ui, post processing
 
     public Renderer(int width, int height, bool fullScreen, float targetFrameRate)
     {
@@ -35,34 +38,34 @@ public class Renderer
         graphics.SynchronizeWithVerticalRetrace = true;
 
         graphics.ApplyChanges();
+
     }
 
     public void Initialise()
     {
         graphicsDevice = GleeCore.Instance.GraphicsDevice;
         spriteBatch = new SpriteBatch(graphicsDevice);
+
+
+        targetFront = new TargetTexture("Front target");
+        targetBack = new TargetTexture("Back target");
     }
+
+
+    internal void SwapTargetBuffer()
+    {
+        (targetFront, targetBack) = (targetBack, targetFront);
+    }
+
 
     public static void BeginBatch()
     {
-        instance.graphicsDevice.SetRenderTarget(
-            instance.currentTargetTexture != null ?
-            instance.currentTargetTexture.BaseTexture as RenderTarget2D :
-            null
-        );
-
         Camera current = GleeCore.WorldManager.Spotlight.Camera;
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: current.ViewMatrix);
     }
 
     public static void BeginBatchWithCustomShader(Material material)
     {
-        instance.graphicsDevice.SetRenderTarget(
-            instance.currentTargetTexture != null ?
-            instance.currentTargetTexture.BaseTexture as RenderTarget2D :
-            null
-        );
-
         Camera current = GleeCore.WorldManager.Spotlight.Camera;
         instance.spriteBatch.Begin(
             samplerState: SamplerState.PointClamp,
@@ -142,40 +145,44 @@ public class Renderer
 
     public static void SetTargetTexture(TargetTexture texture)
     {
-        EndBatch();
-
-        instance.currentTargetTexture = texture;
-        instance.graphicsDevice.SetRenderTarget(instance.currentTargetTexture.BaseTexture as RenderTarget2D);
-        instance.graphicsDevice.Clear(Color.Yellow);
-
-        BeginBatch();
+        instance.graphicsDevice.SetRenderTarget(texture.BaseTexture as RenderTarget2D);
     }
 
 
     public static void RemoveTargetTexture()
     {
-        EndBatch();
+        //instance.graphicsDevice.SetRenderTarget(null);
+        instance.graphicsDevice.SetRenderTarget(instance.targetFront.BaseTexture as RenderTarget2D);
+    }
 
-        instance.currentTargetTexture = null;
+
+    public static void ApplyPostProcessing()
+    {
+        //TODO
+    }
+
+
+    public static void BeginFrame()
+    {
+        instance.graphicsDevice.SetRenderTarget(instance.targetFront.BaseTexture as RenderTarget2D);
+    }
+
+    public static void Present()
+    {
         instance.graphicsDevice.SetRenderTarget(null);
 
-        BeginBatch();
+        instance.spriteBatch.Begin();
+        instance.spriteBatch.Draw(instance.targetFront.BaseTexture, instance.Viewport.Bounds, Color.White);
+        instance.spriteBatch.End();
+
+        instance.SwapTargetBuffer();
     }
 
 
-    internal static void SetTargetTextureForScreenshot(TargetTexture texture)
+    public static void CloneLastFrame(TargetTexture target)
     {
-        instance.currentTargetTexture = texture;
-        instance.graphicsDevice.SetRenderTarget(instance.currentTargetTexture.BaseTexture as RenderTarget2D);
+        target.CloneData(instance.targetBack);
     }
-
-
-    internal static void RemoveTargetTextureForScreenshot()
-    {
-        instance.currentTargetTexture = null;
-        instance.graphicsDevice.SetRenderTarget(null);
-    }
-
 
 
     public static Vector2 AdjustPosition(Vector2 position)
