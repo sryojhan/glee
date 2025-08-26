@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Glee.Audio;
 using Glee.Input;
 using Glee.Graphics;
+using Glee.Service;
 
 
 namespace Glee.Engine;
@@ -33,6 +34,8 @@ public abstract class GleeCore : Game
     /// Gets the sprite batch used for all 2D rendering.
     /// </summary>
     public static Renderer Renderer { get; private set; }
+
+    public static new Services Services { get; private set; }
 
     /// <summary>
     /// Gets the content manager used to load global assets.
@@ -76,6 +79,7 @@ public abstract class GleeCore : Game
             throw new InvalidOperationException($"Only a single Core instance can be created");
         }
 
+
         // Store reference to engine for global member access.
         s_instance = this;
 
@@ -96,6 +100,8 @@ public abstract class GleeCore : Game
 
         // Exit on escape is true by default
         ExitOnEscape = true;
+
+        Services = new Services();
     }
 
     protected override void Initialize()
@@ -144,13 +150,21 @@ public abstract class GleeCore : Game
         WorldManager.ProcessFrame();
         WorldManager.UpdateStack();
 
+
+        Services.UpdateServices();
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        WorldManager.Render();
+        Renderer.BeginFrame();
 
+        WorldManager.Render();
+        Services.RenderServices();
+        
+        
+        Renderer.Present();
 
         base.Draw(gameTime);
     }

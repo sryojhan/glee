@@ -64,6 +64,11 @@ public class Renderer
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: current.ViewMatrix);
     }
 
+    public static void BeginBatchAbsolute()
+    {
+        instance.spriteBatch.Begin();
+    }
+
     public static void BeginBatchWithCustomShader(Material material)
     {
         Camera current = GleeCore.WorldManager.Spotlight.Camera;
@@ -142,6 +147,13 @@ public class Renderer
             layerDepth: 0
         );
     }
+
+
+    public static void RenderAbsoluteText(string text, Font font, Vector2 position)
+    {
+        instance.spriteBatch.DrawString(font.font, text, position, Color.White);
+    }
+
 
     public static void SetTargetTexture(TargetTexture texture)
     {
