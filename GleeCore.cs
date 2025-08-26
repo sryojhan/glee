@@ -105,8 +105,6 @@ public abstract class GleeCore : Game
 
     protected override void Initialize()
     {
-        base.Initialize();
-
         Renderer.Initialise();
 
         // Create a new input manager.
@@ -122,6 +120,15 @@ public abstract class GleeCore : Game
 
         WorldManager.StackWorld(LoadInitialWorld());
         WorldManager.UpdateStack();
+
+
+
+        Services.Run<Log>();
+
+
+
+        base.Initialize();
+
     }
 
     protected abstract World LoadInitialWorld();

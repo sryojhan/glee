@@ -7,21 +7,23 @@ namespace Glee;
 
 public class Log : Service, IRemovableObserver
 {
+    const string RED = "\u001b[31m";
+    const string YELLOW = "\u001b[33m";
+
+
     public void Message(object obj)
     {
-
+        Console.WriteLine(obj.ToString());
     }
 
     public void Error(object obj)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Message(obj);
+        Message(RED + obj);
     }
 
     public void Warning(object obj)
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Message(obj);
+        Message(YELLOW + obj);
     }
 
 

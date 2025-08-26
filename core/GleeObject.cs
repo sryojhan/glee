@@ -30,15 +30,9 @@ public class GleeObject
         return Services.Fetch<ServiceType>();
     }
 
-    private void PrintInternal(string message)
+    protected void Print(object message)
     {
         Get<Log>().Print($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
     }
-
-    protected void Print(object message)
-    {
-        PrintInternal(message.ToString());
-    }
-
 
 }
