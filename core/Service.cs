@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Glee.Behaviours;
 using Glee.Engine;
@@ -12,14 +13,14 @@ public class Service: GleeObject
 
 public class Services
 {
-    readonly List<Service> services = [];
+    readonly Dictionary<Type, Service> services = [];
 
     private static Services instance => GleeCore.Services;
 
 
     public void UpdateServices()
     {
-        foreach (Service service in services)
+        foreach (Service service in services.Values)
         {
             if (service.Enabled && service is IUpdatable updatable)
             {
@@ -32,7 +33,7 @@ public class Services
     {
         Renderer.BeginBatchAbsolute();
 
-        foreach (Service service in services)
+        foreach (Service service in services.Values)
         {
             if (service.Enabled && service is IRenderizable renderizable)
             {
@@ -46,7 +47,7 @@ public class Services
 
     public static ServiceType Fetch<ServiceType>() where ServiceType : Service
     {
-        foreach (Service service in instance.services)
+        foreach (Service service in instance.services.Values)
         {
             if (service is ServiceType type)
             {
@@ -60,14 +61,14 @@ public class Services
 
     public static void Append<ServiceType>(Service service) where ServiceType : Service
     {
-        instance.services.Add(service);
+        instance.services.Add(typeof(ServiceType), service);
     }
 
 
     public static ServiceType Run<ServiceType>() where ServiceType : Service, new()
     {
         ServiceType serv = new();
-        instance.services.Add(serv);
+        instance.services.Add(typeof(ServiceType), serv);
 
         return serv;
     }
@@ -79,7 +80,7 @@ public class Services
         if (serv is IRemovableObserver removable)
             removable.OnRemove();
 
-        instance.services.Remove(serv);
+        instance.services.Remove(typeof(ServiceType));
     }
 
     public static void Pause<ServiceType>() where ServiceType : Service
