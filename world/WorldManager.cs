@@ -106,10 +106,11 @@ public class WorldManager
 
     public void Render()
     {
+        //TODO: physics separation. Physics service will update and access PhysicsWorldData inside the spotlight world
         while (pendingScreenshots.Count > 0)
         {
             (World world, TargetTexture targetTexture) = pendingScreenshots.Dequeue();
-            
+
             world.RenderToTexture(targetTexture);
         }
 
