@@ -25,9 +25,14 @@ public class GleeObject
     }
 
 
+    protected static ServiceType Get<ServiceType>() where ServiceType : Service
+    {
+        return Services.Fetch<ServiceType>();
+    }
+
     private void PrintInternal(string message)
     {
-        Console.WriteLine($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
+        Get<Log>().Print($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
     }
 
     protected void Print(object message)

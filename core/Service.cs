@@ -4,7 +4,7 @@ using Glee.Behaviours;
 using Glee.Engine;
 using Glee.Graphics;
 
-namespace Glee.Service;
+namespace Glee;
 
 public class Service: GleeObject
 { 
