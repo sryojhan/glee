@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Glee.Behaviours;
 using Glee.Engine;
+using Glee.Graphics;
 
 namespace Glee.Service;
 
@@ -29,6 +30,8 @@ public class Services
 
     public void RenderServices()
     {
+        Renderer.BeginBatchAbsolute();
+
         foreach (Service service in services)
         {
             if (service.Enabled && service is IRenderizable renderizable)
@@ -36,6 +39,8 @@ public class Services
                 renderizable.Render();
             }
         }
+
+        Renderer.EndBatch();
     }
 
 

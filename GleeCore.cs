@@ -158,9 +158,13 @@ public abstract class GleeCore : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        WorldManager.Render();
+        Renderer.BeginFrame();
 
+        WorldManager.Render();
         Services.RenderServices();
+        
+        
+        Renderer.Present();
 
         base.Draw(gameTime);
     }
