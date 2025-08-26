@@ -34,6 +34,8 @@ public abstract class GleeCore : Game
     /// </summary>
     public static Renderer Renderer { get; private set; }
 
+    public static new Services Services { get; private set; }
+
     /// <summary>
     /// Gets the content manager used to load global assets.
     /// </summary>
@@ -76,6 +78,7 @@ public abstract class GleeCore : Game
             throw new InvalidOperationException($"Only a single Core instance can be created");
         }
 
+
         // Store reference to engine for global member access.
         s_instance = this;
 
@@ -96,12 +99,12 @@ public abstract class GleeCore : Game
 
         // Exit on escape is true by default
         ExitOnEscape = true;
+
+        Services = new Services();
     }
 
     protected override void Initialize()
     {
-        base.Initialize();
-
         Renderer.Initialise();
 
         // Create a new input manager.
@@ -117,6 +120,15 @@ public abstract class GleeCore : Game
 
         WorldManager.StackWorld(LoadInitialWorld());
         WorldManager.UpdateStack();
+
+
+
+        Services.Run<Log>();
+
+
+
+        base.Initialize();
+
     }
 
     protected abstract World LoadInitialWorld();
@@ -144,13 +156,21 @@ public abstract class GleeCore : Game
         WorldManager.ProcessFrame();
         WorldManager.UpdateStack();
 
+
+        Services.UpdateServices();
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        WorldManager.Render();
+        Renderer.BeginFrame();
 
+        WorldManager.Render();
+        Services.RenderServices();
+        
+        
+        Renderer.Present();
 
         base.Draw(gameTime);
     }

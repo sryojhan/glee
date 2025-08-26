@@ -21,6 +21,7 @@ public interface IRenderizable
     void Render();
 }
 
+//TODO: name idea. Last wish XD
 public interface IRemovableObserver
 {
     void OnRemove();
