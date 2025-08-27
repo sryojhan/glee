@@ -20,7 +20,14 @@ public class Sprite : GleeResource, ITexture
     private readonly Texture rawTexture;
     private readonly Rectangle sourceRectangle;
 
-    public Sprite(Texture texture, string name, Rectangle source) {
+
+    public Sprite()
+    {
+        GleeError.Throw("Tried to create an empty sprite");
+    }
+
+    public Sprite(Texture texture, string name, Rectangle source)
+    {
 
         Name = name;
 
@@ -41,10 +48,16 @@ public class Sprite : GleeResource, ITexture
         Renderer.Render(this, position, size, sourceRectangle, rotation, material);
     }
 
-    public static Sprite Create(Texture texture, string name, Point position, Point size) {
+    public static Sprite Create(Texture texture, string name, Point position, Point size, bool combineName)
+    {
 
-        return Get<Resources>().CreateSprite(texture, name, position, size);
+        return Get<Resources>().CreateSprite(texture, name, position, size, combineName);
     }
 
+
+    public static string CombineName(Texture texture, string spriteName)
+    {
+        return $"{texture.Name}: {spriteName}";
+    }
 
 }

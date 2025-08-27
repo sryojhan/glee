@@ -45,6 +45,11 @@ namespace Glee.Engine
                 return resource;
             }
 
+            if (typeof(ResourceType) == typeof(Sprite))
+            {
+                return LoadSprite(name) as ResourceType;
+            }
+
             ResourceType newResource = new();
 
             if (!newResource.Load(name, GleeCore.Content))
@@ -62,15 +67,27 @@ namespace Glee.Engine
         }
 
 
-        public Sprite CreateSprite(string baseTexture, string spriteName, Point position, Point size)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="baseTexture"></param>
+        /// <param name="spriteName"></param>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="combineName">Whether to combine the name with texture name</param>
+        /// <returns></returns>
+        public Sprite CreateSprite(string baseTexture, string spriteName, Point position, Point size, bool combineName)
         {
 
             Texture texture = Load<Texture>(baseTexture);
-            return CreateSprite(texture, spriteName, position, size);
+            return CreateSprite(texture, spriteName, position, size, combineName);
         }
 
-        public Sprite CreateSprite(Texture baseTexture, string spriteName, Point position, Point size)
+        public Sprite CreateSprite(Texture baseTexture, string spriteName, Point position, Point size, bool combineName)
         {
+            if (combineName) spriteName = Sprite.CombineName(baseTexture, spriteName);
+            
+
             if (resources.ContainsKey(spriteName))
             {
                 GleeError.ResourceAlreadyExists(spriteName);
@@ -78,12 +95,16 @@ namespace Glee.Engine
 
             Sprite spr = new(baseTexture, spriteName, new Rectangle(position, size));
 
-
             resources[spriteName] = spr;
 
             return spr;
         }
 
+
+        public Sprite LoadSpriteFromTexture(Texture texture, string spriteName)
+        {
+            return LoadSprite(Sprite.CombineName(texture, spriteName));
+        }
 
         public Sprite LoadSprite(string name)
         {
