@@ -25,12 +25,33 @@ public class Sprite : GleeResource, ITexture
     protected override IDisposable DisposableObj => null;
 
 
-    public Sprite(Texture texture, string name, Rectangle source)
+    private Sprite(Texture texture, string name, Rectangle source)
     {
         Name = name;
 
         rawTexture = texture;
         sourceRectangle = source;
+    }
+
+    public static Sprite Create(Texture texture, string name, Rectangle source)
+    {
+        if (texture == null)
+        {
+            GleeError.InvalidInitialization($"Sprite [{nameof(texture)} is null]");
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            GleeError.InvalidInitialization($"Sprite [{nameof(name)} is null or empty]");
+        }
+
+        if (source.Left < 0 || source.Right >= texture.Width || source.Top < 0 || source.Bottom >= texture.Height)
+        {
+            GleeError.InvalidInitialization($"Sprite [source rect outside of bounds]");
+        }
+
+
+        return new Sprite(texture, name, source);
     }
 
 
