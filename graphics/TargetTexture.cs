@@ -17,8 +17,10 @@ public class TargetTexture : Texture
     }
 
 
-    public TargetTexture(string name, int width, int height) : base(name)
+    public TargetTexture(string name, int width, int height)
     {
+        Name = name;
+
         BaseTexture = new RenderTarget2D(
             graphicsDevice: GleeCore.Renderer.graphicsDevice,
             width: width,

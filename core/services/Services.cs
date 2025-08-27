@@ -8,6 +8,7 @@ namespace Glee;
 
 public class Service: GleeObject
 { 
+    //TODO: make an interface to implement enabled in various clases (entity, components)
     public bool Enabled { get; set; } = true;
 }
 

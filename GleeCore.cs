@@ -20,6 +20,7 @@ public abstract class GleeCore : Game
 {
     public const string EngineVersion = "1.0";
 
+
     internal static GleeCore s_instance;
 
     /// <summary>
@@ -113,6 +114,10 @@ public abstract class GleeCore : Game
         // Create a new audio controller.
         Audio = new AudioController();
 
+        
+        Services.Run<Log>();
+        Services.Run<Events>();
+        Services.Run<Resources>();
 
         WorldManager = new WorldManager();
 
@@ -122,8 +127,6 @@ public abstract class GleeCore : Game
         WorldManager.UpdateStack();
 
 
-
-        Services.Run<Log>();
 
 
 
@@ -168,11 +171,12 @@ public abstract class GleeCore : Game
 
         WorldManager.Render();
         Services.RenderServices();
-        
-        
+
+
         Renderer.Present();
 
         base.Draw(gameTime);
     }
+
 
 }
