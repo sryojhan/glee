@@ -118,7 +118,9 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     {
         foreach (IUpdatable updatable in updatables)
         {
-            updatable.Update();
+            //TODO: do something to avoid making this conversion everyframe
+            if (((Component)updatable).Enabled)
+                updatable.Update();
         }
     }
 
@@ -126,7 +128,8 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     {
         foreach (IRenderizable renderizable in renderizables)
         {
-            renderizable.Render();
+            if (((Component)renderizable).Enabled)
+                renderizable.Render();
         }
     }
 
