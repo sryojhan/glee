@@ -1,16 +1,16 @@
+using Glee.Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Glee.Graphics;
 
 
 
-public class Sprite : ITexture
+public class Sprite : GleeResource, ITexture
 {
-    public string Name { get; private set; }
     public Texture2D BaseTexture => rawTexture.BaseTexture;
 
-    //TODO: cambiar vector2 a point al manejar texturas
     public Point Size => sourceRectangle.Size;
 
     public int Width => sourceRectangle.Width;
@@ -20,14 +20,19 @@ public class Sprite : ITexture
     private readonly Texture rawTexture;
     private readonly Rectangle sourceRectangle;
 
-    private Sprite(Texture texture, string name, Rectangle source) {
+    public Sprite(Texture texture, string name, Rectangle source) {
 
         Name = name;
 
         rawTexture = texture;
         sourceRectangle = source;
+    }
 
-        texture.RegisterSprite(name, this);
+
+    public override bool Load(string name, ContentManager _)
+    {
+        Name = name;
+        return false;
     }
 
 
@@ -36,13 +41,9 @@ public class Sprite : ITexture
         Renderer.Render(this, position, size, sourceRectangle, rotation, material);
     }
 
-    public static Sprite Create(Texture texture, string name) {
+    public static Sprite Create(Texture texture, string name, Point position, Point size) {
 
-        Sprite spr = texture.GetSprite(name);
-
-        spr ??= new Sprite(texture, name, texture.GetDefinition(name));
-
-        return spr;
+        return Get<Resources>().CreateSprite(texture, name, position, size);
     }
 
 
