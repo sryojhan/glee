@@ -1,9 +1,17 @@
 using System;
+using System.Security.AccessControl;
 
 
 namespace Glee.Engine;
 
-
+/// <summary>
+/// 
+/// List of avaliable extension methods:
+///     - Services => Get
+///     - LOG => Print
+///     - Resources => Load
+/// 
+/// </summary>
 public class GleeObject
 {
     public UID UID { get; private set; } = new UID();
@@ -25,14 +33,20 @@ public class GleeObject
     }
 
 
+
+    protected void Print(object message)
+    {
+        Services.Fetch<Log>().Message($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
+    }
+
     protected static ServiceType Get<ServiceType>() where ServiceType : Service
     {
         return Services.Fetch<ServiceType>();
     }
 
-    protected void Print(object message)
+    protected static ResourceType Load<ResourceType>(string name) where ResourceType : GleeResource, new()
     {
-        Get<Log>().Print($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
+        return Get<Resources>().Load<ResourceType>(name);
     }
 
 }
