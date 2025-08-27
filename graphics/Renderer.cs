@@ -133,7 +133,7 @@ public class Renderer
 
         float scale = 1.0f / GleeCore.WorldManager.Spotlight.Camera.ActiveCameraScale;
 
-        Vector2 size = font.CalculateWidth(text);
+        Vector2 size = font.ComputeSize(text);
 
         instance.spriteBatch.DrawString(
             spriteFont: font.font,
