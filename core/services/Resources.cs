@@ -29,8 +29,9 @@ namespace Glee.Engine
 
 
             factories = new() {
+                { typeof(Font), Font.Create },
+                { typeof(Shader), Shader.Create },
                 { typeof(Texture), Texture.Create },
-                { typeof(Shader), Shader.Create }
             };
 
         }
@@ -175,7 +176,7 @@ namespace Glee.Engine
 
         public Font LoadFont(string name)
         {
-            return null;
+            return Load<Font>(name);
         }
 
 
