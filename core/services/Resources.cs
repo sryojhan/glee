@@ -64,7 +64,8 @@ namespace Glee.Engine
             }
 
 
-            if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory)) {
+            if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory))
+            {
 
                 GleeError.InvalidInitialization(typeof(ResourceType).ToString());
                 return null;
@@ -108,7 +109,7 @@ namespace Glee.Engine
         public Sprite CreateSprite(Texture baseTexture, string spriteName, Point position, Point size, bool combineName)
         {
             if (combineName) spriteName = Sprite.CombineName(baseTexture, spriteName);
-            
+
 
             if (resources.ContainsKey(spriteName))
             {
@@ -191,18 +192,12 @@ namespace Glee.Engine
         }
 
 
-    }
-
-}
-
-
-namespace Glee
-{
-    public static class ResourcesExtension
-    {
-        public static ResourceType Load<ResourceType>(this Engine.GleeObject obj, string name)
+        public void RegisterNewFactory<ResourceType>(GleeResourceFactory factory)
         {
-            return Services.Fetch<Engine.Resources>().Load<ResourceType>(name);
+            factories.Add(typeof(ResourceType), factory);            
         }
+
     }
+
 }
+
