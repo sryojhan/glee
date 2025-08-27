@@ -38,16 +38,19 @@ public class Sprite : GleeResource, ITexture
         if (texture == null)
         {
             GleeError.InvalidInitialization($"Sprite [{nameof(texture)} is null]");
+            return null;
         }
 
         if (string.IsNullOrWhiteSpace(name))
         {
             GleeError.InvalidInitialization($"Sprite [{nameof(name)} is null or empty]");
+            return null;
         }
 
-        if (source.Left < 0 || source.Right >= texture.Width || source.Top < 0 || source.Bottom >= texture.Height)
+        if (source.Left < 0 || source.Right > texture.Width || source.Top < 0 || source.Bottom > texture.Height)
         {
-            GleeError.InvalidInitialization($"Sprite [source rect outside of bounds]");
+            GleeError.InvalidInitialization($"Sprite [source rect outside of bounds Rect({source}) TextureSize({texture.Size})]");
+            return null;
         }
 
 
