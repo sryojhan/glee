@@ -16,24 +16,29 @@ public class Texture : GleeResource, ITexture
     public int Width => BaseTexture.Width;
     public int Height => BaseTexture.Height;
 
+    protected override IDisposable DisposableObj => BaseTexture;
 
-    public override bool Load(string name, ContentManager content)
+    protected Texture() { }
+
+    private Texture(string name, Texture2D texture)
     {
         Name = name;
+        BaseTexture = texture;
+    }
 
+    internal static Texture Create(string name)
+    {
         try
         {
-            BaseTexture = content.Load<Texture2D>($"images/{name}");
-            return true;
+            Texture2D tex = Get<Resources>().ActiveContentManager.Load<Texture2D>($"images/{name}");
+            return new Texture(name, tex);
         }
         catch (ContentLoadException)
         {
-            BaseTexture = null;
             GleeError.AssetNotFound(name);
-            return false;
+            return null;
         }
     }
-
 
     public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
     {

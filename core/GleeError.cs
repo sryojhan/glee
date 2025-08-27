@@ -13,7 +13,7 @@ public class GleeError : Exception
 
     public enum ErrorType
     {
-        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch
+        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch, InvalidInitialization
     }
 
     public ErrorType Error { get; private set; }
@@ -54,5 +54,10 @@ public class GleeError : Exception
     public static void ResourceTypeMismatch(string expected, string value)
     {
         Throw($"Tried to load a {expected} resource as a {value}");
+    }
+
+    public static void InvalidInitialization(string className)
+    {
+        Throw($"Invalid initialization of {className} object", ErrorType.InvalidInitialization);
     }
 }

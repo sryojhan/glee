@@ -6,10 +6,7 @@ namespace Glee.Engine;
 public abstract class GleeResource : GleeObject, IDisposable
 {
     public string Name { get; protected set; }
-    protected IDisposable DisposableObj { get; set; }
-
-
-    public abstract bool Load(string path, ContentManager content);
+    protected abstract IDisposable DisposableObj { get; }
 
 
     public void Dispose()

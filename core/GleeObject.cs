@@ -44,7 +44,7 @@ public class GleeObject
         return Services.Fetch<ServiceType>();
     }
 
-    protected static ResourceType Load<ResourceType>(string name) where ResourceType : GleeResource, new()
+    protected static ResourceType Load<ResourceType>(string name) where ResourceType : GleeResource
     {
         return Get<Resources>().Load<ResourceType>(name);
     }

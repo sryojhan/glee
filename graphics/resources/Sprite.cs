@@ -1,3 +1,4 @@
+using System;
 using Glee.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,25 +22,15 @@ public class Sprite : GleeResource, ITexture
     private readonly Rectangle sourceRectangle;
 
 
-    public Sprite()
-    {
-        GleeError.Throw("Tried to create an empty sprite");
-    }
+    protected override IDisposable DisposableObj => null;
+
 
     public Sprite(Texture texture, string name, Rectangle source)
     {
-
         Name = name;
 
         rawTexture = texture;
         sourceRectangle = source;
-    }
-
-
-    public override bool Load(string name, ContentManager _)
-    {
-        Name = name;
-        return false;
     }
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using Glee.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace Glee.Engine
 {
@@ -14,11 +15,23 @@ namespace Glee.Engine
     //In the future: Sound, Music, Particle, Json, CSV, XML
     public class Resources : Service
     {
-        private Dictionary<string, GleeResource> resources;
+        public delegate GleeResource GleeResourceFactory(string name);
+
+        private readonly Dictionary<Type, GleeResourceFactory> factories;
+        private readonly Dictionary<string, GleeResource> resources;
+
+        //TODO: global and local content managers
+        public ContentManager ActiveContentManager => GleeCore.Content;
 
         public Resources()
         {
             resources = [];
+
+
+            factories = new() {
+                { typeof(Texture), Texture.Create }
+            };
+
         }
 
 
@@ -36,8 +49,8 @@ namespace Glee.Engine
 
 
 
-        //TODO: for now all resources will be loaded globally
-        public new ResourceType Load<ResourceType>(string name) where ResourceType : GleeResource, new()
+        //TODO: now all resources will be loaded globally
+        public new ResourceType Load<ResourceType>(string name) where ResourceType : GleeResource
         {
             if (resources.TryGetValue(name, out GleeResource gleeResouce))
             {
@@ -50,10 +63,19 @@ namespace Glee.Engine
                 return LoadSprite(name) as ResourceType;
             }
 
-            ResourceType newResource = new();
 
-            if (!newResource.Load(name, GleeCore.Content))
+            if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory)) {
+
+                GleeError.InvalidInitialization(typeof(ResourceType).ToString());
                 return null;
+            }
+
+
+            if (factory.Invoke(name) is not ResourceType newResource)
+            {
+                // Exception is thrown inside the factory in case of error
+                return null;
+            }
 
             resources.Add(name, newResource);
 
