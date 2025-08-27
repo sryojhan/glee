@@ -32,7 +32,10 @@ public class GleeObject
         return obj == null;
     }
 
-
+    public static bool operator !(GleeObject obj)
+    {
+        return obj == null;
+    }
 
     protected void Print(object message)
     {
