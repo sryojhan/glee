@@ -63,6 +63,10 @@ namespace Glee.Engine
                 return LoadSprite(name) as ResourceType;
             }
 
+            if (typeof(ResourceType) == typeof(Animation))
+            {
+                return LoadAnimation(name) as ResourceType;
+            }
 
             if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory))
             {
@@ -116,7 +120,9 @@ namespace Glee.Engine
                 GleeError.ResourceAlreadyExists(spriteName);
             }
 
-            Sprite spr = new(baseTexture, spriteName, new Rectangle(position, size));
+            Sprite spr = Sprite.Create(baseTexture, spriteName, new Rectangle(position, size));
+
+            if (!spr) return null;
 
             resources[spriteName] = spr;
 
@@ -131,11 +137,9 @@ namespace Glee.Engine
 
         public Sprite LoadSprite(string name)
         {
-            if (!resources.TryGetValue(name, out GleeResource resource))
-            {
-                GleeError.AssetNotFound(name);
-                return null;
-            }
+            GleeResource resource = Get(name);
+
+            if (!resource) return null;
 
             return Convert<Sprite>(resource);
         }
@@ -143,12 +147,27 @@ namespace Glee.Engine
 
         public Animation CreateAnimation(string name, ICollection<ITexture> frames, float speed)
         {
-            return null;
+            if (resources.ContainsKey(name))
+            {
+                GleeError.ResourceAlreadyExists(name);
+            }
+
+            Animation animation = Animation.Create(name, frames, speed);
+
+            if (!animation) return null;
+
+            resources[name] = animation;
+
+            return animation;
         }
 
         public Animation LoadAnimation(string name)
         {
-            return null;
+            GleeResource resource = Get(name);
+
+            if (!resource) return null;
+
+            return Convert<Animation>(resource);
         }
 
 
