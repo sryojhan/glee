@@ -116,8 +116,8 @@ public abstract class GleeCore : Game
 
         
         Services.Run<Log>();
+        Services.Run<Events>();
         Services.Run<Resources>();
-
 
         WorldManager = new WorldManager();
 
