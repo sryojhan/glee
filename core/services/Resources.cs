@@ -29,7 +29,8 @@ namespace Glee.Engine
 
 
             factories = new() {
-                { typeof(Texture), Texture.Create }
+                { typeof(Texture), Texture.Create },
+                { typeof(Shader), Shader.Create }
             };
 
         }
@@ -71,7 +72,7 @@ namespace Glee.Engine
             if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory))
             {
 
-                GleeError.InvalidInitialization(typeof(ResourceType).ToString());
+                GleeError.ResourceFactoryNotFound(typeof(ResourceType).ToString());
                 return null;
             }
 
@@ -94,13 +95,6 @@ namespace Glee.Engine
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="baseTexture"></param>
-        /// <param name="spriteName"></param>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
         /// <param name="combineName">Whether to combine the name with texture name</param>
         /// <returns></returns>
         public Sprite CreateSprite(string baseTexture, string spriteName, Point position, Point size, bool combineName)
@@ -113,7 +107,6 @@ namespace Glee.Engine
         public Sprite CreateSprite(Texture baseTexture, string spriteName, Point position, Point size, bool combineName)
         {
             if (combineName) spriteName = Sprite.CombineName(baseTexture, spriteName);
-
 
             if (resources.ContainsKey(spriteName))
             {
@@ -173,7 +166,7 @@ namespace Glee.Engine
 
         public Shader LoadShader(string name)
         {
-            return null;
+            return Load<Shader>(name);
         }
 
         public Material LoadMaterial(string name)

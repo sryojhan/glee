@@ -7,13 +7,13 @@ namespace Glee.Engine;
 public class GleeError : Exception
 {
     public static bool StrictMode { get; set; } = false;
-    public static bool Verbose { get; set; } = false;
+    public static bool Verbose { get; set; } = true;
 
     public static ErrorType Last { get; private set; } = ErrorType.None;
 
     public enum ErrorType
     {
-        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch, InvalidInitialization
+        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch, InvalidInitialization, ResourceFactoryNotFound
     }
 
     public ErrorType Error { get; private set; }
@@ -41,23 +41,33 @@ public class GleeError : Exception
     }
 
 
-    public static void AssetNotFound(string asset = "")
+    public static void AssetNotFound(string asset = "", string path = null)
     {
-        Throw($"Failed to load asset '{asset}'.", ErrorType.AssetNotFount);
+        string message = $"Failed to load asset '{asset}'.";
+
+        if (!string.IsNullOrEmpty(path))
+            message += $"Check if the asset exists in the '{path}' folder";
+
+        Throw(message, ErrorType.AssetNotFount);
     }
 
     public static void ResourceAlreadyExists(string resource = "")
     {
-        Throw($"Resource with name {resource} already exists.", ErrorType.ResourceAlreadyExists);
+        Throw($"Resource with name '{resource}' already exists.", ErrorType.ResourceAlreadyExists);
     }
 
     public static void ResourceTypeMismatch(string expected, string value)
     {
-        Throw($"Tried to load a {expected} resource as a {value}");
+        Throw($"Tried to load a '{expected}' resource as a '{value}'");
+    }
+
+    public static void ResourceFactoryNotFound(string resourceType)
+    {
+        Throw($"Tried to create and instance of {resourceType} but no matching factory could be found", ErrorType.ResourceFactoryNotFound);
     }
 
     public static void InvalidInitialization(string className)
     {
-        Throw($"Invalid initialization of {className} object", ErrorType.InvalidInitialization);
+        Throw($"Invalid initialization of '{className}'", ErrorType.InvalidInitialization);
     }
 }
