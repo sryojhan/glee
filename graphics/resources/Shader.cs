@@ -21,7 +21,7 @@ public class Shader : GleeResource
     {
         try
         {
-            Effect effect = GleeCore.Content.Load<Effect>($"shaders/{name}");
+            Effect effect = Get<Resources>().ActiveContentManager.Load<Effect>($"shaders/{name}");
             return new Shader(name, effect);
         }
         catch (ContentLoadException)

@@ -8,7 +8,7 @@ namespace Glee.Engine
 {
 
 
-
+    //TODO: resource container: store globally in the service, and others in each world 
     //Resouce types: Texture, Sprite, Shader, Material, Font, Animation
 
 
@@ -71,7 +71,6 @@ namespace Glee.Engine
 
             if (!factories.TryGetValue(typeof(ResourceType), out GleeResourceFactory factory))
             {
-
                 GleeError.ResourceFactoryNotFound(typeof(ResourceType).ToString());
                 return null;
             }
@@ -171,7 +170,7 @@ namespace Glee.Engine
 
         public Material LoadMaterial(string name)
         {
-            return null;
+            return Load<Material>(name);
         }
 
         public Font LoadFont(string name)
@@ -203,10 +202,20 @@ namespace Glee.Engine
             return output;
         }
 
+        public GleeObject GetSafe(string name)
+        {
+            if (!resources.TryGetValue(name, out GleeResource output))
+            {
+                return null;
+            }
+
+            return output;
+        }
+
 
         public void RegisterNewFactory<ResourceType>(GleeResourceFactory factory)
         {
-            factories.Add(typeof(ResourceType), factory);            
+            factories.Add(typeof(ResourceType), factory);
         }
 
     }
