@@ -14,18 +14,11 @@ public class Material : GleeResource
 
     protected override IDisposable DisposableObj => null;
 
-    public Material(Shader shader)
-    {
-        MainColor = Color.White;
-        //TODO: make a clone of the shader to have custom properties
-        ShaderSource = shader;
-    }
-
-
     private Material(string name, Shader shader)
     {
         Name = name;
         ShaderSource = shader;
+        MainColor = Color.White;
     }
 
     public static Material Create()
@@ -65,7 +58,7 @@ public class Material : GleeResource
             return null;
         }
 
-        return Create(shader.Name);
+        return new Material(shader.Name + DefaultMaterialSuffix, shader);
     }
 
     /// <summary>
