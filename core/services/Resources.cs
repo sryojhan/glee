@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
+using Glee.Assets;
+using Glee.Assets.Text;
 using Glee.Graphics;
 using Microsoft.Xna.Framework.Content;
 
@@ -32,6 +34,8 @@ namespace Glee.Engine
                 { typeof(Font), Font.Create },
                 { typeof(Shader), Shader.Create },
                 { typeof(Texture), Texture.Create },
+                { typeof(TextAsset), TextAsset.Create },
+                { typeof(JSON), JSON.Create },
             };
 
         }
@@ -178,6 +182,28 @@ namespace Glee.Engine
         {
             return Load<Font>(name);
         }
+
+
+        public TextAsset LoadText(string name)
+        {
+            return Load<TextAsset>(name);
+        }
+
+        public JSON LoadJson(string name)
+        {
+            return Load<JSON>(name);
+        }
+
+        public TargetClass LoadJson<TargetClass>(string name) where TargetClass : class
+        {
+            JSON json = Load<JSON>(name);
+
+            if (json)
+                return json.Cast<TargetClass>();
+
+            return null;
+        }
+
 
 
         // Methods for custom resource types outside of the engine

@@ -12,7 +12,7 @@ public class Font : GleeResource
 
     protected override IDisposable DisposableObj => null;
 
-    private Font(SpriteFont font)
+    private Font(string name, SpriteFont font): base(name)
     {
         this.font = font;
     }
@@ -23,7 +23,7 @@ public class Font : GleeResource
         try
         {
             SpriteFont font = Get<Resources>().ActiveContentManager.Load<SpriteFont>($"fonts/{fontName}");
-            return new Font(font);
+            return new Font(fontName, font);
         }
         catch (ContentLoadException)
         {

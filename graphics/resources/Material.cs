@@ -14,7 +14,7 @@ public class Material : GleeResource
 
     protected override IDisposable DisposableObj => null;
 
-    private Material(string name, Shader shader)
+    private Material(string name, Shader shader) : base(name)
     {
         Name = name;
         ShaderSource = shader;

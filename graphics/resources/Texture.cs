@@ -18,15 +18,14 @@ public class Texture : GleeResource, ITexture
 
     protected override IDisposable DisposableObj => BaseTexture;
 
-    protected Texture() { }
+    protected Texture(string name) : base(name) { }
 
-    private Texture(string name, Texture2D texture)
+    private Texture(string name, Texture2D texture): base(name)
     {
-        Name = name;
         BaseTexture = texture;
     }
 
-    internal static Texture Create(string name)
+    public static Texture Create(string name)
     {
         try
         {
