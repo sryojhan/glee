@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Glee.Components;
 using Glee.Engine;
+using Microsoft.Xna.Framework;
 
 
 namespace Glee.Physics;
@@ -9,12 +10,28 @@ namespace Glee.Physics;
 
 public class PhysicsWorld
 {
-    public Vector2 Gravity { get; set; } = new(0, -10.0f);
+    //public Vector2 Gravity { get; set; } = new(0, -10.0f);
+    public Vector2 Gravity { get; set; } = new(0, 0);
 
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
     internal readonly HashSet<Collider> colliders;
     internal readonly HashSet<Body> bodies;
+
+
+    private record struct CollisionRegistry
+    {
+        public Collider A { get; }
+        public Collider B { get; }
+        public CollisionRegistry(Collider first, Collider second)
+        {
+            A = first.GetHashCode() < second.GetHashCode() ? first : second;
+            B = first.GetHashCode() < second.GetHashCode() ? first : second;
+        }
+    }
+
+    private HashSet<CollisionRegistry> collisionThisFrame;
+    private HashSet<CollisionRegistry> collisionLastFrame;
 
     private float lastPhysicsUpdate;
 
@@ -41,6 +58,9 @@ public class PhysicsWorld
 
         colliders = [];
         bodies = [];
+
+        collisionThisFrame = [];
+        collisionLastFrame = [];
 
         TargetPhysicsFrameRate = 50.0f;
 
@@ -89,30 +109,87 @@ public class PhysicsWorld
         return deltaTime;
     }
 
+
+    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver);
+
+    //TODO: Move this to a physics manager
     internal void PhysicsStep()
     {
 
         foreach (Body body in bodies)
         {
-            Vector2 previousPosition = body.entity.Position;
+            //Vector2 validPosition = body.entity.Position;
 
+            //Update the current velocity
             body.Velocity += Gravity * body.GravityMultiplier * world.Time.deltaTime;
-            body.entity.Position += body.Velocity * world.Time.deltaTime;
 
-            if (CheckCollision(body))
+
+            //Separate collisions between axis
+
+
+            if (MathF.Abs(body.Velocity.X) > Utils.Delta)
             {
-                body.Velocity = Vector2.Zero;
-                body.entity.Position = previousPosition;
+                body.entity.Position = body.entity.Position + Utils.Right * body.Velocity.X * world.Time.physicsDeltaTime;
+
+                float maxPenetration = 0;
+
+                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
+                {
+                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Right * body.Velocity.X);
+
+                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
+                        maxPenetration = penetration;
+                }
+
+
+                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
+
+
+                if (MathF.Abs(maxPenetration) > 0)
+                {
+                    
+                    body.Velocity = new Vector2(0, body.Velocity.Y);
+                    body.entity.Position -= Utils.Right * maxPenetration;
+                }
+            }
+
+            if (MathF.Abs(body.Velocity.Y) > Utils.Delta)
+            {
+                body.entity.Position = body.entity.Position + Utils.Up * body.Velocity.Y * world.Time.physicsDeltaTime;
+
+                float maxPenetration = 0;
+
+                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
+                {
+                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Up * body.Velocity.Y);
+
+
+                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
+                        maxPenetration = penetration;
+                }
+
+                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
+
+                if (MathF.Abs(maxPenetration) > 0)
+                {
+                    body.Velocity = new Vector2(body.Velocity.X, 0);
+                    body.entity.Position -= Utils.Up * maxPenetration; 
+                }
+
             }
 
         }
+
+
+        //TODO: physics callbacks
     }
 
 
 
-    public bool CheckCollision(Body body)
+    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision)
     {
         Type bodyType = body.collider.bounds.GetType();
+
         foreach (Collider collider in colliders)
         {
             if (collider == body.collider) continue;
@@ -121,13 +198,47 @@ public class PhysicsWorld
 
             if (!CollisionResolver.TryGetValue((bodyType, colliderType), out ICollisionResolver resolver))
             {
-                throw new Exception($"Cannot check collision between {bodyType} and {colliderType}");
+                //TODO: error
+                GleeError.Throw($"Cannot check collision between {bodyType} and {colliderType}");
+                continue;
             }
 
             bool collision = resolver.Resolve(body.collider.bounds, collider.bounds);
 
             if (collision)
             {
+                onCollision.Invoke(collider, resolver);
+            }
+        }
+    }
+
+
+
+
+    public bool CheckCollision(Body body, out Collider collidedObj, out ICollisionResolver resolver)
+    {
+        collidedObj = null;
+        resolver = null;
+
+        Type bodyType = body.collider.bounds.GetType();
+        foreach (Collider collider in colliders)
+        {
+            if (collider == body.collider) continue;
+
+            Type colliderType = collider.bounds.GetType();
+
+            if (!CollisionResolver.TryGetValue((bodyType, colliderType), out resolver))
+            {
+                //TODO: correct error
+                GleeError.Throw($"Cannot check collision between {bodyType} and {colliderType}");
+                continue;
+            }
+
+            bool collision = resolver.Resolve(body.collider.bounds, collider.bounds);
+
+            if (collision)
+            {
+                collidedObj = collider;
                 return true;
             }
         }

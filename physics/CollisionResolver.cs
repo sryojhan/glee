@@ -8,10 +8,10 @@ namespace Glee.Physics;
 public interface ICollisionResolver
 {
     public bool Resolve(Bounds A, Bounds B);
-
+    public float CalculatePenetration(Bounds A, Bounds B, Vector2 velocityA);
 
     /// <summary>
-     /// Cast ICollisions to the selected Types. The param order doesn't matter and it's automatically asigned the asked position
+    /// Cast ICollisions to the selected Types. The param order doesn't matter and it's automatically asigned the asked position
     /// </summary>
     public static (BoundsA, BoundsB) BoundCast<BoundsA, BoundsB>(Bounds A, Bounds B, bool recursive = false)
     where BoundsA : Bounds
@@ -30,4 +30,9 @@ public interface ICollisionResolver
 
         return (castingA, castingB);
     }
+    
+
+
+    
+
 }
