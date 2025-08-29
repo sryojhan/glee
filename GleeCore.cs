@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using Glee.Audio;
 using Glee.Input;
 using Glee.Graphics;
+using Glee.Assets.Internal;
+using Glee.Assets.Text;
 
 
 namespace Glee.Engine;
@@ -14,6 +16,67 @@ namespace Glee.Engine;
 
 /*
     Glee: Graphic lightweight extensible engine
+*/
+
+
+//TODO: configuracion
+
+/*
+No entiendo a que te refieres con que haga lo del escape opcional? si la idea es que sea un bool para que la configuración decida
+
+- Cerrar juego al pulsar escape
+- Tamaño ventana
+- Nombre de la ventana
+- Fuerza gravedad
+- Target frame rate
+- Vsync activado 
+- IsMouseVisible
+
+
+Adicional
+- Color de fondo por defecto: vale
+- Physics settings adicionales, por ahora no tengo pensado poner nada de esto
+- Audio: no tiene sentido poner esto aqui porque esto va en un xnb, luego ya haré otra forma de poder escribir en tiempo de ejecución en otro tipo de ficheros
+- Opciones de debug:  vale. Haré configurable que se pinten los colliders, los raycast, se muestren los fps, y si el juego se ejecuta o no en modo estricto (el modo estricto lanza excepciones, el modo no estricto continua y hace log del error
+- Escalado de ventana: pixeles por unidad por defecto y modo
+- Logging: mostrar o no logs, con además con configuracion de verbose: all, warnings o errors, y con configuración para mostrar o no un timestamp al escribir el texto, y con opcion para volvar los datos en un log al terminar el juego
+- Image error: configurar que hacer cuando se intente pintar una imagen sin textura, ignorarlo o pintar un cuadrado del color del material
+- Material error: configurar que hacer cuando se intente pintar sin material, usar un color blanco y material por defecto o pintar la textura rosa
+- Capas de render y capas de colisiones
+- Default post processing
+
+
+    Cerrar juego al pulsar Escape → bool
+
+Tamaño ventana → ancho x alto
+
+Nombre de ventana → string
+
+Fuerza gravedad → float
+
+Target frame rate → int
+
+VSync activado → bool
+
+IsMouseVisible → bool
+
+Adicional
+
+Color de fondo por defecto → Color
+
+Opciones de debug → pintar colliders, raycast, FPS, modo estricto/logging de errores
+
+Escalado de ventana → pixeles por unidad, modo (stretch, fit, etc.)
+
+Logging → mostrar logs, verbose level (all/warnings/errors), timestamp, volcado al final del juego
+
+Image error → ignorar / pintar cuadrado del color del material
+
+Material error → usar color/material por defecto / pintar textura rosa
+
+
+
+
 */
 
 public abstract class GleeCore : Game
@@ -83,17 +146,22 @@ public abstract class GleeCore : Game
         // Store reference to engine for global member access.
         s_instance = this;
 
-        // Set the window title
-        Window.Title = title;
-
-        Renderer = new Renderer(width, height, fullScreen, TargetFrameRate);
 
         // Set the core's content manager to a reference of the base Game's
         // content manager.
         Content = base.Content;
 
         // Set the root directory for content.
-        Content.RootDirectory = "content";
+        Content.RootDirectory = "Content";
+
+        JSON.Create("info");
+        Console.WriteLine(GleeCore.Content.Load<TextAssetRaw>("texts/info").Value);
+
+
+        // Set the window title
+        Window.Title = title;
+
+        Renderer = new Renderer(width, height, fullScreen, TargetFrameRate);
 
         // Mouse is visible by default.
         IsMouseVisible = true;
@@ -114,7 +182,7 @@ public abstract class GleeCore : Game
         // Create a new audio controller.
         Audio = new AudioController();
 
-        
+
         Services.Run<Log>();
         Services.Run<Events>();
         Services.Run<Resources>();
