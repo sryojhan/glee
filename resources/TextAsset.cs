@@ -39,7 +39,9 @@ namespace Glee.Assets
         {
             try
             {
-                TextAssetRaw raw = Get<Resources>().ActiveContentManager.Load<TextAssetRaw>($"texts/{name}");
+                ContentManager content = GleeCore.Services != null ? Get<Resources>().ActiveContentManager : GleeCore.Content;
+
+                TextAssetRaw raw = content.Load<TextAssetRaw>($"texts/{name}");
                 return new TextAsset(name, raw.Value);
             }
             catch (ContentLoadException)
