@@ -16,4 +16,9 @@ public static class Utils
         return vector2;
     }
 
+    public const float Delta = 0.00001f;
+    public delegate void Callback();
+
+    public static readonly Vector2 Zero = Vector2.Zero;
+
 }

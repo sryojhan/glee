@@ -11,7 +11,7 @@ public class Body : Component, IInitializable, IRemovableObserver
     public Vector2 Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
 
-    public  Collider collider { get; set; }
+    public Collider collider { get; set; }
 
     public void Initialize()
     {
@@ -25,5 +25,9 @@ public class Body : Component, IInitializable, IRemovableObserver
         PhysicsWorld.UnregisterBody(this);
     }
 
+    public void AddVelocity(Vector2 velocity)
+    {
+        Velocity += velocity;
+    }
 
 }

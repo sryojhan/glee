@@ -153,9 +153,9 @@ public abstract class World : GleeObject
     }
 
 
-    public EntityComposed CreateComposedEntity(string name, Vector2 position, Vector2 size)
+    public EntityComposed CreateComposedEntity(string name, Vector2? position = null, Vector2? size = null)
     {
-        return CreateComposedEntity(name, null, position, size);
+        return CreateComposedEntity(name, null, position ?? Vector2.Zero, size ?? Vector2.One);
     }
 
     public EntityComposed CreateComposedEntity(string name, Entity parent, Vector2 position, Vector2 size)
