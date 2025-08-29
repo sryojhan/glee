@@ -7,7 +7,4 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\.glee_modules\common\common.csproj" />
-  </ItemGroup>
 </Project>

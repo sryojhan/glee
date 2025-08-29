@@ -11,9 +11,8 @@ public class Shader : GleeResource
     internal Effect effect;
     protected override IDisposable DisposableObj => effect;
 
-    private Shader(string name, Effect effect)
+    private Shader(string name, Effect effect): base(name)
     {
-        Name = name;
         this.effect = effect;
     }
 
