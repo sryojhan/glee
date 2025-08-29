@@ -22,9 +22,8 @@ public class Animation : GleeResource
     protected override IDisposable DisposableObj => null;
 
 
-    private Animation(string name, ICollection<ITexture> frames, float speed)
+    private Animation(string name, ICollection<ITexture> frames, float speed): base(name)
     {
-        Name = name;
         Frames = [.. frames];
         BaseSpeed = speed;
     }

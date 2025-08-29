@@ -9,7 +9,9 @@ public class GleeError : Exception
     public static bool StrictMode { get; set; } = false;
     public static bool Verbose { get; set; } = true;
 
-    public static ErrorType Last { get; private set; } = ErrorType.None;
+
+    public record class ErrorContent { public ErrorType Type { get; init; } public string Message { get; init; } }
+    public static ErrorContent Last { get; private set; } = new(){Type = ErrorType.None, Message = ""};
 
     public enum ErrorType
     {
@@ -31,7 +33,7 @@ public class GleeError : Exception
 
     public static void Throw(string message, ErrorType type = ErrorType.Generic)
     {
-        Last = type;
+        Last = new(){Message = message, Type = type};
 
         if (StrictMode)
             throw new GleeError(message, type);

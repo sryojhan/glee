@@ -25,10 +25,8 @@ public class Sprite : GleeResource, ITexture
     protected override IDisposable DisposableObj => null;
 
 
-    private Sprite(Texture texture, string name, Rectangle source)
+    private Sprite(Texture texture, string name, Rectangle source): base(name)
     {
-        Name = name;
-
         rawTexture = texture;
         sourceRectangle = source;
     }
