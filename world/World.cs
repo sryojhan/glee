@@ -147,20 +147,20 @@ public abstract class World : GleeObject
     }
 
 
-    public EntityComposed CreateComposedEntity(string name, Entity parent = null)
+    public Entity CreateEntity(string name, EntityRaw parent = null)
     {
-        return CreateComposedEntity(name, parent, Vector2.Zero, Vector2.One);
+        return CreateEntity(name, parent, Vector2.Zero, Vector2.One);
     }
 
 
-    public EntityComposed CreateComposedEntity(string name, Vector2? position = null, Vector2? size = null)
+    public Entity CreateEntity(string name, Vector2? position = null, Vector2? size = null)
     {
-        return CreateComposedEntity(name, null, position ?? Vector2.Zero, size ?? Vector2.One);
+        return CreateEntity(name, null, position ?? Vector2.Zero, size ?? Vector2.One);
     }
 
-    public EntityComposed CreateComposedEntity(string name, Entity parent, Vector2 position, Vector2 size)
+    public Entity CreateEntity(string name, EntityRaw parent, Vector2 position, Vector2 size)
     {
-        EntityComposed newEntity = new EntityComposed(name, parent, this);
+        Entity newEntity = new Entity(name, parent, this);
 
         worldObjects.Add(newEntity);
 
@@ -174,7 +174,7 @@ public abstract class World : GleeObject
     }
 
 
-    public Entity AddEntity(Entity entity)
+    public EntityRaw AddEntity(EntityRaw entity)
     {
         worldObjects.Add(entity);
 

@@ -1,6 +1,7 @@
 using Glee.Attributes;
 using Glee.Behaviours;
 using Glee.Components;
+using Glee.Engine;
 using Glee.Graphics;
 
 
@@ -8,7 +9,7 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Image))]
-public class Flipbook : Component, IUpdatable, IInitializable
+public class Flipbook : ComponentRaw, IUpdatable, IInitializable
 {
     public Animation animation { get; set; }
 
@@ -30,7 +31,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
 
     public void Initialize()
     {
-        target = GetComponent<Image>();
+        target ??= TryGetComponent<Image>();
     }
 
     public void Update()
@@ -77,7 +78,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
                         CurrentFrame = (CurrentFrame + 1) % TotalFrames;
                         break;
                     }
-                
+
                 case Mode.PingPong:
                     {
 

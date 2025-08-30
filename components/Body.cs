@@ -5,8 +5,8 @@ using Glee.Physics;
 namespace Glee.Components;
 
 
-
-public class Body : Component, IInitializable, IRemovableObserver
+[DependsOn(typeof(Collider))]
+public class Body : ComponentRaw, IInitializable, IRemovableObserver
 {
     public Vector2 Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
@@ -15,7 +15,7 @@ public class Body : Component, IInitializable, IRemovableObserver
 
     public void Initialize()
     {
-        collider = entity.GetComponent<Collider>();
+        collider ??= TryGetComponent<Collider>();
 
         PhysicsWorld.RegisterBody(this);
     }

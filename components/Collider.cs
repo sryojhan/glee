@@ -4,7 +4,7 @@ using Glee.Physics;
 namespace Glee.Components;
 
 
-public class Collider : Component, IInitializable, IRemovableObserver
+public class Collider : ComponentRaw, IInitializable, IRemovableObserver
 {
     private Bounds _bounds = null;
     public Bounds bounds

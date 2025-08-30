@@ -261,7 +261,8 @@ public class PhysicsWorld
 
     public static void RegisterBody(Body body)
     {
-        body.world.physicsWorld.bodies.Add(body);
+        if(body.collider != null)
+            body.world.physicsWorld.bodies.Add(body);
     }
 
     public static void UnregisterBody(Body body)

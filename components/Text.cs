@@ -5,7 +5,7 @@ namespace Glee.Components;
 
 
 
-public class Text : Component, IRenderizable
+public class Text : ComponentRaw, IRenderizable
 {
     // Text properties
     public string Content { get; set; } = "";

@@ -92,7 +92,7 @@ public class Events : Service
             return component.world;
         }
 
-        else if (obj is Entity entity)
+        else if (obj is EntityRaw entity)
         {
             return entity.world;
         }
@@ -114,14 +114,14 @@ public class Events : Service
     }
 
 
-    private static Entity GetEntity(GleeObject obj)
+    private static EntityRaw GetEntity(GleeObject obj)
     {
         if (obj is Component component)
         {
             return component.entity;
         }
 
-        else if (obj is Entity entity)
+        else if (obj is EntityRaw entity)
         {
             return entity;
         }

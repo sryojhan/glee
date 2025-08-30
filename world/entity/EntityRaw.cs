@@ -4,7 +4,7 @@ using Glee.Engine;
 namespace Glee;
 
 
-public class Entity : GleeObject
+public class EntityRaw : GleeObject
 {
     public string Name { get; set; }
     public Vector2 Position { get; set; } = Vector2.Zero;
@@ -17,23 +17,23 @@ public class Entity : GleeObject
     public Vector2 Scale { get; set; } = Vector2.One;
     public float UniformScale { set { Scale = new Vector2(value, value); } }
     public float Rotation { get; protected set; } = 0;
-    public Entity Parent { get; protected set; }
+    public EntityRaw Parent { get; protected set; }
     public World world { get; protected set; }
     public Time Time => world.Time;
 
-    public Entity(World world)
+    public EntityRaw(World world)
     {
         Name = "New entity";
         this.world = world;
     }
 
-    public Entity(string name, World world)
+    public EntityRaw(string name, World world)
     {
         Name = name;
         this.world = world;
     }
 
-    public Entity(string name, Entity parent, World world) : this(name, world)
+    public EntityRaw(string name, EntityRaw parent, World world) : this(name, world)
     {
         Parent = parent;
     }
@@ -46,6 +46,8 @@ public class Entity : GleeObject
 
 
     //Alignments
+
+    //TODO: move this methods to an inner class
 
     public void AlignTopLeft(Vector2 point)
     {

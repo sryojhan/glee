@@ -7,7 +7,7 @@ using System;
 namespace Glee;
 
 
-public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
+public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable
 {
     readonly GleeContainer components;
 
@@ -15,12 +15,12 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     readonly List<IRenderizable> renderizables;
 
 
-    public EntityComposed(string name, World world) : this(name, null, world)
+    public Entity(string name, World world) : this(name, null, world)
     {
 
     }
 
-    public EntityComposed(string name, Entity parent, World world) : base(name, parent, world)
+    public Entity(string name, EntityRaw parent, World world) : base(name, parent, world)
     {
         components = [];
 
@@ -29,7 +29,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     }
 
 
-    public ComponentType CreateComponent<ComponentType>() where ComponentType : Component, new()
+    public ComponentType CreateComponent<ComponentType>() where ComponentType : ComponentRaw, new()
     {
         CreateDependencies<ComponentType>();
 
@@ -70,7 +70,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
             {
                 if (HasComponent(requirement.Value)) continue;
 
-                typeof(EntityComposed).
+                typeof(Entity).
                 GetMethod(nameof(CreateComponent)).
                 MakeGenericMethod(requirement.Value).Invoke(this, null);
             }
@@ -81,7 +81,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public bool HasComponent(Type componentType)
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp.GetType() == componentType) return true;
         }
@@ -89,9 +89,9 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
         return false;
     }
 
-    public ComponentType GetComponent<ComponentType>() where ComponentType : Component
+    public ComponentType GetComponent<ComponentType>() where ComponentType : ComponentRaw
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp is ComponentType found)
             {
@@ -105,7 +105,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public void Initialize()
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp is IInitializable initializable)
             {
@@ -119,7 +119,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
         foreach (IUpdatable updatable in updatables)
         {
             //TODO: do something to avoid making this conversion everyframe
-            if (((Component)updatable).Enabled)
+            if (((ComponentRaw)updatable).Enabled)
                 updatable.Update();
         }
     }
@@ -128,7 +128,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     {
         foreach (IRenderizable renderizable in renderizables)
         {
-            if (((Component)renderizable).Enabled)
+            if (((ComponentRaw)renderizable).Enabled)
                 renderizable.Render();
         }
     }

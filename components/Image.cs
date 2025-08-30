@@ -6,10 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 
-
 namespace Glee.Components;
 
-public class Image : Component, IRenderizable
+public class Image : ComponentRaw, IRenderizable
 {
     public ITexture texture { get; set; }
     public Material material { get; set; }
