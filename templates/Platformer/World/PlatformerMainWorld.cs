@@ -7,7 +7,7 @@ using Glee.Input;
 using Controller = PlatformerCharacterController;
 
 
-public class MainWorld : World, IUpdatable
+public class PlatformerMainWorld : World, IUpdatable
 {
     public Controller Player { get; private set; }
     Texture groundTexture;
