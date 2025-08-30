@@ -154,8 +154,7 @@ public abstract class GleeCore : Game
         // Set the root directory for content.
         Content.RootDirectory = "Content";
 
-        JSON.Create("info");
-        Console.WriteLine(GleeCore.Content.Load<TextAssetRaw>("texts/info").Value);
+        JSON config = JSON.Create("info");
 
 
         // Set the window title

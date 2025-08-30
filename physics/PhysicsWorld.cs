@@ -10,8 +10,7 @@ namespace Glee.Physics;
 
 public class PhysicsWorld
 {
-    //public Vector2 Gravity { get; set; } = new(0, -10.0f);
-    public Vector2 Gravity { get; set; } = new(0, 0);
+    public Vector2 Gravity { get; set; } = new(0, -10.0f);
 
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
@@ -261,8 +260,9 @@ public class PhysicsWorld
 
     public static void RegisterBody(Body body)
     {
-        if(body.collider != null)
+        if (body.collider != null)
             body.world.physicsWorld.bodies.Add(body);
+        else GleeError.Throw("Tried to add a body with no collider assigned"); //TODO: custom error
     }
 
     public static void UnregisterBody(Body body)

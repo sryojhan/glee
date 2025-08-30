@@ -27,7 +27,24 @@ public class Body : ComponentRaw, IInitializable, IRemovableObserver
 
     public void AddVelocity(Vector2 velocity)
     {
+        Velocity += velocity * Time.physicsDeltaTime;
+    }
+
+    public void AddInstantVelocity(Vector2 velocity)
+    {
         Velocity += velocity;
     }
+
+
+    public void SetHorizontalVelocity(float velocity)
+    {
+        Velocity = new Vector2(velocity, Velocity.Y);
+    }
+
+    public void SetVerticalVelocity(float velocity)
+    {
+        Velocity = new Vector2(Velocity.X, velocity);
+    }
+
 
 }

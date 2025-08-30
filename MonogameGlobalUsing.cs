@@ -6,5 +6,5 @@ global using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 //Input
 global using Keys = Microsoft.Xna.Framework.Input.Keys;
-global using Buttons = Microsoft.Xna.Framework.Input.Buttons;
-global using MouseButton = Glee.Input.MouseButton;
+global using Gamepad = Microsoft.Xna.Framework.Input.Buttons;
+global using MouseButton = Glee.Input.MouseButton; //TODO: change name?

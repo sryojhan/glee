@@ -147,7 +147,7 @@ public abstract class World : GleeObject
     }
 
 
-    public Entity CreateEntity(string name, EntityRaw parent = null)
+    public Entity CreateEntity(string name, EntityRaw parent)
     {
         return CreateEntity(name, parent, Vector2.Zero, Vector2.One);
     }

@@ -25,19 +25,24 @@ public class Flipbook : ComponentRaw, IUpdatable, IInitializable
 
     public float SpeedMultiplier { get; set; } = 1;
 
-    private Image target;
+    private Image image;
+    public Image Target
+    {
+        get => image;
+        init { image = value; }
+    }
     private float frameTimer = 0;
     private bool pingPongDirection = true;
 
     public void Initialize()
     {
-        target ??= TryGetComponent<Image>();
+        image ??= TryGetComponent<Image>();
     }
 
     public void Update()
     {
         if (animation == null) return;
-        if (target == null) return;
+        if (Target == null) return;
 
         if (!Playing) return;
 
@@ -53,7 +58,7 @@ public class Flipbook : ComponentRaw, IUpdatable, IInitializable
     public void AdvanceFrame()
     {
         if (animation == null) return;
-        if (target == null) return;
+        if (Target == null) return;
 
 
         if (TotalFrames == 1)
@@ -112,6 +117,6 @@ public class Flipbook : ComponentRaw, IUpdatable, IInitializable
         bool reversed = PlayMode == Mode.Reverse || PlayMode == Mode.ReverseLoop;
 
         int targetFrame = !reversed ? CurrentFrame : TotalFrames - CurrentFrame - 1;
-        target.texture = animation.Frames[targetFrame];
+        Target.texture = animation.Frames[targetFrame];
     }
 }

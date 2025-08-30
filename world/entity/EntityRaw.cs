@@ -8,7 +8,7 @@ public class EntityRaw : GleeObject
 {
     public string Name { get; set; }
     public Vector2 Position { get; set; } = Vector2.Zero;
-    public Vector2 Size { get; set; } = Vector2.Zero;
+    public Vector2 Size { get; set; } = Vector2.One;
     public Vector2 HalfSize => Size * 0.5f;
     public float UniformSize { set { Size = new Vector2(value, value); } }
     public float Width { get { return Size.X; } set { Size = new Vector2(value, Size.Y); } }

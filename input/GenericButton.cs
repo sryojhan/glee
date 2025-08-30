@@ -12,7 +12,7 @@ public class GenericButton : IEquatable<GenericButton>
 
     private Keys key = Keys.None;
     private MouseButton mouse = MouseButton.None;
-    private Buttons gamepad = Buttons.None;
+    private Gamepad gamepad = Gamepad.None;
 
     private enum ContinousButton
     {
@@ -83,7 +83,7 @@ public class GenericButton : IEquatable<GenericButton>
         };
     }
 
-    public static implicit operator GenericButton(Buttons gamepad)
+    public static implicit operator GenericButton(Gamepad gamepad)
     {
         return new GenericButton()
         {
@@ -110,8 +110,8 @@ public class GenericButton : IEquatable<GenericButton>
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
                     ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].LeftTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
                     ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].RightTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Buttons.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Buttons.RightThumbstickDown),
+                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
@@ -144,8 +144,8 @@ public class GenericButton : IEquatable<GenericButton>
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
                     ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasLeftTriggerJustDown(),
                     ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasRightTriggerJustDown(),
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustPressed(Buttons.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Buttons.RightThumbstickDown),
+                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustPressed(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
@@ -168,8 +168,8 @@ public class GenericButton : IEquatable<GenericButton>
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
                     ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasLeftTriggerJustUp(),
                     ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasRightTriggerJustUp(),
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Buttons.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Buttons.RightThumbstickDown),
+                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
