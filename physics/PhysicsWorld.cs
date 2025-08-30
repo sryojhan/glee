@@ -209,8 +209,8 @@ public class PhysicsWorld
     {
         foreach (CollisionRegistry registry in collisionThisFrame)
         {
-            ICollisionObserver A = registry.A.entity as ICollisionObserver;
-            ICollisionObserver B = registry.B.entity as ICollisionObserver;
+            ICollisionStayObserver A = registry.A.entity as ICollisionStayObserver;
+            ICollisionStayObserver B = registry.B.entity as ICollisionStayObserver;
 
             if (collisionLastFrame.Contains(registry))
             {
@@ -223,22 +223,26 @@ public class PhysicsWorld
             else
             {
                 // collision begin
-                A?.OnCollisionBegin(registry.B);
-                B?.OnCollisionBegin(registry.A);
+                ICollisionBeginObserver A_begin = registry.A.entity as ICollisionBeginObserver;
+                ICollisionBeginObserver B_begin = registry.B.entity as ICollisionBeginObserver;
+
+                A_begin?.OnCollisionBegin(registry.B);
+                B_begin?.OnCollisionBegin(registry.A);
 
                 A?.OnCollision(registry.B);
                 B?.OnCollision(registry.A);
+
             }
         }
 
         //If collisions last frame have not been cleared, it means it doesn't collide any more. Hence we call collisionEnd
         foreach (CollisionRegistry registry in collisionLastFrame)
         {
-            ICollisionObserver A = registry.A.entity as ICollisionObserver;
-            ICollisionObserver B = registry.B.entity as ICollisionObserver;
+            ICollisionEndObserver A_end = registry.A.entity as ICollisionEndObserver;
+            ICollisionEndObserver B_end = registry.B.entity as ICollisionEndObserver;
 
-            A.OnCollisionEnd(registry.B);
-            B.OnCollisionEnd(registry.A);
+            A_end.OnCollisionEnd(registry.B);
+            B_end.OnCollisionEnd(registry.A);
         }
 
 

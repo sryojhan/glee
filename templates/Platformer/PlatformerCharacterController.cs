@@ -7,7 +7,7 @@ using System;
 namespace Glee.Templates.Platformer;
 
 //TODO: Create a EntityComplex?? Class that both manages components and supports custom engine callbacks (update, init, render, physics)
-public class PlatformerCharacterController : EntityRaw, IInitializable, IUpdatable, IRenderizable, IPhysicsUpdatable, ICollisionObserver, ITriggerObserver
+public class PlatformerCharacterController : EntityRaw, IEverything
 {
     public Image ImageComponent { get; }
     public Collider ColliderComponent { get; }
@@ -77,6 +77,11 @@ public class PlatformerCharacterController : EntityRaw, IInitializable, IUpdatab
 
     public void OnTriggernd(Collider other)
     {
+    }
+
+    public void OnRemove()
+    {
+        
     }
 }
 
