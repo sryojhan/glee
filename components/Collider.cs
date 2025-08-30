@@ -17,6 +17,9 @@ public class Collider : ComponentRaw, IInitializable, IRemovableObserver
         }
     }
 
+    public bool Trigger { set; get; } = false;
+
+
     public void Initialize()
     {
         bounds ??= new Rect();

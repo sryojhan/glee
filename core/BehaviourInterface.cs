@@ -1,5 +1,6 @@
 
 
+using Glee.Components;
 using Microsoft.Xna.Framework;
 
 namespace Glee.Behaviours;
@@ -33,19 +34,19 @@ public interface IPhysicsUpdatable
     void PhysicsUpdate();
 }
 
+//TODO: collision info class? 
 public interface ICollisionObserver
 {
-    void CollisionBegin();
-    void CollisionPersist();
-    void CollisionEnd();
+    void OnCollisionBegin(Collider other);
+    void OnCollision(Collider other);
+    void OnCollisionEnd(Collider other);
 }
 
 public interface ITriggerObserver
 {
-    void TriggerBegin();
-    void TriggerPersist();
-    void Triggernd();
-
+    void OnTriggerBegin(Collider other);
+    void OnTrigger(Collider other);
+    void OnTriggernd(Collider other);
 }
 
 public interface IWorldLifecycleOberserved

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Glee.Behaviours;
 using Glee.Components;
 using Glee.Engine;
 using Microsoft.Xna.Framework;
@@ -25,7 +26,7 @@ public class PhysicsWorld
         public CollisionRegistry(Collider first, Collider second)
         {
             A = first.GetHashCode() < second.GetHashCode() ? first : second;
-            B = first.GetHashCode() < second.GetHashCode() ? first : second;
+            B = first.GetHashCode() < second.GetHashCode() ? second : first;
         }
     }
 
@@ -132,6 +133,8 @@ public class PhysicsWorld
 
                 if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
                     maxPenetration = penetration;
+
+                collisionThisFrame.Add(new CollisionRegistry(body.collider, collider));
             }
 
 
@@ -169,7 +172,7 @@ public class PhysicsWorld
         }
 
 
-        //TODO: physics callbacks
+        ManageCollisionCallbacks();
     }
 
 
@@ -202,36 +205,45 @@ public class PhysicsWorld
 
 
 
-
-    public bool CheckCollision(Body body, out Collider collidedObj, out ICollisionResolver resolver)
+    private void ManageCollisionCallbacks()
     {
-        collidedObj = null;
-        resolver = null;
-
-        Type bodyType = body.collider.bounds.GetType();
-        foreach (Collider collider in colliders)
+        foreach (CollisionRegistry registry in collisionThisFrame)
         {
-            if (collider == body.collider) continue;
+            ICollisionObserver A = registry.A.entity as ICollisionObserver;
+            ICollisionObserver B = registry.B.entity as ICollisionObserver;
 
-            Type colliderType = collider.bounds.GetType();
-
-            if (!CollisionResolver.TryGetValue((bodyType, colliderType), out resolver))
+            if (collisionLastFrame.Contains(registry))
             {
-                //TODO: correct error
-                GleeError.Throw($"Cannot check collision between {bodyType} and {colliderType}");
-                continue;
+                // collision stay
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
+
+                collisionLastFrame.Remove(registry);
             }
-
-            bool collision = resolver.Resolve(body.collider.bounds, collider.bounds);
-
-            if (collision)
+            else
             {
-                collidedObj = collider;
-                return true;
+                // collision begin
+                A?.OnCollisionBegin(registry.B);
+                B?.OnCollisionBegin(registry.A);
+
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
             }
         }
 
-        return false;
+        //If collisions last frame have not been cleared, it means it doesn't collide any more. Hence we call collisionEnd
+        foreach (CollisionRegistry registry in collisionLastFrame)
+        {
+            ICollisionObserver A = registry.A.entity as ICollisionObserver;
+            ICollisionObserver B = registry.B.entity as ICollisionObserver;
+
+            A.OnCollisionEnd(registry.B);
+            B.OnCollisionEnd(registry.A);
+        }
+
+
+        collisionLastFrame = collisionThisFrame;
+        collisionThisFrame = [];
     }
 
 

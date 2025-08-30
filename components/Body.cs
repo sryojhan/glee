@@ -6,7 +6,7 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Collider))]
-public class Body : ComponentRaw, IInitializable, IRemovableObserver
+public class Body : ComponentRaw, IInitializable, IRemovableObserver, ICollisionObserver
 {
     public Vector2 Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
@@ -46,5 +46,20 @@ public class Body : ComponentRaw, IInitializable, IRemovableObserver
         Velocity = new Vector2(Velocity.X, velocity);
     }
 
+
+    public void OnCollision(Collider other)
+    {
+        Print("AAAAAAAAA");
+    }
+
+    public void OnCollisionBegin(Collider other)
+    {
+        Print("Joder joder");
+    }
+
+    public void OnCollisionEnd(Collider other)
+    {
+        Print("Por fin!!!");
+    }
 
 }
