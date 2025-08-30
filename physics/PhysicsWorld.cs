@@ -109,7 +109,7 @@ public class PhysicsWorld
     }
 
 
-    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver);
+    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver, Vector2 direction);
 
     //TODO: Move this to a physics manager
     internal void PhysicsStep()
@@ -125,54 +125,43 @@ public class PhysicsWorld
 
             //Separate collisions between axis
 
+            float maxPenetration = 0;
+            void OnCollision(Collider collider, ICollisionResolver resolver, Vector2 direction)
+            {
+                float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction);
+
+                if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
+                    maxPenetration = penetration;
+            }
+
+
 
             if (MathF.Abs(body.Velocity.X) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Right * body.Velocity.X * world.Time.physicsDeltaTime;
 
-                float maxPenetration = 0;
-
-                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
-                {
-                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Right * body.Velocity.X);
-
-                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
-                        maxPenetration = penetration;
-                }
-
-
-                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
-
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Right * body.Velocity.X);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    
+
                     body.Velocity = new Vector2(0, body.Velocity.Y);
                     body.entity.Position -= Utils.Right * maxPenetration;
                 }
             }
 
+            maxPenetration = 0;
+
             if (MathF.Abs(body.Velocity.Y) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Up * body.Velocity.Y * world.Time.physicsDeltaTime;
 
-                float maxPenetration = 0;
-
-                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
-                {
-                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Up * body.Velocity.Y);
-
-
-                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
-                        maxPenetration = penetration;
-                }
-
-                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Up * body.Velocity.Y);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
                     body.Velocity = new Vector2(body.Velocity.X, 0);
-                    body.entity.Position -= Utils.Up * maxPenetration; 
+                    body.entity.Position -= Utils.Up * maxPenetration;
                 }
 
             }
@@ -185,7 +174,7 @@ public class PhysicsWorld
 
 
 
-    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision)
+    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision, Vector2 direction)
     {
         Type bodyType = body.collider.bounds.GetType();
 
@@ -206,7 +195,7 @@ public class PhysicsWorld
 
             if (collision)
             {
-                onCollision.Invoke(collider, resolver);
+                onCollision.Invoke(collider, resolver, direction);
             }
         }
     }
