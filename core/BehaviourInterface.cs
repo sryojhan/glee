@@ -5,7 +5,7 @@ namespace Glee.Behaviours;
 // Bundles
 public interface IBehaviour : IInitializable, IUpdatable { }
 public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
-public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, IRemovableObserver { }
+public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, ICleanable { }
 
 
 
@@ -25,10 +25,9 @@ public interface IRenderizable
     void Render();
 }
 
-//TODO: name idea. Last wish XD
-public interface IRemovableObserver
+public interface ICleanable
 {
-    void OnRemove();
+    void CleanUp();
 }
 
 

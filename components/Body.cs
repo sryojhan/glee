@@ -6,7 +6,7 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Collider))]
-public class Body : ComponentRaw, IInitializable, IRemovableObserver, ICollisionObserver
+public class Body : ComponentRaw, IInitializable, ICleanable, ICollisionObserver
 {
     public Vector Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
@@ -20,14 +20,14 @@ public class Body : ComponentRaw, IInitializable, IRemovableObserver, ICollision
         PhysicsWorld.RegisterBody(this);
     }
 
-    public void OnRemove()
+    public void CleanUp()
     {
         PhysicsWorld.UnregisterBody(this);
     }
 
-    public void AddVelocity(Vector velocity)
+    public void Accelerate(Vector acceleration)
     {
-        Velocity += velocity * Time.physicsDeltaTime;
+        Velocity += acceleration * Time.physicsDeltaTime;
     }
 
     public void AddInstantVelocity(Vector velocity)

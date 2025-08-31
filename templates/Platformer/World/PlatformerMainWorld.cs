@@ -60,7 +60,7 @@ public class PlatformerMainWorld : World, IUpdatable
         Body playerBody = Player.BodyComponent;
         //playerBody.SetHorizontalVelocity(horizontal * 10);
 
-        playerBody.AddVelocity(Utils.Right * horizontal * 10);
+        playerBody.Accelerate(Utils.Right * horizontal * 10);
 
 
         if (isJumping)

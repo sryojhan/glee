@@ -81,7 +81,7 @@ public class PlatformerCharacterController : EntityRaw, IEverything
     {
     }
 
-    public void OnRemove()
+    public void CleanUp()
     {
 
     }
