@@ -2,6 +2,7 @@ using Glee.Engine;
 using Glee.Components;
 using Glee.Behaviours;
 using System;
+using Glee.Graphics;
 
 
 namespace Glee.Templates.Platformer;
@@ -34,17 +35,18 @@ public class PlatformerCharacterController : EntityRaw, IEverything
     {
         ColliderComponent.Initialize();
         BodyComponent.Initialize();
+
+        ImageComponent.material = Material.Default;
     }
 
 
     public void Update()
     {
-
+        ImageComponent.material.MainColor = ColliderComponent.IsGrounded() ? Color.SeaGreen : Color.White;
     }
 
     public void PhysicsUpdate()
     {
-
     }
 
 

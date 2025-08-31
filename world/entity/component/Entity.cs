@@ -16,6 +16,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
     readonly List<IUpdatable> updatables;
     readonly List<IRenderizable> renderizables;
 
+    //TODO: physics loop components
 
     public Entity(string name, World world) : this(name, null, world)
     {

@@ -37,10 +37,7 @@ public class Collider : ComponentRaw, IInitializable, IRemovableObserver
     public bool IsGrounded()
     {
         Vector bottom = Utils.Alignment.Bottom(entity);
-
-
-
-        return false;
+        return Physics.Physics.Raycast(bottom, Utils.Down, distance: 0.01f, exclusionList: [entity]);
     }
 
 }
