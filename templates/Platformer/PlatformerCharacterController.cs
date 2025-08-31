@@ -42,15 +42,15 @@ public class PlatformerCharacterController : EntityRaw, IEverything
 
     }
 
+    public void PhysicsUpdate()
+    {
+
+    }
+
 
     public void Render()
     {
         ImageComponent.Render();
-    }
-
-    public void PhysicsUpdate()
-    {
-
     }
 
     public void OnCollisionBegin(Collider other)
@@ -81,7 +81,7 @@ public class PlatformerCharacterController : EntityRaw, IEverything
 
     public void OnRemove()
     {
-        
+
     }
 }
 

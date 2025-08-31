@@ -24,7 +24,7 @@ public class PlatformerMainWorld : World, IUpdatable
         InitialiseScenery();
     }
 
-    private Entity CreatePlatform(Vector2 position, Vector2 size)
+    private Entity CreatePlatform(Vector position, Vector size)
     {
         Entity platform = CreateEntity("Platform", position, size);
         platform.CreateComponent<Collider>();
@@ -47,7 +47,7 @@ public class PlatformerMainWorld : World, IUpdatable
 
     private void InitialiseScenery()
     {
-        CreatePlatform(position: new Vector2(0, -3), size: new Vector2(10, 1)).Name = "Ground";
+        CreatePlatform(position: new Vector(0, -3), size: new Vector(10, 1)).Name = "Ground";
     }
 
 

@@ -202,21 +202,21 @@ public class GenericButton : IEquatable<GenericButton>
         }
     }
 
-    public Vector2 Value2D
+    public Vector Value2D
     {
         get
         {
             return buttonType switch
             {
                 ButtonType.None => throw new Exception("Using non-initialized generic buttons"),
-                ButtonType.Key => Vector2.Zero,
-                ButtonType.Mouse => Vector2.Zero,
-                ButtonType.Gamepad => Vector2.Zero,
+                ButtonType.Key => Vector.Zero,
+                ButtonType.Mouse => Vector.Zero,
+                ButtonType.Gamepad => Vector.Zero,
                 ButtonType.Continous => continousButton switch
                 {
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
-                    ContinousButton.LeftTrigger => Vector2.Zero,
-                    ContinousButton.RightTrigger => Vector2.Zero,
+                    ContinousButton.LeftTrigger => Vector.Zero,
+                    ContinousButton.RightTrigger => Vector.Zero,
                     ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].LeftThumbStick,
                     ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].RightThumbStick,
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")

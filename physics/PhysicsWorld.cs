@@ -127,7 +127,7 @@ public class PhysicsWorld
             //Separate collisions between axis
 
             float maxPenetration = 0;
-            void OnCollision(Collider collider, ICollisionResolver resolver, Vector2 direction)
+            void OnCollision(Collider collider, ICollisionResolver resolver, Vector direction)
             {
                 float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction);
 

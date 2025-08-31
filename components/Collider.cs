@@ -1,3 +1,4 @@
+using System.Numerics;
 using Glee.Behaviours;
 using Glee.Physics;
 
@@ -31,4 +32,15 @@ public class Collider : ComponentRaw, IInitializable, IRemovableObserver
     {
         PhysicsWorld.UnregisterCollider(this);
     }
+
+
+    public bool IsGrounded()
+    {
+        Vector bottom = Utils.Alignment.Bottom(entity);
+
+
+
+        return false;
+    }
+
 }

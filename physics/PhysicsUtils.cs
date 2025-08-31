@@ -11,8 +11,8 @@ public static class Physics
 {
     public static bool Raycast
     (
-        Vector2 origin,
-        Vector2 direction,
+        Vector origin,
+        Vector direction,
         float distance = float.MaxValue,
         World world = null,
         HashSet<EntityRaw> exclusionList = null
@@ -24,8 +24,8 @@ public static class Physics
 
     public static bool Raycast
     (
-        Vector2 origin,
-        Vector2 direction,
+        Vector origin,
+        Vector direction,
         out RaycastHit hit,
         float distance = float.MaxValue,
         World world = null,
@@ -41,7 +41,7 @@ public static class Physics
         {
             return false;
         }
-        
+
         hit = first;
         return true;
     }
@@ -49,8 +49,8 @@ public static class Physics
 
     public static RaycastHit[] RaycastAll
     (
-        Vector2 origin,
-        Vector2 direction,
+        Vector origin,
+        Vector direction,
         float distance = float.PositiveInfinity,
         World world = null,
         HashSet<EntityRaw> exclusionList = null
@@ -63,8 +63,8 @@ public static class Physics
 
     private static IEnumerable<RaycastHit> RaycastEnumerable
     (
-        Vector2 origin,
-        Vector2 direction,
+        Vector origin,
+        Vector direction,
         float distance = float.MaxValue,
         World world = null,
         HashSet<EntityRaw> exclusionList = null
