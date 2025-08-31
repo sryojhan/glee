@@ -7,6 +7,8 @@ namespace Glee.Components;
 
 public class Collider : ComponentRaw, IInitializable, ICleanable
 {
+    public float Friction { get; set; } = 0.5f;
+
     private Bounds _bounds = null;
     public Bounds bounds
     {

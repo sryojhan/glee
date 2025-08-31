@@ -6,10 +6,11 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Collider))]
-public class Body : ComponentRaw, IInitializable, ICleanable, ICollisionObserver
+public class Body : ComponentRaw, IInitializable, ICleanable
 {
     public Vector Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
+    public float AirResistanceMultiplier { get; set; } = 1;
 
     public Collider collider { get; set; }
 
@@ -47,19 +48,11 @@ public class Body : ComponentRaw, IInitializable, ICleanable, ICollisionObserver
     }
 
 
-    public void OnCollision(Collider other)
+    /// <summary>
+    /// Add an oposing force to the body velocity relative to the body's current speed
+    /// </summary>
+    public void AddResistance(float resistanceScale)
     {
-        Print("AAAAAAAAA");
+        Velocity -= Velocity * (resistanceScale * Time.physicsDeltaTime);
     }
-
-    public void OnCollisionBegin(Collider other)
-    {
-        Print("Joder joder");
-    }
-
-    public void OnCollisionEnd(Collider other)
-    {
-        Print("Por fin!!!");
-    }
-
 }

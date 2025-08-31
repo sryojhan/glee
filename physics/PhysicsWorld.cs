@@ -13,6 +13,9 @@ public class PhysicsWorld
 {
     public Vector2 Gravity { get; set; } = new(0, -10.0f);
 
+    public float AirResistance { get; set; } = 0.1f;
+
+
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
     internal readonly HashSet<Collider> colliders;
@@ -110,7 +113,7 @@ public class PhysicsWorld
     }
 
 
-    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver, Vector2 direction);
+    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver, Vector2 direction, float speed);
 
     //TODO: Move this to a physics manager
     internal void PhysicsStep()
@@ -118,52 +121,56 @@ public class PhysicsWorld
 
         foreach (Body body in bodies)
         {
-            //Vector2 validPosition = body.entity.Position;
+            //Apply gravity
+            body.AddInstantVelocity(Gravity * (body.GravityMultiplier * world.Time.physicsDeltaTime));
 
-            //Update the current velocity
-            body.Velocity += Gravity * body.GravityMultiplier * world.Time.deltaTime;
-
+            //Air resistance
+            body.AddResistance(AirResistance * body.AirResistanceMultiplier);
 
             //Separate collisions between axis
-
+            float maxFriction = 0;
             float maxPenetration = 0;
-            void OnCollision(Collider collider, ICollisionResolver resolver, Vector direction)
+            void OnCollision(Collider collider, ICollisionResolver resolver, Vector direction, float speed)
             {
-                float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction);
+                float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction * speed);
 
                 if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
                     maxPenetration = penetration;
 
-                collisionThisFrame.Add(new CollisionRegistry(body.collider, collider));
+
+                //Calculate friction
+                float friction = MathF.Sqrt(body.collider.Friction * collider.Friction);
+                if (friction > maxFriction)
+                    maxFriction = friction;
+
+                collisionThisFrame.Add(new CollisionRegistry(body.collider, collider)); 
             }
-
-
 
             if (MathF.Abs(body.Velocity.X) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Right * body.Velocity.X * world.Time.physicsDeltaTime;
 
-                CheckCollisionWithAllColliders(body, OnCollision, Utils.Right * body.Velocity.X);
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Right, body.Velocity.X);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-
-                    body.Velocity = new Vector2(0, body.Velocity.Y);
+                    body.Velocity = new Vector2(0, body.Velocity.Y * (1 - maxFriction * world.Time.physicsDeltaTime));
                     body.entity.Position -= Utils.Right * maxPenetration;
                 }
             }
 
+            maxFriction = 0;
             maxPenetration = 0;
 
             if (MathF.Abs(body.Velocity.Y) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Up * body.Velocity.Y * world.Time.physicsDeltaTime;
 
-                CheckCollisionWithAllColliders(body, OnCollision, Utils.Up * body.Velocity.Y);
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Up, body.Velocity.Y);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    body.Velocity = new Vector2(body.Velocity.X, 0);
+                    body.Velocity = new Vector2(body.Velocity.X * (1 - maxFriction * world.Time.physicsDeltaTime), 0);
                     body.entity.Position -= Utils.Up * maxPenetration;
                 }
 
@@ -177,7 +184,7 @@ public class PhysicsWorld
 
 
 
-    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision, Vector2 direction)
+    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision, Vector2 direction, float speed)
     {
         Type bodyType = body.collider.bounds.GetType();
 
@@ -198,7 +205,7 @@ public class PhysicsWorld
 
             if (collision)
             {
-                onCollision.Invoke(collider, resolver, direction);
+                onCollision.Invoke(collider, resolver, direction, speed);
             }
         }
     }

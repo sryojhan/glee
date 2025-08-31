@@ -27,9 +27,8 @@ public class PlatformerMainWorld : World, IUpdatable
     private Entity CreatePlatform(Vector position, Vector size)
     {
         Entity platform = CreateEntity("Platform", position, size);
-        platform.CreateComponent<Collider>();
+        platform.CreateComponent<Collider>().Friction = 2;
         platform.CreateComponent<Image>().texture = groundTexture;
-
         return platform;
     }
 
