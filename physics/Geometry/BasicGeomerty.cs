@@ -6,11 +6,6 @@ namespace Glee.Physics;
 
 public class Rect : Bounds
 {
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance)
-    {
-        return Raycast(origin, direction, distance, out _);
-    }
-
     public override bool Raycast(Vector2 origin, Vector2 direction, float distance, out RaycastHit hit)
     {
         hit = new RaycastHit();
@@ -59,11 +54,6 @@ public class Rect : Bounds
 public class Circle : Bounds
 {
     public float Radius => entity.Size.X * 0.5f;
-
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance)
-    {
-        return Raycast(origin, direction, distance, out _);
-    }
 
     public override bool Raycast(Vector2 origin, Vector2 direction, float distance, out RaycastHit hit)
     {
