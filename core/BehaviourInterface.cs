@@ -2,6 +2,10 @@ using Glee.Components;
 
 namespace Glee.Behaviours;
 
+// Bundles
+public interface IBehaviour : IInitializable, IUpdatable { }
+public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
+public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, IRemovableObserver { }
 
 
 
@@ -84,7 +88,3 @@ public interface ISpotlightObserver
 }
 
 
-
-public interface IBehaviour : IInitializable, IUpdatable { }
-public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
-public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IPhysicsObserver, IRemovableObserver { }
