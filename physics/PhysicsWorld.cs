@@ -154,7 +154,7 @@ public class PhysicsWorld
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    body.Velocity = new Vector2(0, body.Velocity.Y * (1 - maxFriction * world.Time.physicsDeltaTime));
+                    body.Velocity = new Vector2(-body.Velocity.X * body.Bounciness, body.Velocity.Y * (1 - maxFriction * world.Time.physicsDeltaTime));
                     body.entity.Position -= Utils.Right * maxPenetration;
                 }
             }
@@ -170,7 +170,7 @@ public class PhysicsWorld
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    body.Velocity = new Vector2(body.Velocity.X * (1 - maxFriction * world.Time.physicsDeltaTime), 0);
+                    body.Velocity = new Vector2(body.Velocity.X * (1 - maxFriction * world.Time.physicsDeltaTime), -body.Velocity.Y * body.Bounciness);
                     body.entity.Position -= Utils.Up * maxPenetration;
                 }
 

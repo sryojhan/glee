@@ -11,6 +11,7 @@ public class Body : ComponentRaw, IInitializable, ICleanable
     public Vector Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
     public float AirResistanceMultiplier { get; set; } = 1;
+    public float Bounciness { get; set; } = 0;
 
     public Collider collider { get; set; }
 
