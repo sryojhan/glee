@@ -28,6 +28,7 @@ public class CoreService : Service
 
 public class Services
 {
+    //TODO: make so services are executed in the order they are added
     readonly Dictionary<Type, Service> services = [];
 
     private static Services instance => GleeCore.Services;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Glee.Behaviours;
 using Glee.Engine;
 using Glee.Graphics;
 using Microsoft.Xna.Framework;
@@ -6,7 +7,7 @@ using Microsoft.Xna.Framework;
 namespace Glee.Input; //TODO: change the namespace name because accessing Input.Input is ugly
 //TODO: Move the static class to Glee namespace and change this namespace to something like InputManagement
 
-public class InputManager: Service
+public class InputManager: CoreService, IUpdatable
 {
 
     /// <summary>
@@ -42,15 +43,14 @@ public class InputManager: Service
     /// <summary>
     /// Updates the state information for the keyboard, mouse, and gamepad inputs.
     /// </summary>
-    /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         Keyboard.Update();
         Mouse.Update();
 
         for (int i = 0; i < 4; i++)
         {
-            GamePads[i].Update(gameTime);
+            GamePads[i].Update();
         }
     }
 
@@ -60,30 +60,30 @@ public class InputManager: Service
 
 public static class Input
 {
-    public static InputManager Manager => GleeCore.Input;
+    public static InputManager i => Services.Fetch<InputManager>();
 
     public static void Bind(string name, InputBinding bind)
     {
         //TODO: check if exists and combine with previous
-        GleeCore.Input.bindings.Add(name, bind);
+        i.bindings.Add(name, bind);
     }
 
-    public static bool IsDown(string name) => GleeCore.Input.bindings[name].IsDown;
-    public static bool IsUp(string name) => GleeCore.Input.bindings[name].IsUp;
-    public static bool IsJustDown(string name) => GleeCore.Input.bindings[name].IsJustDown;
-    public static bool IsJustUp(string name) => GleeCore.Input.bindings[name].IsJustUp;
-    public static float Value(string name) => GleeCore.Input.bindings[name].Value;
-    public static Vector2 Value2D(string name) => GleeCore.Input.bindings[name].Value2D;
+    public static bool IsDown(string name) => i.bindings[name].IsDown;
+    public static bool IsUp(string name) => i.bindings[name].IsUp;
+    public static bool IsJustDown(string name) => i.bindings[name].IsJustDown;
+    public static bool IsJustUp(string name) => i.bindings[name].IsJustUp;
+    public static float Value(string name) => i.bindings[name].Value;
+    public static Vector2 Value2D(string name) => i.bindings[name].Value2D;
 
 
 
     //Mouse accessors
-    public static Vector2 MousePosition => GleeCore.Input.Mouse.Position.ToVector2();
-    public static Vector2 MouseDelta => GleeCore.Input.Mouse.PositionDelta.ToVector2();
-    public static Point MousePositionInt => GleeCore.Input.Mouse.Position;
-    public static Point MouseDeltaInt => GleeCore.Input.Mouse.PositionDelta;
-    public static int ScrollWheel => GleeCore.Input.Mouse.ScrollWheel;
-    public static int ScrollWheelDelta => GleeCore.Input.Mouse.ScrollWheelDelta;
+    public static Vector2 MousePosition => i.Mouse.Position.ToVector2();
+    public static Vector2 MouseDelta => i.Mouse.PositionDelta.ToVector2();
+    public static Point MousePositionInt => i.Mouse.Position;
+    public static Point MouseDeltaInt => i.Mouse.PositionDelta;
+    public static int ScrollWheel => i.Mouse.ScrollWheel;
+    public static int ScrollWheelDelta => i.Mouse.ScrollWheelDelta;
 
 
 

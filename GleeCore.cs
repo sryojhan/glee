@@ -106,11 +106,6 @@ public abstract class GleeCore : Game
     public static new ContentManager Content { get; private set; }
 
     /// <summary>
-    /// Gets a reference to to the input management system.
-    /// </summary>
-    public static InputManager Input { get; private set; }
-
-    /// <summary>
     /// Gets or Sets a value that indicates if the game should exit when the esc key on the keyboard is pressed.
     /// </summary>
     public static bool ExitOnEscape { get; set; }
@@ -175,14 +170,11 @@ public abstract class GleeCore : Game
     {
         Renderer.Initialise();
 
-        // Create a new input manager.
-        Input = new InputManager();
-
         // Create a new audio controller.
         Audio = new AudioController();
         GameTime = new GameTime();
 
-
+        Services.RunInternal<InputManager>();
         Services.RunInternal<Log>();
         Services.RunInternal<Events>();
         Services.RunInternal<Resources>();
@@ -214,15 +206,15 @@ public abstract class GleeCore : Game
     {
         GameTime = gameTime;
 
-        Input.Update(gameTime);
         Audio.Update();
 
-        if (ExitOnEscape && Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+        Services.UpdateServices();
+
+        if (ExitOnEscape && Services.Fetch<InputManager>().Keyboard.WasKeyJustPressed(Keys.Escape))
         {
             Exit();
         }
 
-        Services.UpdateServices();
         worldManager.UpdateStack();
 
         base.Update(gameTime);
