@@ -91,6 +91,7 @@ public abstract class GleeCore : Game
     /// </summary>
     public static GleeCore Instance => s_instance;
 
+    //TODO: to cleanup maybe remove this property?
     private WorldManager worldManager;
 
     /// <summary>

@@ -112,7 +112,7 @@ public class Services
         ResumeInternal<ServiceType>();
     }
 
-    public static ServiceType RunInternal<ServiceType>() where ServiceType : Service, new()
+    internal static ServiceType RunInternal<ServiceType>() where ServiceType : Service, new()
     {
         ServiceType serv = new();
         instance.services.Add(typeof(ServiceType), serv);
@@ -121,7 +121,7 @@ public class Services
     }
 
 
-    public static void ShutdownInternal<ServiceType>() where ServiceType : Service
+    internal static void ShutdownInternal<ServiceType>() where ServiceType : Service
     {
         ServiceType serv = Fetch<ServiceType>();
 
@@ -131,20 +131,16 @@ public class Services
         instance.services.Remove(typeof(ServiceType));
     }
 
-
-
     internal static void PauseInternal<ServiceType>() where ServiceType : Service
     {
         ServiceType service = Fetch<ServiceType>();
 
-        if (!service.Enabled)
+        if (service.Enabled)
         {
             service.Enabled = false;
             service.OnPause();
         }
     }
-
-
 
     internal static void ResumeInternal<ServiceType>() where ServiceType : Service
     {
