@@ -6,7 +6,7 @@ namespace Glee;
 
 
 
-public class Log : Service, ICleanable
+public class Log : CoreService, ICleanable
 {
     const string RED = "\u001b[31m";
     const string YELLOW = "\u001b[33m";

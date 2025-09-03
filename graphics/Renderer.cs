@@ -6,7 +6,7 @@ using System;
 namespace Glee.Graphics;
 
 
-public class Renderer
+public class Renderer: Service
 {
     internal GraphicsDeviceManager graphics;
     internal GraphicsDevice graphicsDevice;
@@ -15,7 +15,7 @@ public class Renderer
 
     private TargetTexture targetFront, targetBack;
 
-    private static Renderer instance => GleeCore.Renderer;
+    private static Renderer instance => Get<Renderer>();
 
     //TODO: habria que hacer dos pasos para shaders: ScreenShaders y Post Processing pero que en el fondo sean un poco lo mismo
     //TODO: a lo mejor es interesante guardar varios render targets con el render en cada paso del pipeline: world, ui, post processing
@@ -60,7 +60,7 @@ public class Renderer
 
     public static void BeginBatch()
     {
-        Camera current = GleeCore.WorldManager.Spotlight.Camera;
+        Camera current = Get<WorldManager>().Spotlight.Camera;
         instance.spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: current.ViewMatrix);
     }
 
@@ -71,7 +71,7 @@ public class Renderer
 
     public static void BeginBatchWithCustomShader(Material material)
     {
-        Camera current = GleeCore.WorldManager.Spotlight.Camera;
+        Camera current = Get<WorldManager>().Spotlight.Camera;
         instance.spriteBatch.Begin(
             samplerState: SamplerState.PointClamp,
             effect: material.ShaderSource.effect,
@@ -131,7 +131,7 @@ public class Renderer
     {
         position = AdjustPosition(position);
 
-        float scale = 1.0f / GleeCore.WorldManager.Spotlight.Camera.ActiveCameraScale;
+        float scale = 1.0f / Get<WorldManager>().Spotlight.Camera.ActiveCameraScale;
 
         Vector2 size = font.ComputeSize(text);
 

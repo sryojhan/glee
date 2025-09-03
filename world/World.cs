@@ -54,7 +54,7 @@ public abstract class World : GleeObject
         physicsWorld = new(this);
 
 
-        Camera = new Camera(GleeCore.Renderer.Viewport);
+        Camera = new Camera(Get<Renderer>().Viewport);
     }
 
     public virtual void LoadResources() { }
@@ -193,7 +193,7 @@ public abstract class World : GleeObject
 
     public void Screenshot(TargetTexture texture)
     {
-        GleeCore.WorldManager.Screenshot(this, texture);
+        Get<WorldManager>().Screenshot(this, texture);
     }
 
 

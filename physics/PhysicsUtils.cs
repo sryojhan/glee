@@ -70,7 +70,7 @@ public static class Physics
         HashSet<EntityRaw> exclusionList = null
     )
     {
-        world ??= GleeCore.WorldManager.Spotlight;
+        world ??= Services.Fetch<WorldManager>().Spotlight;
 
         PhysicsWorld physicsWorld = world.physicsWorld;
 

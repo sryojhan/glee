@@ -14,6 +14,8 @@ public class GenericButton : IEquatable<GenericButton>
     private MouseButton mouse = MouseButton.None;
     private Gamepad gamepad = Gamepad.None;
 
+    private InputManager i => Services.Fetch<InputManager>();
+
     private enum ContinousButton
     {
         None, LeftTrigger, RightTrigger, LeftThumbStick, RightThumbStick
@@ -102,16 +104,16 @@ public class GenericButton : IEquatable<GenericButton>
             return buttonType switch
             {
                 ButtonType.None => throw new Exception("Using non-initialized generic buttons"),
-                ButtonType.Key => GleeCore.Input.Keyboard.IsKeyDown(key),
-                ButtonType.Mouse => GleeCore.Input.Mouse.IsButtonDown(mouse),
-                ButtonType.Gamepad => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(gamepad),
+                ButtonType.Key => i.Keyboard.IsKeyDown(key),
+                ButtonType.Mouse => i.Mouse.IsButtonDown(mouse),
+                ButtonType.Gamepad => i.GamePads[GAMEPAD_IDX].IsButtonDown(gamepad),
                 ButtonType.Continous => continousButton switch
                 {
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
-                    ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].LeftTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
-                    ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].RightTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.RightThumbstickDown),
+                    ContinousButton.LeftTrigger => i.GamePads[GAMEPAD_IDX].LeftTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
+                    ContinousButton.RightTrigger => i.GamePads[GAMEPAD_IDX].RightTrigger > GamePadInfo.Trigger.PRESSED_THRESHOLD,
+                    ContinousButton.LeftThumbStick => i.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => i.GamePads[GAMEPAD_IDX].IsButtonDown(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
@@ -136,16 +138,16 @@ public class GenericButton : IEquatable<GenericButton>
             return buttonType switch
             {
                 ButtonType.None => throw new Exception("Using non-initialized generic buttons"),
-                ButtonType.Key => GleeCore.Input.Keyboard.WasKeyJustPressed(key),
-                ButtonType.Mouse => GleeCore.Input.Mouse.WasButtonJustPressed(mouse),
-                ButtonType.Gamepad => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustPressed(gamepad),
+                ButtonType.Key => i.Keyboard.WasKeyJustPressed(key),
+                ButtonType.Mouse => i.Mouse.WasButtonJustPressed(mouse),
+                ButtonType.Gamepad => i.GamePads[GAMEPAD_IDX].WasButtonJustPressed(gamepad),
                 ButtonType.Continous => continousButton switch
                 {
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
-                    ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasLeftTriggerJustDown(),
-                    ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasRightTriggerJustDown(),
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustPressed(Gamepad.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
+                    ContinousButton.LeftTrigger => i.GamePads[GAMEPAD_IDX].WasLeftTriggerJustDown(),
+                    ContinousButton.RightTrigger => i.GamePads[GAMEPAD_IDX].WasRightTriggerJustDown(),
+                    ContinousButton.LeftThumbStick => i.GamePads[GAMEPAD_IDX].WasButtonJustPressed(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => i.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
@@ -160,16 +162,16 @@ public class GenericButton : IEquatable<GenericButton>
             return buttonType switch
             {
                 ButtonType.None => throw new Exception("Using non-initialized generic buttons"),
-                ButtonType.Key => GleeCore.Input.Keyboard.WasKeyJustReleased(key),
-                ButtonType.Mouse => GleeCore.Input.Mouse.WasButtonJustReleased(mouse),
-                ButtonType.Gamepad => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(gamepad),
+                ButtonType.Key => i.Keyboard.WasKeyJustReleased(key),
+                ButtonType.Mouse => i.Mouse.WasButtonJustReleased(mouse),
+                ButtonType.Gamepad => i.GamePads[GAMEPAD_IDX].WasButtonJustReleased(gamepad),
                 ButtonType.Continous => continousButton switch
                 {
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
-                    ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasLeftTriggerJustUp(),
-                    ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].WasRightTriggerJustUp(),
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.LeftThumbstickDown),
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
+                    ContinousButton.LeftTrigger => i.GamePads[GAMEPAD_IDX].WasLeftTriggerJustUp(),
+                    ContinousButton.RightTrigger => i.GamePads[GAMEPAD_IDX].WasRightTriggerJustUp(),
+                    ContinousButton.LeftThumbStick => i.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.LeftThumbstickDown),
+                    ContinousButton.RightThumbStick => i.GamePads[GAMEPAD_IDX].WasButtonJustReleased(Gamepad.RightThumbstickDown),
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")
@@ -185,14 +187,14 @@ public class GenericButton : IEquatable<GenericButton>
             return buttonType switch
             {
                 ButtonType.None => throw new Exception("Using non-initialized generic buttons"),
-                ButtonType.Key => GleeCore.Input.Keyboard.IsKeyDown(key) ? 1 : 0,
-                ButtonType.Mouse => GleeCore.Input.Mouse.IsButtonDown(mouse) ? 1 : 0,
-                ButtonType.Gamepad => GleeCore.Input.GamePads[GAMEPAD_IDX].IsButtonDown(gamepad) ? 1 : 0,
+                ButtonType.Key => i.Keyboard.IsKeyDown(key) ? 1 : 0,
+                ButtonType.Mouse => i.Mouse.IsButtonDown(mouse) ? 1 : 0,
+                ButtonType.Gamepad => i.GamePads[GAMEPAD_IDX].IsButtonDown(gamepad) ? 1 : 0,
                 ButtonType.Continous => continousButton switch
                 {
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
-                    ContinousButton.LeftTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].LeftTrigger,
-                    ContinousButton.RightTrigger => GleeCore.Input.GamePads[GAMEPAD_IDX].RightTrigger,
+                    ContinousButton.LeftTrigger => i.GamePads[GAMEPAD_IDX].LeftTrigger,
+                    ContinousButton.RightTrigger => i.GamePads[GAMEPAD_IDX].RightTrigger,
                     ContinousButton.LeftThumbStick => 0,
                     ContinousButton.RightThumbStick => 0,
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
@@ -217,8 +219,8 @@ public class GenericButton : IEquatable<GenericButton>
                     ContinousButton.None => throw new Exception("Using non-initialized continous buttons"),
                     ContinousButton.LeftTrigger => Vector.Zero,
                     ContinousButton.RightTrigger => Vector.Zero,
-                    ContinousButton.LeftThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].LeftThumbStick,
-                    ContinousButton.RightThumbStick => GleeCore.Input.GamePads[GAMEPAD_IDX].RightThumbStick,
+                    ContinousButton.LeftThumbStick => i.GamePads[GAMEPAD_IDX].LeftThumbStick,
+                    ContinousButton.RightThumbStick => i.GamePads[GAMEPAD_IDX].RightThumbStick,
                     _ => throw new ArgumentOutOfRangeException("Non existing continous button")
                 },
                 _ => throw new ArgumentOutOfRangeException("Non existing button type")

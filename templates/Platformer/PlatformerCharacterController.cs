@@ -15,7 +15,7 @@ public class PlatformerCharacterController : EntityRaw, IEverything
     public Body BodyComponent { get; }
     public Flipbook Flipbook { get; }
 
-    public PlatformerCharacterController() : base("Player", GleeCore.WorldManager.Spotlight)
+    public PlatformerCharacterController() : base("Player", Get<WorldManager>().Spotlight)
     {
         ImageComponent = new Image() {entity = this};
         ColliderComponent = new Collider() { entity = this };

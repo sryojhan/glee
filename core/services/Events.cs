@@ -7,7 +7,7 @@ namespace Glee;
 
 public class GleeEvent : GleeObject { }
 
-public class Events : Service
+public class Events : CoreService
 {
     public enum Scope { World, Local, Global }
 

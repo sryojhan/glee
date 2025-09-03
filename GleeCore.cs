@@ -91,12 +91,12 @@ public abstract class GleeCore : Game
     /// </summary>
     public static GleeCore Instance => s_instance;
 
-    public static WorldManager WorldManager { get; private set; }
+    //TODO: to cleanup maybe remove this property?
+    private WorldManager worldManager;
 
     /// <summary>
     /// Gets the sprite batch used for all 2D rendering.
     /// </summary>
-    public static Renderer Renderer { get; private set; }
 
     public static new Services Services { get; private set; }
 
@@ -104,11 +104,6 @@ public abstract class GleeCore : Game
     /// Gets the content manager used to load global assets.
     /// </summary>
     public static new ContentManager Content { get; private set; }
-
-    /// <summary>
-    /// Gets a reference to to the input management system.
-    /// </summary>
-    public static InputManager Input { get; private set; }
 
     /// <summary>
     /// Gets or Sets a value that indicates if the game should exit when the esc key on the keyboard is pressed.
@@ -160,7 +155,8 @@ public abstract class GleeCore : Game
         // Set the window title
         Window.Title = title;
 
-        Renderer = new Renderer(width, height, fullScreen, TargetFrameRate);
+        Services = new Services();
+        Services.AppendInternal<Renderer>(new Renderer(width, height, fullScreen, TargetFrameRate));
 
         // Mouse is visible by default.
         IsMouseVisible = true;
@@ -168,37 +164,28 @@ public abstract class GleeCore : Game
         // Exit on escape is true by default
         ExitOnEscape = true;
 
-        Services = new Services();
     }
 
     protected override void Initialize()
     {
-        Renderer.Initialise();
-
-        // Create a new input manager.
-        Input = new InputManager();
+        Services.Fetch<Renderer>().Initialise();
 
         // Create a new audio controller.
         Audio = new AudioController();
-
-
-        Services.Run<Log>();
-        Services.Run<Events>();
-        Services.Run<Resources>();
-
-        WorldManager = new WorldManager();
-
         GameTime = new GameTime();
 
-        WorldManager.StackWorld(LoadInitialWorld());
-        WorldManager.UpdateStack();
+        Services.RunInternal<InputManager>();
+        Services.RunInternal<Log>();
+        Services.RunInternal<Events>();
+        Services.RunInternal<Resources>();
 
+        worldManager = Services.RunInternal<WorldManager>();
 
-
+        worldManager.StackWorld(LoadInitialWorld());
+        worldManager.UpdateStack();
 
 
         base.Initialize();
-
     }
 
     protected abstract World LoadInitialWorld();
@@ -215,19 +202,16 @@ public abstract class GleeCore : Game
     {
         GameTime = gameTime;
 
-        Input.Update(gameTime);
         Audio.Update();
 
-        if (ExitOnEscape && Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+        Services.UpdateServices();
+
+        if (ExitOnEscape && Services.Fetch<InputManager>().Keyboard.WasKeyJustPressed(Keys.Escape))
         {
             Exit();
         }
 
-        WorldManager.ProcessFrame();
-        WorldManager.UpdateStack();
-
-
-        Services.UpdateServices();
+        worldManager.UpdateStack();
 
         base.Update(gameTime);
     }
@@ -236,10 +220,7 @@ public abstract class GleeCore : Game
     {
         Renderer.BeginFrame();
 
-        WorldManager.Render();
         Services.RenderServices();
-
-
         Renderer.Present();
 
         base.Draw(gameTime);

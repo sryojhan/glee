@@ -15,7 +15,7 @@ namespace Glee.Engine
 
 
     //In the future: Sound, Music, Particle, Json, CSV, XML
-    public class Resources : Service
+    public class Resources : CoreService
     {
         public delegate GleeResource GleeResourceFactory(string name);
 

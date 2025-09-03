@@ -1,4 +1,5 @@
 using System;
+using Glee.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -64,14 +65,14 @@ public class GamePadInfo
     /// Updates the state information for this gamepad input.
     /// </summary>
     /// <param name="gameTime"></param>
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         PreviousState = CurrentState;
         CurrentState = GamePad.GetState(PlayerIndex);
 
         if (_vibrationTimeRemaining > TimeSpan.Zero)
         {
-            _vibrationTimeRemaining -= gameTime.ElapsedGameTime;
+            _vibrationTimeRemaining -= GleeCore.GameTime.ElapsedGameTime;
 
             if (_vibrationTimeRemaining <= TimeSpan.Zero)
             {
