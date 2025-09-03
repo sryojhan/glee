@@ -91,7 +91,7 @@ public abstract class GleeCore : Game
     /// </summary>
     public static GleeCore Instance => s_instance;
 
-    public static WorldManager WorldManager { get; private set; }
+    private WorldManager worldManager;
 
     /// <summary>
     /// Gets the sprite batch used for all 2D rendering.
@@ -180,18 +180,17 @@ public abstract class GleeCore : Game
 
         // Create a new audio controller.
         Audio = new AudioController();
+        GameTime = new GameTime();
 
 
         Services.RunInternal<Log>();
         Services.RunInternal<Events>();
         Services.RunInternal<Resources>();
 
-        WorldManager = new WorldManager();
+        worldManager = Services.RunInternal<WorldManager>();
 
-        GameTime = new GameTime();
-
-        WorldManager.StackWorld(LoadInitialWorld());
-        WorldManager.UpdateStack();
+        worldManager.StackWorld(LoadInitialWorld());
+        worldManager.UpdateStack();
 
 
 
@@ -223,11 +222,8 @@ public abstract class GleeCore : Game
             Exit();
         }
 
-        WorldManager.ProcessFrame();
-        WorldManager.UpdateStack();
-
-
         Services.UpdateServices();
+        worldManager.UpdateStack();
 
         base.Update(gameTime);
     }
@@ -236,10 +232,7 @@ public abstract class GleeCore : Game
     {
         Renderer.BeginFrame();
 
-        WorldManager.Render();
         Services.RenderServices();
-
-
         Renderer.Present();
 
         base.Draw(gameTime);

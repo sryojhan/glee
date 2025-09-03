@@ -35,6 +35,7 @@ public class Services
 
     public void UpdateServices()
     {
+        //TODO: optimize this in lists
         foreach (Service service in services.Values)
         {
             if (service.Enabled && service is IUpdatable updatable)
@@ -59,18 +60,18 @@ public class Services
         Renderer.EndBatch();
     }
 
-
+    //TODO: the gleeObject accessor is Get, maybe change the name from fetch to get here also?
     public static ServiceType Fetch<ServiceType>() where ServiceType : Service
     {
-        foreach (Service service in instance.services.Values)
+        Type type = typeof(ServiceType);
+        if (!instance.services.TryGetValue(type, out Service value))
         {
-            if (service is ServiceType type)
-            {
-                return type;
-            }
+            //TODO: custom error
+            GleeError.Throw($"The service {type.Name} is not initialised");
+            return null;
         }
 
-        return null;
+        return value as ServiceType;
     }
 
 
@@ -102,7 +103,7 @@ public class Services
     public static void Resume<ServiceType>() where ServiceType : Service
     {
         if (CoreCheckError<ServiceType>("Resume")) return;
-        ResumeInternal <ServiceType>();
+        ResumeInternal<ServiceType>();
     }
 
     public static ServiceType RunInternal<ServiceType>() where ServiceType : Service, new()

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace Glee.Input; //TODO: change the namespace name because accessing Input.Input is ugly
 //TODO: Move the static class to Glee namespace and change this namespace to something like InputManagement
 
-public class InputManager
+public class InputManager: Service
 {
 
     /// <summary>
@@ -99,7 +99,7 @@ public static class Input
     {
         get
         {
-            Camera cam = GleeCore.WorldManager.Spotlight.Camera;
+            Camera cam = Services.Fetch<WorldManager>().Spotlight.Camera;
             Matrix matrix = Matrix.Invert(cam.GetMatrixWithoutUpdating());
 
             return Renderer.AdjustPosition(Vector2.Transform(MousePosition, matrix));

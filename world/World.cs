@@ -193,7 +193,7 @@ public abstract class World : GleeObject
 
     public void Screenshot(TargetTexture texture)
     {
-        GleeCore.WorldManager.Screenshot(this, texture);
+        Get<WorldManager>().Screenshot(this, texture);
     }
 
 
