@@ -91,7 +91,7 @@ public static class Input
     {
         get
         {
-            return MousePosition / GleeCore.Renderer.Viewport.Width;
+            return MousePosition / Services.Fetch<Renderer>().Viewport.Width;
         }
     }
 

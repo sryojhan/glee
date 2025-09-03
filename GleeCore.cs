@@ -96,7 +96,6 @@ public abstract class GleeCore : Game
     /// <summary>
     /// Gets the sprite batch used for all 2D rendering.
     /// </summary>
-    public static Renderer Renderer { get; private set; }
 
     public static new Services Services { get; private set; }
 
@@ -155,7 +154,8 @@ public abstract class GleeCore : Game
         // Set the window title
         Window.Title = title;
 
-        Renderer = new Renderer(width, height, fullScreen, TargetFrameRate);
+        Services = new Services();
+        Services.AppendInternal<Renderer>(new Renderer(width, height, fullScreen, TargetFrameRate));
 
         // Mouse is visible by default.
         IsMouseVisible = true;
@@ -163,12 +163,11 @@ public abstract class GleeCore : Game
         // Exit on escape is true by default
         ExitOnEscape = true;
 
-        Services = new Services();
     }
 
     protected override void Initialize()
     {
-        Renderer.Initialise();
+        Services.Fetch<Renderer>().Initialise();
 
         // Create a new audio controller.
         Audio = new AudioController();
@@ -185,11 +184,7 @@ public abstract class GleeCore : Game
         worldManager.UpdateStack();
 
 
-
-
-
         base.Initialize();
-
     }
 
     protected abstract World LoadInitialWorld();

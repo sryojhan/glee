@@ -10,8 +10,8 @@ public class TargetTexture : Texture
 {
 
     public TargetTexture(string name) : this(name,
-    GleeCore.Renderer.graphicsDevice.PresentationParameters.BackBufferWidth,
-    GleeCore.Renderer.graphicsDevice.PresentationParameters.BackBufferHeight)
+    Get<Renderer>().graphicsDevice.PresentationParameters.BackBufferWidth,
+    Get<Renderer>().graphicsDevice.PresentationParameters.BackBufferHeight)
     {
 
     }
@@ -20,7 +20,7 @@ public class TargetTexture : Texture
     public TargetTexture(string name, int width, int height): base(name)
     {
         BaseTexture = new RenderTarget2D(
-            graphicsDevice: GleeCore.Renderer.graphicsDevice,
+            graphicsDevice: Get<Renderer>().graphicsDevice,
             width: width,
             height: height,
             mipMap: false,
@@ -35,7 +35,7 @@ public class TargetTexture : Texture
         BaseTexture.Dispose();
 
         BaseTexture = new RenderTarget2D(
-            graphicsDevice: GleeCore.Renderer.graphicsDevice,
+            graphicsDevice: Get<Renderer>().graphicsDevice,
             width: original.Width,
             height: original.Height,
             mipMap: false,

@@ -79,6 +79,11 @@ public class Services
     public static void Append<ServiceType>(Service service) where ServiceType : Service
     {
         if (CoreCheckError<ServiceType>("Append")) return;
+        AppendInternal <ServiceType>(service);
+    }
+
+    public static void AppendInternal<ServiceType>(Service service) where ServiceType : Service
+    {
         instance.services.Add(typeof(ServiceType), service);
     }
 

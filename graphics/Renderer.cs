@@ -15,7 +15,7 @@ public class Renderer: Service
 
     private TargetTexture targetFront, targetBack;
 
-    private static Renderer instance => GleeCore.Renderer;
+    private static Renderer instance => Get<Renderer>();
 
     //TODO: habria que hacer dos pasos para shaders: ScreenShaders y Post Processing pero que en el fondo sean un poco lo mismo
     //TODO: a lo mejor es interesante guardar varios render targets con el render en cada paso del pipeline: world, ui, post processing
