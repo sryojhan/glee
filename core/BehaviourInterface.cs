@@ -1,8 +1,12 @@
-
-
-using Microsoft.Xna.Framework;
+using Glee.Components;
 
 namespace Glee.Behaviours;
+
+// Bundles
+public interface IBehaviour : IInitializable, IUpdatable { }
+public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
+public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, ICleanable { }
+
 
 
 public interface IInitializable
@@ -21,10 +25,9 @@ public interface IRenderizable
     void Render();
 }
 
-//TODO: name idea. Last wish XD
-public interface IRemovableObserver
+public interface ICleanable
 {
-    void OnRemove();
+    void CleanUp();
 }
 
 
@@ -33,21 +36,43 @@ public interface IPhysicsUpdatable
     void PhysicsUpdate();
 }
 
-public interface ICollisionObserver
+//TODO: collision info class? know more information about the collision
+public interface ICollisionObserver : ICollisionBeginObserver, ICollisionStayObserver, ICollisionEndObserver { }
+
+public interface ICollisionBeginObserver
 {
-    void CollisionBegin();
-    void CollisionPersist();
-    void CollisionEnd();
+    void OnCollisionBegin(Collider other);
 }
 
-public interface ITriggerObserver
+public interface ICollisionStayObserver
 {
-    void TriggerBegin();
-    void TriggerPersist();
-    void Triggernd();
-
+    void OnCollision(Collider other);
 }
 
+public interface ICollisionEndObserver
+{
+    void OnCollisionEnd(Collider other);
+}
+
+
+public interface ITriggerObserver: ITriggerBeginObserver, ITriggerStayObserver, ITriggerEndObserver{}
+
+public interface ITriggerBeginObserver
+{
+    void OnTriggerBegin(Collider other);
+}
+
+public interface ITriggerStayObserver
+{
+    void OnTrigger(Collider other);
+}
+
+public interface ITriggerEndObserver
+{
+    void OnTriggernd(Collider other);
+}
+
+//TODO: world callbacks
 public interface IWorldLifecycleOberserved
 {
     void WorldLoaded();
@@ -60,3 +85,5 @@ public interface ISpotlightObserver
     void SpotlightGained();
     void SpotlightLost();
 }
+
+

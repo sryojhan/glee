@@ -129,8 +129,8 @@ public class WorldManager
 
             foreach (World world in loadedWorlds.Reverse())
             {
-                if (world is IRemovableObserver removable)
-                    removable.OnRemove();
+                if (world is ICleanable removable)
+                    removable.CleanUp();
             }
             return true;
         }
@@ -139,9 +139,9 @@ public class WorldManager
         {
             loadedWorlds.Remove(world);
 
-            if (world is IRemovableObserver removable)
+            if (world is ICleanable removable)
             {
-                removable.OnRemove();
+                removable.CleanUp();
             }
         }
         worldsToBeRemoved.Clear();

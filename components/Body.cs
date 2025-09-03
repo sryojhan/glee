@@ -6,10 +6,12 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Collider))]
-public class Body : ComponentRaw, IInitializable, IRemovableObserver
+public class Body : ComponentRaw, IInitializable, ICleanable
 {
-    public Vector2 Velocity { get; set; }
+    public Vector Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
+    public float AirResistanceMultiplier { get; set; } = 1;
+    public float Bounciness { get; set; } = 0;
 
     public Collider collider { get; set; }
 
@@ -20,17 +22,17 @@ public class Body : ComponentRaw, IInitializable, IRemovableObserver
         PhysicsWorld.RegisterBody(this);
     }
 
-    public void OnRemove()
+    public void CleanUp()
     {
         PhysicsWorld.UnregisterBody(this);
     }
 
-    public void AddVelocity(Vector2 velocity)
+    public void Accelerate(Vector acceleration)
     {
-        Velocity += velocity * Time.physicsDeltaTime;
+        Velocity += acceleration * Time.physicsDeltaTime;
     }
 
-    public void AddInstantVelocity(Vector2 velocity)
+    public void AddInstantVelocity(Vector velocity)
     {
         Velocity += velocity;
     }
@@ -38,13 +40,20 @@ public class Body : ComponentRaw, IInitializable, IRemovableObserver
 
     public void SetHorizontalVelocity(float velocity)
     {
-        Velocity = new Vector2(velocity, Velocity.Y);
+        Velocity = new Vector(velocity, Velocity.Y);
     }
 
     public void SetVerticalVelocity(float velocity)
     {
-        Velocity = new Vector2(Velocity.X, velocity);
+        Velocity = new Vector(Velocity.X, velocity);
     }
 
 
+    /// <summary>
+    /// Add an oposing force to the body velocity relative to the body's current speed
+    /// </summary>
+    public void AddResistance(float resistanceScale)
+    {
+        Velocity -= Velocity * (resistanceScale * Time.physicsDeltaTime);
+    }
 }

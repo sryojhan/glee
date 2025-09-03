@@ -6,22 +6,17 @@ namespace Glee.Physics;
 
 public class Rect : Bounds
 {
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance)
-    {
-        return Raycast(origin, direction, distance, out _);
-    }
-
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance, out RaycastHit hit)
+    public override bool Raycast(Vector origin, Vector direction, float distance, out RaycastHit hit)
     {
         hit = new RaycastHit();
 
-        Vector2 halfSize = Size * 0.5f;
-        Vector2 minPoint = Position - halfSize;
-        Vector2 maxPoint = Position + halfSize;
+        Vector halfSize = Size * 0.5f;
+        Vector minPoint = Position - halfSize;
+        Vector maxPoint = Position + halfSize;
 
 
         // Evitar división entre cero
-        Vector2 invDir = new Vector2(
+        Vector invDir = new Vector(
             direction.X != 0 ? 1f / direction.X : float.PositiveInfinity,
             direction.Y != 0 ? 1f / direction.Y : float.PositiveInfinity
         );
@@ -48,7 +43,7 @@ public class Rect : Bounds
             return false;
 
         // Punto de impacto
-        Vector2 hitPoint = origin + direction * t;
+        Vector hitPoint = origin + direction * t;
         hit = new RaycastHit(origin, direction, hitPoint);
         return true;
 
@@ -60,29 +55,24 @@ public class Circle : Bounds
 {
     public float Radius => entity.Size.X * 0.5f;
 
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance)
-    {
-        return Raycast(origin, direction, distance, out _);
-    }
-
-    public override bool Raycast(Vector2 origin, Vector2 direction, float distance, out RaycastHit hit)
+    public override bool Raycast(Vector origin, Vector direction, float distance, out RaycastHit hit)
     {
         hit = new RaycastHit();
 
-        if (direction == Vector2.Zero)
+        if (direction == Vector.Zero)
             return false;
 
         direction.Normalize();
 
 
-        Vector2 pointToCircle = Position - origin;
+        Vector pointToCircle = Position - origin;
 
-        float projection = Vector2.Dot(pointToCircle, direction);
+        float projection = Vector.Dot(pointToCircle, direction);
 
         if (projection < 0) //Point going in a different direction
             return false;
 
-        float circleToRaySquared = Vector2.Dot(pointToCircle, pointToCircle) - projection * projection;
+        float circleToRaySquared = Vector.Dot(pointToCircle, pointToCircle) - projection * projection;
 
         if (circleToRaySquared > Radius * Radius) //Point doesn't hit the ray
             return false;
@@ -104,7 +94,7 @@ public class Circle : Bounds
 
         if (hitDistance != float.MaxValue)  //No intersection inside the range
         {
-            Vector2 hitPoint = origin + direction * hitDistance;
+            Vector hitPoint = origin + direction * hitDistance;
 
             hit = new RaycastHit(origin, direction, hitPoint);
             return true;

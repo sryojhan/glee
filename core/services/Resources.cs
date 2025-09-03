@@ -101,14 +101,14 @@ namespace Glee.Engine
 
         /// <param name="combineName">Whether to combine the name with texture name</param>
         /// <returns></returns>
-        public Sprite CreateSprite(string baseTexture, string spriteName, Point position, Point size, bool combineName)
+        public Sprite CreateSprite(string baseTexture, string spriteName, VectorInt position, VectorInt size, bool combineName)
         {
 
             Texture texture = Load<Texture>(baseTexture);
             return CreateSprite(texture, spriteName, position, size, combineName);
         }
 
-        public Sprite CreateSprite(Texture baseTexture, string spriteName, Point position, Point size, bool combineName)
+        public Sprite CreateSprite(Texture baseTexture, string spriteName, VectorInt position, VectorInt size, bool combineName)
         {
             if (combineName) spriteName = Sprite.CombineName(baseTexture, spriteName);
 

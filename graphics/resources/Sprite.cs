@@ -12,7 +12,7 @@ public class Sprite : GleeResource, ITexture
 {
     public Texture2D BaseTexture => rawTexture.BaseTexture;
 
-    public Point Size => sourceRectangle.Size;
+    public VectorInt Size => sourceRectangle.Size;
 
     public int Width => sourceRectangle.Width;
 
@@ -56,7 +56,7 @@ public class Sprite : GleeResource, ITexture
     }
 
 
-    public void Render(Vector2 position, Vector2 size, float rotation = 0, Material material = null)
+    public void Render(Vector position, Vector size, float rotation = 0, Material material = null)
     {
         Renderer.Render(this, position, size, sourceRectangle, rotation, material);
     }

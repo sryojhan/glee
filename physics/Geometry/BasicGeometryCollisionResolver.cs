@@ -14,13 +14,13 @@ public class CircleCircleCollisionResolver : ICollisionResolver
         float radiusSquared = (circleA.Radius + circleB.Radius) * (circleA.Radius + circleB.Radius);
 
         float distanceSquared =
-        Vector2.DistanceSquared(circleA.Position, circleB.Position);
+        Vector.DistanceSquared(circleA.Position, circleB.Position);
 
 
         return distanceSquared < radiusSquared;
     }
 
-    public float CalculatePenetration(Bounds A, Bounds B, Vector2 velocityA) => throw new NotImplementedException();
+    public float CalculatePenetration(Bounds A, Bounds B, Vector velocityA) => throw new NotImplementedException();
 }
 
 
@@ -30,31 +30,31 @@ public class RectRectCollisionResolver : ICollisionResolver
     {
         (Rect circleA, Rect circleB) = ICollisionResolver.BoundCast<Rect, Rect>(A, B);
 
-        Vector2 halfA = circleA.Size * 0.5f;
-        Vector2 halfB = circleB.Size * 0.5f;
+        Vector halfA = circleA.Size * 0.5f;
+        Vector halfB = circleB.Size * 0.5f;
 
-        Vector2 minA = circleA.Position - halfA;
-        Vector2 maxA = circleA.Position + halfA;
+        Vector minA = circleA.Position - halfA;
+        Vector maxA = circleA.Position + halfA;
 
-        Vector2 minB = circleB.Position - halfB;
-        Vector2 maxB = circleB.Position + halfB;
+        Vector minB = circleB.Position - halfB;
+        Vector maxB = circleB.Position + halfB;
 
         return minA.X <= maxB.X && maxA.X >= minB.X &&
                minA.Y <= maxB.Y && maxA.Y >= minB.Y;
     }
 
 
-    public float CalculatePenetration(Bounds A, Bounds B, Vector2 velocityA)
+    public float CalculatePenetration(Bounds A, Bounds B, Vector velocityA)
     {
         // AABB centrados
-        Vector2 halfA = A.Size * 0.5f;
-        Vector2 halfB = B.Size * 0.5f;
+        Vector halfA = A.Size * 0.5f;
+        Vector halfB = B.Size * 0.5f;
 
-        Vector2 minA = A.Position - halfA;
-        Vector2 maxA = A.Position + halfA;
+        Vector minA = A.Position - halfA;
+        Vector maxA = A.Position + halfA;
 
-        Vector2 minB = B.Position - halfB;
-        Vector2 maxB = B.Position + halfB;
+        Vector minB = B.Position - halfB;
+        Vector maxB = B.Position + halfB;
 
         // Solapamiento (si no hay, 0)
         float overlapX = MathF.Min(maxA.X, maxB.X) - MathF.Max(minA.X, minB.X);
@@ -103,23 +103,23 @@ public class CircleRectCollisionResolver : ICollisionResolver
     {
         (Circle circle, Rect rect) = ICollisionResolver.BoundCast<Circle, Rect>(A, B);
 
-        Vector2 half = rect.Size * 0.5f;
-        Vector2 min = rect.Position - half;
-        Vector2 max = rect.Position + half;
+        Vector half = rect.Size * 0.5f;
+        Vector min = rect.Position - half;
+        Vector max = rect.Position + half;
 
         // Clamp: punto más cercano del rectángulo al círculo
         float closestX = Math.Clamp(circle.Position.X, min.X, max.X);
         float closestY = Math.Clamp(circle.Position.Y, min.Y, max.Y);
-        Vector2 closestPoint = new Vector2(closestX, closestY);
+        Vector closestPoint = new Vector(closestX, closestY);
 
         // Distancia del círculo al punto más cercano
-        Vector2 diff = circle.Position - closestPoint;
+        Vector diff = circle.Position - closestPoint;
         float distSq = diff.LengthSquared();
 
         return distSq <= circle.Radius * circle.Radius;
     }
 
-    public float CalculatePenetration(Bounds A, Bounds B, Vector2 velocityA) => throw new NotImplementedException();
+    public float CalculatePenetration(Bounds A, Bounds B, Vector velocityA) => throw new NotImplementedException();
 }
 
 

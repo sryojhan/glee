@@ -6,7 +6,7 @@ namespace Glee;
 
 
 
-public class Log : Service, IRemovableObserver
+public class Log : Service, ICleanable
 {
     const string RED = "\u001b[31m";
     const string YELLOW = "\u001b[33m";
@@ -28,7 +28,7 @@ public class Log : Service, IRemovableObserver
     }
 
 
-    public void OnRemove()
+    public void CleanUp()
     {
         //TODO: flushing logs into a file
     }

@@ -12,7 +12,7 @@ public class Texture : GleeResource, ITexture
 {
     public Texture2D BaseTexture { get; set; }
 
-    public Point Size => new(Width, Height);
+    public VectorInt Size => new(Width, Height);
     public int Width => BaseTexture.Width;
     public int Height => BaseTexture.Height;
 

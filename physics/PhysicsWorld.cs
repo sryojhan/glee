@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Glee.Behaviours;
 using Glee.Components;
 using Glee.Engine;
 using Microsoft.Xna.Framework;
@@ -12,12 +13,17 @@ public class PhysicsWorld
 {
     public Vector2 Gravity { get; set; } = new(0, -10.0f);
 
+    public float AirResistance { get; set; } = 0.1f;
+
+
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
     internal readonly HashSet<Collider> colliders;
     internal readonly HashSet<Body> bodies;
+    public  CollisionMatrix CollisionMatrix { get; private set; } = new();
 
-
+    //TODO: separate physics step logic from world data
+    //TODO: make a class to represent a uniquePair. Also add CollisionMatrix pair to this
     private record struct CollisionRegistry
     {
         public Collider A { get; }
@@ -25,7 +31,7 @@ public class PhysicsWorld
         public CollisionRegistry(Collider first, Collider second)
         {
             A = first.GetHashCode() < second.GetHashCode() ? first : second;
-            B = first.GetHashCode() < second.GetHashCode() ? first : second;
+            B = first.GetHashCode() < second.GetHashCode() ? second : first;
         }
     }
 
@@ -109,7 +115,7 @@ public class PhysicsWorld
     }
 
 
-    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver);
+    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver, Vector2 direction, float speed);
 
     //TODO: Move this to a physics manager
     internal void PhysicsStep()
@@ -117,62 +123,57 @@ public class PhysicsWorld
 
         foreach (Body body in bodies)
         {
-            //Vector2 validPosition = body.entity.Position;
+            //Apply gravity
+            body.AddInstantVelocity(Gravity * (body.GravityMultiplier * world.Time.physicsDeltaTime));
 
-            //Update the current velocity
-            body.Velocity += Gravity * body.GravityMultiplier * world.Time.deltaTime;
-
+            //Air resistance
+            body.AddResistance(AirResistance * body.AirResistanceMultiplier);
 
             //Separate collisions between axis
+            float maxFriction = 0;
+            float maxPenetration = 0;
+            void OnCollision(Collider collider, ICollisionResolver resolver, Vector direction, float speed)
+            {
+                float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction * speed);
 
+                if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
+                    maxPenetration = penetration;
+
+
+                //Calculate friction
+                float friction = MathF.Sqrt(body.collider.Friction * collider.Friction);
+                if (friction > maxFriction)
+                    maxFriction = friction;
+
+                collisionThisFrame.Add(new CollisionRegistry(body.collider, collider)); 
+            }
 
             if (MathF.Abs(body.Velocity.X) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Right * body.Velocity.X * world.Time.physicsDeltaTime;
 
-                float maxPenetration = 0;
-
-                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
-                {
-                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Right * body.Velocity.X);
-
-                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
-                        maxPenetration = penetration;
-                }
-
-
-                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
-
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Right, body.Velocity.X);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    
-                    body.Velocity = new Vector2(0, body.Velocity.Y);
+                    body.Velocity = new Vector2(-body.Velocity.X * body.Bounciness, body.Velocity.Y * (1 - maxFriction * world.Time.physicsDeltaTime));
                     body.entity.Position -= Utils.Right * maxPenetration;
                 }
             }
+
+            maxFriction = 0;
+            maxPenetration = 0;
 
             if (MathF.Abs(body.Velocity.Y) > Utils.Delta)
             {
                 body.entity.Position = body.entity.Position + Utils.Up * body.Velocity.Y * world.Time.physicsDeltaTime;
 
-                float maxPenetration = 0;
-
-                void OnHorizontalCollision(Collider collider, ICollisionResolver resolver)
-                {
-                    float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, Utils.Up * body.Velocity.Y);
-
-
-                    if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
-                        maxPenetration = penetration;
-                }
-
-                CheckCollisionWithAllColliders(body, OnHorizontalCollision);
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Up, body.Velocity.Y);
 
                 if (MathF.Abs(maxPenetration) > 0)
                 {
-                    body.Velocity = new Vector2(body.Velocity.X, 0);
-                    body.entity.Position -= Utils.Up * maxPenetration; 
+                    body.Velocity = new Vector2(body.Velocity.X * (1 - maxFriction * world.Time.physicsDeltaTime), -body.Velocity.Y * body.Bounciness);
+                    body.entity.Position -= Utils.Up * maxPenetration;
                 }
 
             }
@@ -180,18 +181,25 @@ public class PhysicsWorld
         }
 
 
-        //TODO: physics callbacks
+        ManageCollisionCallbacks();
     }
 
 
 
-    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision)
+    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision, Vector2 direction, float speed)
     {
         Type bodyType = body.collider.bounds.GetType();
 
         foreach (Collider collider in colliders)
         {
-            if (collider == body.collider) continue;
+            if (body.collider == collider) continue;
+
+            //This way if both layers are null (default case), they will still collider
+            if (string.IsNullOrEmpty(body.collider.Layer) != string.IsNullOrEmpty(collider.Layer)) continue;
+            if (!string.IsNullOrEmpty(body.collider.Layer))
+            {
+                if (!CollisionMatrix.Collides(body.collider.Layer, collider.Layer)) continue;
+            }
 
             Type colliderType = collider.bounds.GetType();
 
@@ -206,43 +214,56 @@ public class PhysicsWorld
 
             if (collision)
             {
-                onCollision.Invoke(collider, resolver);
+                onCollision.Invoke(collider, resolver, direction, speed);
             }
         }
     }
 
 
 
-
-    public bool CheckCollision(Body body, out Collider collidedObj, out ICollisionResolver resolver)
+    private void ManageCollisionCallbacks()
     {
-        collidedObj = null;
-        resolver = null;
-
-        Type bodyType = body.collider.bounds.GetType();
-        foreach (Collider collider in colliders)
+        foreach (CollisionRegistry registry in collisionThisFrame)
         {
-            if (collider == body.collider) continue;
+            ICollisionStayObserver A = registry.A.entity as ICollisionStayObserver;
+            ICollisionStayObserver B = registry.B.entity as ICollisionStayObserver;
 
-            Type colliderType = collider.bounds.GetType();
-
-            if (!CollisionResolver.TryGetValue((bodyType, colliderType), out resolver))
+            if (collisionLastFrame.Contains(registry))
             {
-                //TODO: correct error
-                GleeError.Throw($"Cannot check collision between {bodyType} and {colliderType}");
-                continue;
+                // collision stay
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
+
+                collisionLastFrame.Remove(registry);
             }
-
-            bool collision = resolver.Resolve(body.collider.bounds, collider.bounds);
-
-            if (collision)
+            else
             {
-                collidedObj = collider;
-                return true;
+                // collision begin
+                ICollisionBeginObserver A_begin = registry.A.entity as ICollisionBeginObserver;
+                ICollisionBeginObserver B_begin = registry.B.entity as ICollisionBeginObserver;
+
+                A_begin?.OnCollisionBegin(registry.B);
+                B_begin?.OnCollisionBegin(registry.A);
+
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
+
             }
         }
 
-        return false;
+        //If collisions last frame have not been cleared, it means it doesn't collide any more. Hence we call collisionEnd
+        foreach (CollisionRegistry registry in collisionLastFrame)
+        {
+            ICollisionEndObserver A_end = registry.A.entity as ICollisionEndObserver;
+            ICollisionEndObserver B_end = registry.B.entity as ICollisionEndObserver;
+
+            A_end.OnCollisionEnd(registry.B);
+            B_end.OnCollisionEnd(registry.A);
+        }
+
+
+        collisionLastFrame = collisionThisFrame;
+        collisionThisFrame = [];
     }
 
 

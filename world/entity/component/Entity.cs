@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using Glee.Engine;
 using Glee.Behaviours;
 using System;
+using Glee.Components;
 
 namespace Glee;
 
 
-public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable
+public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICollisionObserver
 {
+    //TODO: maybe it's better to not have a GleeContainer here
     readonly GleeContainer components;
 
     readonly List<IUpdatable> updatables;
     readonly List<IRenderizable> renderizables;
 
+    //TODO: physics loop components
 
     public Entity(string name, World world) : this(name, null, world)
     {
@@ -134,6 +137,38 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable
     }
 
 
+
+    public void OnCollisionBegin(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollisionBegin(other);
+            }
+        }
+    }
+
+    public void OnCollision(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollision(other);
+            }
+        }
+    }
+    public void OnCollisionEnd(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollisionEnd(other);
+            }
+        }
+    }
 
 
 }

@@ -80,8 +80,8 @@ public class Services
     {
         ServiceType serv = Fetch<ServiceType>();
 
-        if (serv is IRemovableObserver removable)
-            removable.OnRemove();
+        if (serv is ICleanable removable)
+            removable.CleanUp();
 
         instance.services.Remove(typeof(ServiceType));
     }
