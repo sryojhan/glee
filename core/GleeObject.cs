@@ -43,6 +43,8 @@ public class GleeObject
         Services.Fetch<Log>().Message($"{GleeCore.GameTime.TotalGameTime}: {GetType()}: {message}");
     }
 
+    //TODO: move each of this to a partial class
+
     protected static ServiceType Get<ServiceType>() where ServiceType : Service
     {
         return Services.Fetch<ServiceType>();

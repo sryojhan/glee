@@ -2,8 +2,8 @@ using Glee.Engine;
 
 namespace Glee;
 
-
-public static class Utils
+//TODO: Divide this into various classes
+public static partial class Utils
 {
     public static Vector Left => new(-1, 0);
     public static Vector Right => new(1, 0);

@@ -37,6 +37,8 @@ public class PlatformerCharacterController : EntityRaw, IEverything
         BodyComponent.Initialize();
 
         ImageComponent.material = Material.Default;
+
+        ColliderComponent.Layer = CollisionLayers.Player;
     }
 
 

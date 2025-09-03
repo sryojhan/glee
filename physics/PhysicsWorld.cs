@@ -20,8 +20,10 @@ public class PhysicsWorld
 
     internal readonly HashSet<Collider> colliders;
     internal readonly HashSet<Body> bodies;
+    public  CollisionMatrix CollisionMatrix { get; private set; } = new();
 
-
+    //TODO: separate physics step logic from world data
+    //TODO: make a class to represent a uniquePair. Also add CollisionMatrix pair to this
     private record struct CollisionRegistry
     {
         public Collider A { get; }
@@ -190,7 +192,14 @@ public class PhysicsWorld
 
         foreach (Collider collider in colliders)
         {
-            if (collider == body.collider) continue;
+            if (body.collider == collider) continue;
+
+            //This way if both layers are null (default case), they will still collider
+            if (string.IsNullOrEmpty(body.collider.Layer) != string.IsNullOrEmpty(collider.Layer)) continue;
+            if (!string.IsNullOrEmpty(body.collider.Layer))
+            {
+                if (!CollisionMatrix.Collides(body.collider.Layer, collider.Layer)) continue;
+            }
 
             Type colliderType = collider.bounds.GetType();
 
