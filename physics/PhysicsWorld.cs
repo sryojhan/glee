@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Glee.Behaviours;
 using Glee.Components;
 using Glee.Engine;
+using Microsoft.Xna.Framework;
 
 
 namespace Glee.Physics;
@@ -11,10 +13,30 @@ public class PhysicsWorld
 {
     public Vector2 Gravity { get; set; } = new(0, -10.0f);
 
+    public float AirResistance { get; set; } = 0.1f;
+
+
     public static Dictionary<(Type a, Type b), ICollisionResolver> CollisionResolver { get; private set; } = null;
 
     internal readonly HashSet<Collider> colliders;
     internal readonly HashSet<Body> bodies;
+    public  CollisionMatrix CollisionMatrix { get; private set; } = new();
+
+    //TODO: separate physics step logic from world data
+    //TODO: make a class to represent a uniquePair. Also add CollisionMatrix pair to this
+    private record struct CollisionRegistry
+    {
+        public Collider A { get; }
+        public Collider B { get; }
+        public CollisionRegistry(Collider first, Collider second)
+        {
+            A = first.GetHashCode() < second.GetHashCode() ? first : second;
+            B = first.GetHashCode() < second.GetHashCode() ? second : first;
+        }
+    }
+
+    private HashSet<CollisionRegistry> collisionThisFrame;
+    private HashSet<CollisionRegistry> collisionLastFrame;
 
     private float lastPhysicsUpdate;
 
@@ -41,6 +63,9 @@ public class PhysicsWorld
 
         colliders = [];
         bodies = [];
+
+        collisionThisFrame = [];
+        collisionLastFrame = [];
 
         TargetPhysicsFrameRate = 50.0f;
 
@@ -89,50 +114,156 @@ public class PhysicsWorld
         return deltaTime;
     }
 
+
+    private delegate void CollisionCallback(Collider collider, ICollisionResolver resolver, Vector2 direction, float speed);
+
+    //TODO: Move this to a physics manager
     internal void PhysicsStep()
     {
 
         foreach (Body body in bodies)
         {
-            Vector2 previousPosition = body.entity.Position;
+            //Apply gravity
+            body.AddInstantVelocity(Gravity * (body.GravityMultiplier * world.Time.physicsDeltaTime));
 
-            body.Velocity += Gravity * body.GravityMultiplier * world.Time.deltaTime;
-            body.entity.Position += body.Velocity * world.Time.deltaTime;
+            //Air resistance
+            body.AddResistance(AirResistance * body.AirResistanceMultiplier);
 
-            if (CheckCollision(body))
+            //Separate collisions between axis
+            float maxFriction = 0;
+            float maxPenetration = 0;
+            void OnCollision(Collider collider, ICollisionResolver resolver, Vector direction, float speed)
             {
-                body.Velocity = Vector2.Zero;
-                body.entity.Position = previousPosition;
+                float penetration = resolver.CalculatePenetration(body.collider.bounds, collider.bounds, direction * speed);
+
+                if (MathF.Abs(penetration) > MathF.Abs(maxPenetration))
+                    maxPenetration = penetration;
+
+
+                //Calculate friction
+                float friction = MathF.Sqrt(body.collider.Friction * collider.Friction);
+                if (friction > maxFriction)
+                    maxFriction = friction;
+
+                collisionThisFrame.Add(new CollisionRegistry(body.collider, collider)); 
+            }
+
+            if (MathF.Abs(body.Velocity.X) > Utils.Delta)
+            {
+                body.entity.Position = body.entity.Position + Utils.Right * body.Velocity.X * world.Time.physicsDeltaTime;
+
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Right, body.Velocity.X);
+
+                if (MathF.Abs(maxPenetration) > 0)
+                {
+                    body.Velocity = new Vector2(-body.Velocity.X * body.Bounciness, body.Velocity.Y * (1 - maxFriction * world.Time.physicsDeltaTime));
+                    body.entity.Position -= Utils.Right * maxPenetration;
+                }
+            }
+
+            maxFriction = 0;
+            maxPenetration = 0;
+
+            if (MathF.Abs(body.Velocity.Y) > Utils.Delta)
+            {
+                body.entity.Position = body.entity.Position + Utils.Up * body.Velocity.Y * world.Time.physicsDeltaTime;
+
+                CheckCollisionWithAllColliders(body, OnCollision, Utils.Up, body.Velocity.Y);
+
+                if (MathF.Abs(maxPenetration) > 0)
+                {
+                    body.Velocity = new Vector2(body.Velocity.X * (1 - maxFriction * world.Time.physicsDeltaTime), -body.Velocity.Y * body.Bounciness);
+                    body.entity.Position -= Utils.Up * maxPenetration;
+                }
+
             }
 
         }
+
+
+        ManageCollisionCallbacks();
     }
 
 
 
-    public bool CheckCollision(Body body)
+    private void CheckCollisionWithAllColliders(Body body, CollisionCallback onCollision, Vector2 direction, float speed)
     {
         Type bodyType = body.collider.bounds.GetType();
+
         foreach (Collider collider in colliders)
         {
-            if (collider == body.collider) continue;
+            if (body.collider == collider) continue;
+
+            //This way if both layers are null (default case), they will still collider
+            if (string.IsNullOrEmpty(body.collider.Layer) != string.IsNullOrEmpty(collider.Layer)) continue;
+            if (!string.IsNullOrEmpty(body.collider.Layer))
+            {
+                if (!CollisionMatrix.Collides(body.collider.Layer, collider.Layer)) continue;
+            }
 
             Type colliderType = collider.bounds.GetType();
 
             if (!CollisionResolver.TryGetValue((bodyType, colliderType), out ICollisionResolver resolver))
             {
-                throw new Exception($"Cannot check collision between {bodyType} and {colliderType}");
+                //TODO: error
+                GleeError.Throw($"Cannot check collision between {bodyType} and {colliderType}");
+                continue;
             }
 
             bool collision = resolver.Resolve(body.collider.bounds, collider.bounds);
 
             if (collision)
             {
-                return true;
+                onCollision.Invoke(collider, resolver, direction, speed);
+            }
+        }
+    }
+
+
+
+    private void ManageCollisionCallbacks()
+    {
+        foreach (CollisionRegistry registry in collisionThisFrame)
+        {
+            ICollisionStayObserver A = registry.A.entity as ICollisionStayObserver;
+            ICollisionStayObserver B = registry.B.entity as ICollisionStayObserver;
+
+            if (collisionLastFrame.Contains(registry))
+            {
+                // collision stay
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
+
+                collisionLastFrame.Remove(registry);
+            }
+            else
+            {
+                // collision begin
+                ICollisionBeginObserver A_begin = registry.A.entity as ICollisionBeginObserver;
+                ICollisionBeginObserver B_begin = registry.B.entity as ICollisionBeginObserver;
+
+                A_begin?.OnCollisionBegin(registry.B);
+                B_begin?.OnCollisionBegin(registry.A);
+
+                A?.OnCollision(registry.B);
+                B?.OnCollision(registry.A);
+
             }
         }
 
-        return false;
+        //If collisions last frame have not been cleared, it means it doesn't collide any more. Hence we call collisionEnd
+        foreach (CollisionRegistry registry in collisionLastFrame)
+        {
+            ICollisionEndObserver A_end = registry.A.entity as ICollisionEndObserver;
+            ICollisionEndObserver B_end = registry.B.entity as ICollisionEndObserver;
+
+            A_end.OnCollisionEnd(registry.B);
+            B_end.OnCollisionEnd(registry.A);
+        }
+
+
+        collisionLastFrame = collisionThisFrame;
+        collisionThisFrame = [];
     }
 
 
@@ -150,7 +281,9 @@ public class PhysicsWorld
 
     public static void RegisterBody(Body body)
     {
-        body.world.physicsWorld.bodies.Add(body);
+        if (body.collider != null)
+            body.world.physicsWorld.bodies.Add(body);
+        else GleeError.Throw("Tried to add a body with no collider assigned"); //TODO: custom error
     }
 
     public static void UnregisterBody(Body body)

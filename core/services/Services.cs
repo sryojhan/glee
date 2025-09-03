@@ -6,8 +6,10 @@ using Glee.Graphics;
 
 namespace Glee;
 
-public class Service: GleeObject
-{ 
+//TODO: make AdminService. This service cannot be disabled, removed, created by the game...
+
+public class Service : GleeObject
+{
     //TODO: make an interface to implement enabled in various clases (entity, components)
     public bool Enabled { get; set; } = true;
 }
@@ -78,8 +80,8 @@ public class Services
     {
         ServiceType serv = Fetch<ServiceType>();
 
-        if (serv is IRemovableObserver removable)
-            removable.OnRemove();
+        if (serv is ICleanable removable)
+            removable.CleanUp();
 
         instance.services.Remove(typeof(ServiceType));
     }

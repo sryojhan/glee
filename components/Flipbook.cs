@@ -1,6 +1,7 @@
 using Glee.Attributes;
 using Glee.Behaviours;
 using Glee.Components;
+using Glee.Engine;
 using Glee.Graphics;
 
 
@@ -8,7 +9,7 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Image))]
-public class Flipbook : Component, IUpdatable, IInitializable
+public class Flipbook : ComponentRaw, IUpdatable, IInitializable
 {
     public Animation animation { get; set; }
 
@@ -24,19 +25,24 @@ public class Flipbook : Component, IUpdatable, IInitializable
 
     public float SpeedMultiplier { get; set; } = 1;
 
-    private Image target;
+    private Image image;
+    public Image Target
+    {
+        get => image;
+        init { image = value; }
+    }
     private float frameTimer = 0;
     private bool pingPongDirection = true;
 
     public void Initialize()
     {
-        target = GetComponent<Image>();
+        image ??= TryGetComponent<Image>();
     }
 
     public void Update()
     {
         if (animation == null) return;
-        if (target == null) return;
+        if (Target == null) return;
 
         if (!Playing) return;
 
@@ -52,7 +58,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
     public void AdvanceFrame()
     {
         if (animation == null) return;
-        if (target == null) return;
+        if (Target == null) return;
 
 
         if (TotalFrames == 1)
@@ -77,7 +83,7 @@ public class Flipbook : Component, IUpdatable, IInitializable
                         CurrentFrame = (CurrentFrame + 1) % TotalFrames;
                         break;
                     }
-                
+
                 case Mode.PingPong:
                     {
 
@@ -111,6 +117,6 @@ public class Flipbook : Component, IUpdatable, IInitializable
         bool reversed = PlayMode == Mode.Reverse || PlayMode == Mode.ReverseLoop;
 
         int targetFrame = !reversed ? CurrentFrame : TotalFrames - CurrentFrame - 1;
-        target.texture = animation.Frames[targetFrame];
+        Target.texture = animation.Frames[targetFrame];
     }
 }

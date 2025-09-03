@@ -23,7 +23,7 @@ public class Material : GleeResource
 
     public static Material Create()
     {
-        return Default();
+        return Default;
     }
 
     /// <summary>
@@ -87,7 +87,8 @@ public class Material : GleeResource
     /// Returns a material with no assigned shader
     /// </summary>
     /// <returns></returns>
-    public static Material Default(string name = "default")
+    public static Material Default => new("default", null);
+    public static Material CreateDefaultInstance(string name)
     {
         return new Material(name, null);
     }

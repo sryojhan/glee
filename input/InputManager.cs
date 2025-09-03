@@ -3,7 +3,8 @@ using Glee.Engine;
 using Glee.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Glee.Input;
+namespace Glee.Input; //TODO: change the namespace name because accessing Input.Input is ugly
+//TODO: Move the static class to Glee namespace and change this namespace to something like InputManagement
 
 public class InputManager
 {
@@ -59,8 +60,11 @@ public class InputManager
 
 public static class Input
 {
+    public static InputManager Manager => GleeCore.Input;
+
     public static void Bind(string name, InputBinding bind)
     {
+        //TODO: check if exists and combine with previous
         GleeCore.Input.bindings.Add(name, bind);
     }
 

@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using Glee.Engine;
 using Glee.Behaviours;
 using System;
+using Glee.Components;
 
 namespace Glee;
 
 
-public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
+public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICollisionObserver
 {
+    //TODO: maybe it's better to not have a GleeContainer here
     readonly GleeContainer components;
 
     readonly List<IUpdatable> updatables;
     readonly List<IRenderizable> renderizables;
 
+    //TODO: physics loop components
 
-    public EntityComposed(string name, World world) : this(name, null, world)
+    public Entity(string name, World world) : this(name, null, world)
     {
 
     }
 
-    public EntityComposed(string name, Entity parent, World world) : base(name, parent, world)
+    public Entity(string name, EntityRaw parent, World world) : base(name, parent, world)
     {
         components = [];
 
@@ -29,7 +32,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     }
 
 
-    public ComponentType CreateComponent<ComponentType>() where ComponentType : Component, new()
+    public ComponentType CreateComponent<ComponentType>() where ComponentType : ComponentRaw, new()
     {
         CreateDependencies<ComponentType>();
 
@@ -70,7 +73,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
             {
                 if (HasComponent(requirement.Value)) continue;
 
-                typeof(EntityComposed).
+                typeof(Entity).
                 GetMethod(nameof(CreateComponent)).
                 MakeGenericMethod(requirement.Value).Invoke(this, null);
             }
@@ -81,7 +84,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public bool HasComponent(Type componentType)
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp.GetType() == componentType) return true;
         }
@@ -89,9 +92,9 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
         return false;
     }
 
-    public ComponentType GetComponent<ComponentType>() where ComponentType : Component
+    public ComponentType GetComponent<ComponentType>() where ComponentType : ComponentRaw
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp is ComponentType found)
             {
@@ -105,7 +108,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
 
     public void Initialize()
     {
-        foreach (Component comp in components)
+        foreach (ComponentRaw comp in components)
         {
             if (comp is IInitializable initializable)
             {
@@ -119,7 +122,7 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
         foreach (IUpdatable updatable in updatables)
         {
             //TODO: do something to avoid making this conversion everyframe
-            if (((Component)updatable).Enabled)
+            if (((ComponentRaw)updatable).Enabled)
                 updatable.Update();
         }
     }
@@ -128,12 +131,44 @@ public class EntityComposed : Entity, IInitializable, IUpdatable, IRenderizable
     {
         foreach (IRenderizable renderizable in renderizables)
         {
-            if (((Component)renderizable).Enabled)
+            if (((ComponentRaw)renderizable).Enabled)
                 renderizable.Render();
         }
     }
 
 
+
+    public void OnCollisionBegin(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollisionBegin(other);
+            }
+        }
+    }
+
+    public void OnCollision(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollision(other);
+            }
+        }
+    }
+    public void OnCollisionEnd(Collider other)
+    {
+        foreach (ComponentRaw component in components)
+        {
+            if (component is ICollisionObserver observer)
+            {
+                observer.OnCollisionEnd(other);
+            }
+        }
+    }
 
 
 }

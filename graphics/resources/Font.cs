@@ -34,7 +34,7 @@ public class Font : GleeResource
 
 
 
-    public Vector2 ComputeSize(string text)
+    public Vector ComputeSize(string text)
     {
         return font.MeasureString(text);
     }
