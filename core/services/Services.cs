@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Net.Security;
 using Glee.Behaviours;
 using Glee.Engine;
 using Glee.Graphics;
@@ -12,7 +14,17 @@ public class Service : GleeObject
 {
     //TODO: make an interface to implement enabled in various clases (entity, components)
     public bool Enabled { get; set; } = true;
+
+    public virtual void OnPause() { }
+    public virtual void OnResume() { }
 }
+
+
+public class CoreService : Service
+{
+    internal CoreService() { }
+}
+
 
 public class Services
 {
@@ -64,11 +76,36 @@ public class Services
 
     public static void Append<ServiceType>(Service service) where ServiceType : Service
     {
+        if (CoreCheckError<ServiceType>("Append")) return;
         instance.services.Add(typeof(ServiceType), service);
     }
 
 
     public static ServiceType Run<ServiceType>() where ServiceType : Service, new()
+    {
+        if (CoreCheckError<ServiceType>("Run")) return null;
+        return RunInternal<ServiceType>();
+    }
+
+    public static void Shutdown<ServiceType>() where ServiceType : Service
+    {
+        if (CoreCheckError<ServiceType>("Shutdown")) return;
+        ShutdownInternal<ServiceType>();
+    }
+
+    public static void Pause<ServiceType>() where ServiceType : Service
+    {
+        if (CoreCheckError<ServiceType>("Pause")) return;
+        PauseInternal<ServiceType>();
+    }
+
+    public static void Resume<ServiceType>() where ServiceType : Service
+    {
+        if (CoreCheckError<ServiceType>("Resume")) return;
+        ResumeInternal <ServiceType>();
+    }
+
+    public static ServiceType RunInternal<ServiceType>() where ServiceType : Service, new()
     {
         ServiceType serv = new();
         instance.services.Add(typeof(ServiceType), serv);
@@ -76,7 +113,8 @@ public class Services
         return serv;
     }
 
-    public static void Shutdown<ServiceType>() where ServiceType : Service
+
+    public static void ShutdownInternal<ServiceType>() where ServiceType : Service
     {
         ServiceType serv = Fetch<ServiceType>();
 
@@ -86,13 +124,40 @@ public class Services
         instance.services.Remove(typeof(ServiceType));
     }
 
-    public static void Pause<ServiceType>() where ServiceType : Service
+
+
+    internal static void PauseInternal<ServiceType>() where ServiceType : Service
     {
-        Fetch<ServiceType>().Enabled = false;
+        ServiceType service = Fetch<ServiceType>();
+
+        if (!service.Enabled)
+        {
+            service.Enabled = false;
+            service.OnPause();
+        }
     }
 
-    public static void Resume<ServiceType>() where ServiceType : Service
+
+
+    internal static void ResumeInternal<ServiceType>() where ServiceType : Service
     {
-        Fetch<ServiceType>().Enabled = true;
+        ServiceType service = Fetch<ServiceType>();
+
+        if (!service.Enabled)
+        {
+            service.Enabled = true;
+            service.OnResume();
+        }
+    }
+
+    private static bool CoreCheckError<ServiceType>(string errorMessage = "")
+    {
+        if (typeof(CoreService).IsAssignableFrom(typeof(ServiceType)))
+        {
+            //TODO: custom error message
+            GleeError.Throw($"Tried to alter a core service: {errorMessage}");
+            return true;
+        }
+        return false;
     }
 }

@@ -182,9 +182,9 @@ public abstract class GleeCore : Game
         Audio = new AudioController();
 
 
-        Services.Run<Log>();
-        Services.Run<Events>();
-        Services.Run<Resources>();
+        Services.RunInternal<Log>();
+        Services.RunInternal<Events>();
+        Services.RunInternal<Resources>();
 
         WorldManager = new WorldManager();
 
