@@ -46,7 +46,7 @@ public class GleeObject
         return obj == null || !obj.IsValid;       
     }
 
-    internal void Clear()
+    internal void Remove()
     {
         if (CheckValid()) return;
 

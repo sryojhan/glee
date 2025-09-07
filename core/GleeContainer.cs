@@ -59,10 +59,7 @@ public class GleeContainer : GleeObject, ICollection
     {
         // 1. Argument validation:
         // It's crucial to validate the arguments to prevent runtime errors.
-        if (array == null)
-        {
-            throw new ArgumentNullException(nameof(array));
-        }
+        ArgumentNullException.ThrowIfNull(array);
 
         if (index < 0)
         {

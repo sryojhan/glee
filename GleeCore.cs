@@ -136,28 +136,33 @@ public abstract class GleeCore : Game
         // Store reference to engine for global member access.
         s_instance = this;
 
-
         // Set the core's content manager to a reference of the base Game's
         // content manager.
+
         Content = base.Content;
 
         // Set the root directory for content.
         Content.RootDirectory = "Content";
 
-        JSON config = JSON.Create("info");
+        Services = new Services();
+        Services.RunInternal<Log>();
+        Services.RunInternal<Resources>();
+
+        GleeConfiguration config = GleeConfiguration.Create();
+        Services.AppendInternal<GleeConfiguration>(config);
+
 
 
         // Set the window title
-        Window.Title = title;
+        Window.Title = config.Title;
 
-        Services = new Services();
-        Services.AppendInternal<Renderer>(new Renderer(width, height, fullScreen, targetFrameRate));
+        Services.AppendInternal<Renderer>(new Renderer(config.Width, config.Height, config.Fullscreen, config.TargetFrameRate));
 
         // Mouse is visible by default.
-        IsMouseVisible = true;
+        IsMouseVisible = config.IsMouseVisible;
 
         // Exit on escape is true by default
-        ExitOnEscape = true;
+        ExitOnEscape = config.ExitOnEscape;
 
     }
 
@@ -170,9 +175,7 @@ public abstract class GleeCore : Game
         GameTime = new GameTime();
 
         Services.RunInternal<InputManager>();
-        Services.RunInternal<Log>();
         Services.RunInternal<Events>();
-        Services.RunInternal<Resources>();
 
         WorldManager worldManager = Services.RunInternal<WorldManager>();
 
