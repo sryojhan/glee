@@ -19,7 +19,6 @@ namespace Glee.Engine;
 */
 
 
-//TODO: configuracion
 
 /*
 No entiendo a que te refieres con que haga lo del escape opcional? si la idea es que sea un bool para que la configuración decida
@@ -91,9 +90,6 @@ public abstract class GleeCore : Game
     /// </summary>
     public static GleeCore Instance => s_instance;
 
-    //TODO: to cleanup maybe remove this property?
-    private WorldManager worldManager;
-
     /// <summary>
     /// Gets the sprite batch used for all 2D rendering.
     /// </summary>
@@ -119,7 +115,6 @@ public abstract class GleeCore : Game
     public static GameTime GameTime { get; private set; }
 
 
-    public static float TargetFrameRate { get; } = 60.0f;
 
 
     /// <summary>
@@ -129,7 +124,7 @@ public abstract class GleeCore : Game
     /// <param name="width">The initial width, in pixels, of the game window.</param>
     /// <param name="height">The initial height, in pixels, of the game window.</param>
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
-    public GleeCore(string title, int width, int height, bool fullScreen)
+    public GleeCore(string title, int width, int height, bool fullScreen, float targetFrameRate)
     {
         // Ensure that multiple cores are not created.
         if (s_instance != null)
@@ -156,7 +151,7 @@ public abstract class GleeCore : Game
         Window.Title = title;
 
         Services = new Services();
-        Services.AppendInternal<Renderer>(new Renderer(width, height, fullScreen, TargetFrameRate));
+        Services.AppendInternal<Renderer>(new Renderer(width, height, fullScreen, targetFrameRate));
 
         // Mouse is visible by default.
         IsMouseVisible = true;
@@ -179,7 +174,7 @@ public abstract class GleeCore : Game
         Services.RunInternal<Events>();
         Services.RunInternal<Resources>();
 
-        worldManager = Services.RunInternal<WorldManager>();
+        WorldManager worldManager = Services.RunInternal<WorldManager>();
 
         worldManager.StackWorld(LoadInitialWorld());
         worldManager.UpdateStack();
@@ -211,7 +206,7 @@ public abstract class GleeCore : Game
             Exit();
         }
 
-        worldManager.UpdateStack();
+        Services.Fetch<WorldManager>().UpdateStack();
 
         base.Update(gameTime);
     }

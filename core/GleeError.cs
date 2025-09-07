@@ -6,7 +6,14 @@ namespace Glee.Engine;
 //TODO: try catch before each update call in components, entities and worlds
 public class GleeError : Exception
 {
-    public static bool StrictMode { get; set; } = false;
+    //TODO: 3 Modes: Strict, Normal, Permissive
+    public enum ToleranceMode
+    {
+        Permissive, Normal, Strict
+    }
+
+    public static ToleranceMode Tolerance { get; set; }
+
     public static bool Verbose { get; set; } = true;
 
 
@@ -15,7 +22,7 @@ public class GleeError : Exception
 
     public enum ErrorType
     {
-        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch, InvalidInitialization, ResourceFactoryNotFound
+        None, Generic, AssetNotFount, ResourceAlreadyExists, ResourceTypeMismatch, InvalidInitialization, ResourceFactoryNotFound, InvalidGleeObject
     }
 
     public ErrorType Error { get; private set; }
@@ -30,16 +37,34 @@ public class GleeError : Exception
     {
         Throw("Unknown error.", ErrorType.Generic);
     }
+    
+    public static void Try(Utils.Callback func)
+    {
+        try
+        {
+            func?.Invoke();
+        }
+        catch (Exception exc)
+        {
+            Services.Fetch<Log>().Error(exc.Message);
+        }
+    }
 
     public static void Throw(string message, ErrorType type = ErrorType.Generic)
     {
-        Last = new(){Message = message, Type = type};
+        Last = new() { Message = message, Type = type };
 
-        if (StrictMode)
+        if (Tolerance != ToleranceMode.Permissive)
             throw new GleeError(message, type);
 
         if (Verbose)
             Services.Fetch<Log>().Error(message);
+    }
+
+
+    public static void InvalidGleeObject()
+    {
+        Throw("Tried to access a GleeObject that has already been cleared", ErrorType.InvalidGleeObject);
     }
 
 

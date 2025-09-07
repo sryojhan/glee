@@ -1,4 +1,5 @@
 using System;
+using Glee.Graphics;
 
 namespace Glee;
 
@@ -31,7 +32,7 @@ public class Time
         get
         {
             if (realDeltaTime > 0) return (int)MathF.Round(1.0f / realDeltaTime);
-            return (int)MathF.Round(Engine.GleeCore.TargetFrameRate);
+            return (int)MathF.Round(Renderer.TargetFrameRate);
         }
     }
 

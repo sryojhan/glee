@@ -3,6 +3,7 @@ using Glee.Engine;
 namespace Glee;
 
 //TODO: Divide this into various classes
+//TODO: change name to GleeUtils
 public static partial class Utils
 {
     public static Vector Left => new(-1, 0);
@@ -30,7 +31,6 @@ public static partial class Utils
 
     public const float Delta = 0.00001f;
     public delegate void Callback();
-
 
 
     public static class Alignment
