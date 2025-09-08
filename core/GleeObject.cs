@@ -14,7 +14,7 @@ namespace Glee.Engine;
 ///     - Resources => Load
 /// 
 /// </summary>
-public class GleeObject
+public partial class GleeObject
 {
     public UID UID { get; private set; } = new UID();
     public bool IsValid { get; private set; } = true;

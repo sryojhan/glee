@@ -4,7 +4,7 @@ using Glee.Graphics;
 namespace Glee;
 
 
-
+//TODO: there needs to be a way to access the general time of the game
 public class Time
 {
     public float speed { get; set; } = 1;

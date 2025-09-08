@@ -176,6 +176,7 @@ public abstract class GleeCore : Game
 
         Services.RunInternal<InputManager>();
         Services.RunInternal<Events>();
+        Services.RunInternal<CoroutineManager>();
 
         WorldManager worldManager = Services.RunInternal<WorldManager>();
 

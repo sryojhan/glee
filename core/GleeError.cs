@@ -38,7 +38,7 @@ public class GleeError : Exception
         Throw("Unknown error.", ErrorType.Generic);
     }
     
-    public static void Try(Utils.Callback func)
+    public static void Try(Callback func)
     {
         try
         {
