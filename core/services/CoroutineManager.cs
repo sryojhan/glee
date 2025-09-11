@@ -64,3 +64,13 @@ class CoroutineManager : CoreService, IUpdatable
 
 }
 
+
+
+public partial class GleeObject
+{
+    protected void Launch(IEnumerator coroutine)
+    {
+        Get<CoroutineManager>().Launch(this, coroutine);
+    }
+
+}

@@ -68,16 +68,4 @@ namespace Glee
 
 
 
-    namespace Engine
-    {
-        public partial class GleeObject
-        {
-            protected void Launch(IEnumerator coroutine)
-            {
-                Get<CoroutineManager>().Launch(this, coroutine);
-            }
-
-        }
-    }
-
 }
