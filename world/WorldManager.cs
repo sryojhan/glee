@@ -152,7 +152,7 @@ public class WorldManager : CoreService, IUpdatable, IRenderizable
             spotlight = world;
 
             loadedWorlds.AddFirst(world);
-            world.Initialize();
+            world.InitializeWorld();
         }
         worldsToBeAddedOnBottom.Clear();
 
@@ -161,7 +161,7 @@ public class WorldManager : CoreService, IUpdatable, IRenderizable
             spotlight = world;
 
             loadedWorlds.AddLast(world);
-            world.Initialize();
+            world.InitializeWorld();
         }
         worldsToBeAddedOnTop.Clear();
 

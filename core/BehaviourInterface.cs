@@ -36,7 +36,7 @@ public interface IPhysicsUpdatable
     void PhysicsUpdate();
 }
 
-//TODO: collision info class? know more information about the collision
+
 public interface ICollisionObserver : ICollisionBeginObserver, ICollisionStayObserver, ICollisionEndObserver { }
 
 public interface ICollisionBeginObserver

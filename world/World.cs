@@ -62,7 +62,7 @@ public abstract class World : GleeObject
     public abstract void CreateWorld();
 
 
-    public void Initialize()
+    public void InitializeWorld()
     {
         LoadResources();
         CreateWorld();
@@ -71,6 +71,11 @@ public abstract class World : GleeObject
 
     private void InitialiseObjects()
     {
+        if (this is IInitializable worldInitializable)
+        {
+            worldInitializable.Initialize();
+        }
+
         foreach (GleeObject gleeObj in worldObjects)
         {
             if (gleeObj is IInitializable initializable)

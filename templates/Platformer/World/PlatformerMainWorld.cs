@@ -1,5 +1,6 @@
 namespace Glee.Templates.Platformer;
 
+using System.Collections;
 using Glee.Behaviours;
 using Glee.Components;
 using Glee.Graphics;
@@ -13,7 +14,7 @@ public static class CollisionLayers
     public const string Ground = "Ground";
 }
 
-public class PlatformerMainWorld : World, IUpdatable
+public class PlatformerMainWorld : World, IUpdatable, IInitializable
 {
     public Controller Player { get; private set; }
     Texture groundTexture;
@@ -65,7 +66,6 @@ public class PlatformerMainWorld : World, IUpdatable
     }
 
 
-
     public void Update()
     {
         bool isJumping = Input.IsJustDown("jump");
@@ -81,6 +81,18 @@ public class PlatformerMainWorld : World, IUpdatable
         {
             playerBody.SetVerticalVelocity(10);
         }
+    }
+
+    public void Initialize()
+    {
+        Launch(MiCorrutina());
+    }
+
+    IEnumerator MiCorrutina()
+    {
+        Print("Hola");
+        yield return new WaitCondition(()=> Input.IsJustDown("jump"));
+        Print("Adios");
     }
 
 }

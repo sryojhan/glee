@@ -1,9 +1,10 @@
 using System;
+using Glee.Graphics;
 
 namespace Glee;
 
 
-
+//TODO: there needs to be a way to access the general time of the game
 public class Time
 {
     public float speed { get; set; } = 1;
@@ -31,7 +32,7 @@ public class Time
         get
         {
             if (realDeltaTime > 0) return (int)MathF.Round(1.0f / realDeltaTime);
-            return (int)MathF.Round(Engine.GleeCore.TargetFrameRate);
+            return (int)MathF.Round(Renderer.TargetFrameRate);
         }
     }
 

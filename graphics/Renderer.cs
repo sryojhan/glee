@@ -15,6 +15,8 @@ public class Renderer: Service
 
     private TargetTexture targetFront, targetBack;
 
+    public static float TargetFrameRate { get; private set; } = 60.0f;
+
     private static Renderer instance => Get<Renderer>();
 
     //TODO: habria que hacer dos pasos para shaders: ScreenShaders y Post Processing pero que en el fondo sean un poco lo mismo
@@ -33,6 +35,7 @@ public class Renderer: Service
         graphics.IsFullScreen = fullScreen;
 
         GleeCore.Instance.IsFixedTimeStep = true;
+        TargetFrameRate = targetFrameRate;
         GleeCore.Instance.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / targetFrameRate);
 
         graphics.SynchronizeWithVerticalRetrace = true;
@@ -88,12 +91,6 @@ public class Renderer: Service
     {
         instance.graphicsDevice.Clear(color);
     }
-
-    public static void Clear()
-    {
-        Clear(Color.Black);
-    }
-
 
     public static void Render(ITexture texture, Vector2 position, Vector2 size, Rectangle? sourceRectangle = null, float rotation = 0, Material material = null)
     {

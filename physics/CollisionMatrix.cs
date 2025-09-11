@@ -17,11 +17,13 @@ public class CollisionMatrix()
 
     public bool ContainsLayer(string layer)
     {
-        return allLayers.Contains(layer);
+        return allLayers.Contains(layer.ToLower());
     }
 
     public void RegisterLayer(string layer, bool collideWithTheRest = false)
     {
+        layer = layer.ToLower();
+
         if (allLayers.Contains(layer))
         {
             //TODO: error message
@@ -43,6 +45,8 @@ public class CollisionMatrix()
 
     public bool TryAddLayer(string layer)
     {
+        layer = layer.ToLower();
+
         if (allLayers.Contains(layer)) return false;
         RegisterLayer(layer);
         return true;
@@ -51,6 +55,8 @@ public class CollisionMatrix()
 
     public void RemoveLayer(string layer)
     {
+        layer = layer.ToLower();
+
         CheckLayerForErrors(layer);
 
         collisionMatrix.RemoveWhere(pair => InPair(layer, pair));
@@ -60,6 +66,9 @@ public class CollisionMatrix()
 
     public void DoCollision(string layerA, string layerB)
     {
+        layerA = layerA.ToLower();
+        layerB = layerB.ToLower();
+
         CheckLayerForErrors(layerA);
         CheckLayerForErrors(layerB);
 
@@ -68,6 +77,9 @@ public class CollisionMatrix()
 
     public void IgnoreCollision(string layerA, string layerB)
     {
+        layerA = layerA.ToLower();
+        layerB = layerB.ToLower();
+
         CheckLayerForErrors(layerA);
         CheckLayerForErrors(layerB);
 
@@ -77,8 +89,11 @@ public class CollisionMatrix()
 
     public bool Collides(string layerA, string layerB)
     {
+        layerA = layerA.ToLower();
+        layerB = layerB.ToLower();
+
         CheckLayerForErrors(layerA);
-        CheckLayerForErrors(layerB);        
+        CheckLayerForErrors(layerB);
 
         //TODO: use an EPIC data structure so we do not need to seach for this in everyframe
         foreach ((string, string) pair in collisionMatrix)

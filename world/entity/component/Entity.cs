@@ -4,6 +4,7 @@ using Glee.Engine;
 using Glee.Behaviours;
 using System;
 using Glee.Components;
+using System.Net;
 
 namespace Glee;
 
@@ -112,18 +113,19 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (comp is IInitializable initializable)
             {
-                initializable.Initialize();
+                GleeError.Try(initializable.Initialize);
             }
         }
     }
+
+
 
     public void Update()
     {
         foreach (IUpdatable updatable in updatables)
         {
-            //TODO: do something to avoid making this conversion everyframe
             if (((ComponentRaw)updatable).Enabled)
-                updatable.Update();
+                GleeError.Try(updatable.Update);
         }
     }
 
@@ -132,7 +134,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         foreach (IRenderizable renderizable in renderizables)
         {
             if (((ComponentRaw)renderizable).Enabled)
-                renderizable.Render();
+                GleeError.Try(renderizable.Render);
         }
     }
 
@@ -144,7 +146,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                observer.OnCollisionBegin(other);
+                GleeError.Try(() =>{ observer.OnCollisionBegin(other);});
             }
         }
     }
@@ -155,7 +157,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                observer.OnCollision(other);
+                GleeError.Try(() =>{ observer.OnCollision(other);});
             }
         }
     }
@@ -165,7 +167,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                observer.OnCollisionEnd(other);
+                GleeError.Try(() =>{ observer.OnCollisionEnd(other);});
             }
         }
     }
