@@ -5,7 +5,7 @@ namespace Glee;
 //TODO: Divide this into various classes
 //TODO: change name to GleeUtils
 
-
+//TODO: Dividir entre varios ficheros
 public delegate void Callback();
 public delegate bool Condition();
 

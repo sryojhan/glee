@@ -25,7 +25,7 @@ public class CoreService : Service
     internal CoreService() { }
 }
 
-
+//TODO: change name to services locator
 public class Services
 {
     //TODO: make so services are executed in the order they are added

@@ -5,6 +5,8 @@ namespace Glee.Behaviours;
 // Bundles
 public interface IBehaviour : IInitializable, IUpdatable { }
 public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
+
+//TODO: remove, this is not clean code
 public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, ICleanable { }
 
 
