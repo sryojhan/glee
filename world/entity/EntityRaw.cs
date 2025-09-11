@@ -3,8 +3,7 @@ using Glee.Engine;
 
 namespace Glee;
 
-
-public class EntityRaw : GleeObject
+public class GleeEntityRaw : GleeObject
 {
     public string Name { get; set; }
     public Vector Position { get; set; } = Vector.Zero;
@@ -17,23 +16,23 @@ public class EntityRaw : GleeObject
     public Vector Scale { get; set; } = Vector.One;
     public float UniformScale { set { Scale = new Vector(value, value); } }
     public float Rotation { get; protected set; } = 0;
-    public EntityRaw Parent { get; protected set; }
+    public GleeEntityRaw Parent { get; protected set; }
     public World world { get; protected set; }
     public Time Time => world.Time;
 
-    public EntityRaw(World world)
+    public GleeEntityRaw(World world)
     {
         Name = "New entity";
         this.world = world;
     }
 
-    public EntityRaw(string name, World world)
+    public GleeEntityRaw(string name, World world)
     {
         Name = name;
         this.world = world;
     }
 
-    public EntityRaw(string name, EntityRaw parent, World world) : this(name, world)
+    public GleeEntityRaw(string name, GleeEntityRaw parent, World world) : this(name, world)
     {
         Parent = parent;
     }

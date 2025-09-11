@@ -7,7 +7,7 @@ public interface IBehaviour : IInitializable, IUpdatable { }
 public interface IPhysicsObserver : ICollisionObserver, ITriggerObserver { }
 
 //TODO: remove, this is not clean code
-public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, ICleanable { }
+public interface IEverything : IInitializable, IUpdatable, IPhysicsUpdatable, IRenderizable, IPhysicsObserver, IDestroyable { }
 
 
 
@@ -27,9 +27,9 @@ public interface IRenderizable
     void Render();
 }
 
-public interface ICleanable
+public interface IDestroyable
 {
-    void CleanUp();
+    void OnDestroy();
 }
 
 

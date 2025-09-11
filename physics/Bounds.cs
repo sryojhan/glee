@@ -4,7 +4,7 @@ namespace Glee.Physics;
 
 public abstract class Bounds
 {
-    public EntityRaw entity { get; internal set; }
+    public GleeEntityRaw entity { get; internal set; }
 
     public Vector Position => entity.Position;
     public Vector Size => entity.Size;

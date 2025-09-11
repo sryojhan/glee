@@ -7,6 +7,6 @@ namespace Glee;
 
 public abstract class Component : ComponentRaw
 {
-    public new Entity entity { get; init; }
+    public new GleeEntity entity { get; init; }
     public ComponentType GetComponent<ComponentType>() where ComponentType : Component => entity.GetComponent<ComponentType>();
 }

@@ -9,7 +9,7 @@ using System.Net;
 namespace Glee;
 
 
-public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICollisionObserver
+public class GleeEntity : GleeEntityRaw, IInitializable, IUpdatable, IRenderizable, ICollisionObserver
 {
     //TODO: maybe it's better to not have a GleeContainer here
     readonly GleeContainer components;
@@ -19,12 +19,12 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
 
     //TODO: physics loop components
 
-    public Entity(string name, World world) : this(name, null, world)
+    public GleeEntity(string name, World world) : this(name, null, world)
     {
 
     }
 
-    public Entity(string name, EntityRaw parent, World world) : base(name, parent, world)
+    public GleeEntity(string name, GleeEntityRaw parent, World world) : base(name, parent, world)
     {
         components = [];
 
@@ -74,7 +74,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
             {
                 if (HasComponent(requirement.Value)) continue;
 
-                typeof(Entity).
+                typeof(GleeEntity).
                 GetMethod(nameof(CreateComponent)).
                 MakeGenericMethod(requirement.Value).Invoke(this, null);
             }
@@ -113,7 +113,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (comp is IInitializable initializable)
             {
-                GleeError.Try(initializable.Initialize);
+                GleeError.TryIfPermissive(initializable.Initialize);
             }
         }
     }
@@ -124,8 +124,8 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
     {
         foreach (IUpdatable updatable in updatables)
         {
-            if (((ComponentRaw)updatable).Enabled)
-                GleeError.Try(updatable.Update);
+            if (((ComponentRaw)updatable).Enabled) //TODO: remove casting
+                GleeError.TryIfPermissive(updatable.Update);
         }
     }
 
@@ -134,7 +134,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         foreach (IRenderizable renderizable in renderizables)
         {
             if (((ComponentRaw)renderizable).Enabled)
-                GleeError.Try(renderizable.Render);
+                GleeError.TryIfPermissive(renderizable.Render);
         }
     }
 
@@ -146,7 +146,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.Try(() =>{ observer.OnCollisionBegin(other);});
+                GleeError.TryIfPermissive(() =>{ observer.OnCollisionBegin(other);});
             }
         }
     }
@@ -157,7 +157,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.Try(() =>{ observer.OnCollision(other);});
+                GleeError.TryIfPermissive(() =>{ observer.OnCollision(other);});
             }
         }
     }
@@ -167,7 +167,7 @@ public class Entity : EntityRaw, IInitializable, IUpdatable, IRenderizable, ICol
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.Try(() =>{ observer.OnCollisionEnd(other);});
+                GleeError.TryIfPermissive(() =>{ observer.OnCollisionEnd(other);});
             }
         }
     }

@@ -93,12 +93,12 @@ public abstract class World : GleeObject
 
         if (this is IUpdatable updatable)
         {
-            updatable.Update();
+            GleeError.TryIfPermissive(updatable.Update);
         }
 
         foreach (IUpdatable entity in updatables)
         {
-            entity.Update();
+            GleeError.TryIfPermissive(entity.Update);
         }
 
 
@@ -106,7 +106,7 @@ public abstract class World : GleeObject
         {
             float deltaTime = physicsWorld.UpdatePhysicsTime();
 
-            physicsWorld.PhysicsStep();
+            GleeError.TryIfPermissive(physicsWorld.PhysicsStep);
 
             Time.deltaTime = deltaTime;
         }
@@ -152,20 +152,20 @@ public abstract class World : GleeObject
     }
 
 
-    public Entity CreateEntity(string name, EntityRaw parent)
+    public GleeEntity CreateEntity(string name, GleeEntityRaw parent)
     {
         return CreateEntity(name, parent, Vector2.Zero, Vector2.One);
     }
 
 
-    public Entity CreateEntity(string name, Vector2? position = null, Vector2? size = null)
+    public GleeEntity CreateEntity(string name, Vector2? position = null, Vector2? size = null)
     {
         return CreateEntity(name, null, position ?? Vector2.Zero, size ?? Vector2.One);
     }
 
-    public Entity CreateEntity(string name, EntityRaw parent, Vector2 position, Vector2 size)
+    public GleeEntity CreateEntity(string name, GleeEntityRaw parent, Vector2 position, Vector2 size)
     {
-        Entity newEntity = new Entity(name, parent, this);
+        GleeEntity newEntity = new GleeEntity(name, parent, this);
 
         worldObjects.Add(newEntity);
 
@@ -179,7 +179,7 @@ public abstract class World : GleeObject
     }
 
 
-    public EntityRaw AddEntity(EntityRaw entity)
+    public GleeEntityRaw AddEntity(GleeEntityRaw entity)
     {
         worldObjects.Add(entity);
 
@@ -196,6 +196,22 @@ public abstract class World : GleeObject
         return entity;
     }
 
+
+    public void RemoveEntityInmediate(GleeEntityRaw entity)
+    {
+        worldObjects.Remove(entity);
+
+        if (entity is IUpdatable updatable)
+        {
+            updatables.Remove(updatable);
+        }
+
+        if (entity is IRenderizable renderizable)
+        {
+            renderizables.Remove(renderizable);
+        }
+    }
+
     public void Screenshot(TargetTexture texture)
     {
         Get<WorldManager>().Screenshot(this, texture);
@@ -208,4 +224,6 @@ public abstract class World : GleeObject
         RenderFrame();
         Renderer.RemoveTargetTexture();
     }
+
+
 }

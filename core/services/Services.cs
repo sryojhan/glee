@@ -125,8 +125,8 @@ public class Services
     {
         ServiceType serv = Fetch<ServiceType>();
 
-        if (serv is ICleanable removable)
-            removable.CleanUp();
+        if (serv is IDestroyable removable)
+            removable.OnDestroy();
 
         instance.services.Remove(typeof(ServiceType));
     }

@@ -6,7 +6,7 @@ namespace Glee;
 
 
 
-public class Log : CoreService, ICleanable
+public class Log : CoreService, IDestroyable
 {
     const string RED = "\u001b[31m";
     const string YELLOW = "\u001b[33m";
@@ -28,7 +28,7 @@ public class Log : CoreService, ICleanable
     }
 
 
-    public void CleanUp()
+    public void OnDestroy()
     {
         //TODO: flushing logs into a file
     }

@@ -1,7 +1,4 @@
 
-
-using System;
-
 namespace Glee.Engine;
 
 
@@ -39,6 +36,6 @@ public struct UID
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return uid.GetHashCode();
     }
 }

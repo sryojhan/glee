@@ -33,7 +33,15 @@ public class WorldManager : CoreService, IUpdatable, IRenderizable
         pendingScreenshots = new Queue<(World, Graphics.TargetTexture)>();
 
         spotlight = null;
+
+        Observe<Cleanup.RemoveEntity>((evt) =>
+        {
+            Print("AA");
+            GleeEntityRaw ent = (evt as Cleanup.RemoveEntity).entity;
+            ent.world.RemoveEntityInmediate(ent);
+        });
     }
+
 
 
     public World Spotlight => spotlight;
@@ -130,8 +138,8 @@ public class WorldManager : CoreService, IUpdatable, IRenderizable
 
             foreach (World world in loadedWorlds.Reverse())
             {
-                if (world is ICleanable removable)
-                    removable.CleanUp();
+                if (world is IDestroyable removable)
+                    removable.OnDestroy();
             }
             return true;
         }
@@ -140,9 +148,9 @@ public class WorldManager : CoreService, IUpdatable, IRenderizable
         {
             loadedWorlds.Remove(world);
 
-            if (world is ICleanable removable)
+            if (world is IDestroyable removable)
             {
-                removable.CleanUp();
+                removable.OnDestroy();
             }
         }
         worldsToBeRemoved.Clear();

@@ -15,7 +15,7 @@ public static class Physics
         Vector direction,
         float distance = float.MaxValue,
         World world = null,
-        HashSet<EntityRaw> exclusionList = null
+        HashSet<GleeEntityRaw> exclusionList = null
     )
     {
         return Raycast(origin, direction, out RaycastHit _, distance, world, exclusionList);
@@ -29,7 +29,7 @@ public static class Physics
         out RaycastHit hit,
         float distance = float.MaxValue,
         World world = null,
-        HashSet<EntityRaw> exclusionList = null
+        HashSet<GleeEntityRaw> exclusionList = null
     )
     {
         hit = default;
@@ -53,7 +53,7 @@ public static class Physics
         Vector direction,
         float distance = float.PositiveInfinity,
         World world = null,
-        HashSet<EntityRaw> exclusionList = null
+        HashSet<GleeEntityRaw> exclusionList = null
     )
     {
         var result = RaycastEnumerable(origin, direction, distance, world, exclusionList);
@@ -67,7 +67,7 @@ public static class Physics
         Vector direction,
         float distance = float.MaxValue,
         World world = null,
-        HashSet<EntityRaw> exclusionList = null
+        HashSet<GleeEntityRaw> exclusionList = null
     )
     {
         world ??= Services.Fetch<WorldManager>().Spotlight;

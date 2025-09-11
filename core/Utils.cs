@@ -9,8 +9,18 @@ namespace Glee;
 public delegate void Callback();
 public delegate bool Condition();
 
+
 public static partial class Utils
 {
+
+    public static void Loop(Callback logic, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            logic();
+        }
+    }
+
     public static Vector Left => new(-1, 0);
     public static Vector Right => new(1, 0);
     public static Vector Down => new(0, -1);
@@ -39,7 +49,7 @@ public static partial class Utils
 
     public static class Alignment
     {
-        public static void Fit(EntityRaw entity, Vector min, Vector max)
+        public static void Fit(GleeEntityRaw entity, Vector min, Vector max)
         {
             if (min.X > max.X || min.Y > max.Y) GleeError.Throw("MAX vector is greater than MAX vector");
 
@@ -50,67 +60,67 @@ public static partial class Utils
             entity.Size = size;
         }
 
-        public static void Pivot(EntityRaw entity, Vector point, Vector pivot)
+        public static void Pivot(GleeEntityRaw entity, Vector point, Vector pivot)
         {
             entity.Position = point + new Vector(entity.HalfSize.X, entity.HalfSize.Y) - entity.Size * pivot;
         }
 
 
-        public static void AlignLeft(EntityRaw entity, Vector point)
+        public static void AlignLeft(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + Utils.Right * entity.HalfSize;
         }
 
-        public static void AlignTop(EntityRaw entity, Vector point)
+        public static void AlignTop(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + Utils.Down * entity.HalfSize;
         }
 
-        public static void AlignRight(EntityRaw entity, Vector point)
+        public static void AlignRight(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + Utils.Left * entity.HalfSize;
         }
 
-        public static void AlignBottom(EntityRaw entity, Vector point)
+        public static void AlignBottom(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + Utils.Up * entity.HalfSize;
         }
 
 
 
-        public static void AlignTopLeft(EntityRaw entity, Vector point)
+        public static void AlignTopLeft(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + new Vector(entity.HalfSize.X, -entity.HalfSize.Y);
         }
-        public static void AlignTopRight(EntityRaw entity, Vector point)
+        public static void AlignTopRight(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + new Vector(-entity.HalfSize.X, -entity.HalfSize.Y);
         }
 
-        public static void AlignBottomRight(EntityRaw entity, Vector point)
+        public static void AlignBottomRight(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + new Vector(-entity.HalfSize.X, entity.HalfSize.Y);
         }
 
-        public static void AlignBottomLeft(EntityRaw entity, Vector point)
+        public static void AlignBottomLeft(GleeEntityRaw entity, Vector point)
         {
             entity.Position = point + new Vector(entity.HalfSize.X, entity.HalfSize.Y);
         }
 
 
         //Getters
-        public static Vector Left(EntityRaw entity) => entity.Position + Utils.Left * entity.HalfSize;
-        public static Vector Right(EntityRaw entity) => entity.Position + Utils.Right * entity.HalfSize;
-        public static Vector Bottom(EntityRaw entity) => entity.Position + Utils.Down * entity.HalfSize;
-        public static Vector Top(EntityRaw entity) => entity.Position + Utils.Up * entity.HalfSize;
+        public static Vector Left(GleeEntityRaw entity) => entity.Position + Utils.Left * entity.HalfSize;
+        public static Vector Right(GleeEntityRaw entity) => entity.Position + Utils.Right * entity.HalfSize;
+        public static Vector Bottom(GleeEntityRaw entity) => entity.Position + Utils.Down * entity.HalfSize;
+        public static Vector Top(GleeEntityRaw entity) => entity.Position + Utils.Up * entity.HalfSize;
 
 
 
 
-        public static Vector TopLeft(EntityRaw entity) => entity.Position + new Vector(-entity.HalfSize.X, entity.HalfSize.Y);
-        public static Vector TopRight(EntityRaw entity) => entity.Position + new Vector(entity.HalfSize.X, entity.HalfSize.Y);
-        public static Vector BottomRight(EntityRaw entity) => entity.Position + new Vector(entity.HalfSize.X, -entity.HalfSize.Y);
-        public static Vector BottomLeft(EntityRaw entity) => entity.Position + new Vector(-entity.HalfSize.X, -entity.HalfSize.Y);
+        public static Vector TopLeft(GleeEntityRaw entity) => entity.Position + new Vector(-entity.HalfSize.X, entity.HalfSize.Y);
+        public static Vector TopRight(GleeEntityRaw entity) => entity.Position + new Vector(entity.HalfSize.X, entity.HalfSize.Y);
+        public static Vector BottomRight(GleeEntityRaw entity) => entity.Position + new Vector(entity.HalfSize.X, -entity.HalfSize.Y);
+        public static Vector BottomLeft(GleeEntityRaw entity) => entity.Position + new Vector(-entity.HalfSize.X, -entity.HalfSize.Y);
 
     }
 
@@ -118,7 +128,7 @@ public static partial class Utils
     public static Time GetAssociatedTime(GleeObject obj)
     {
         if (obj is Component component) return component.Time;
-        if (obj is Entity entity) return entity.Time;
+        if (obj is GleeEntity entity) return entity.Time;
         if (obj is World world) return world.Time;
 
         //TODO: kind of ugly

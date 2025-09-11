@@ -2,12 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Glee.Engine;
 
 public class GleeContainer : GleeObject, ICollection
 {
-    private readonly Dictionary<UID, GleeObject> gleeObjects;
+    private readonly Dictionary<UID, GleeObject> gleeObjects; //TODO: cambiar por un hashset
 
     public int Count => gleeObjects.Count;
 
@@ -23,6 +24,7 @@ public class GleeContainer : GleeObject, ICollection
 
     public void Add(GleeObject gleeObj)
     {
+        //TODO: check error
         gleeObjects.Add(gleeObj, gleeObj);
     }
 
@@ -31,7 +33,7 @@ public class GleeContainer : GleeObject, ICollection
     {
         if (Contains(uid))
         {
-            Remove(uid);
+            gleeObjects.Remove(uid);
             return true;
         }
 
@@ -99,6 +101,16 @@ public class GleeContainer : GleeObject, ICollection
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+
+    //TODO random utils class
+    public GleeObject Random()
+    {
+        if (Count == 0) return null;
+
+        int r = new Random().Next(Count);
+        return gleeObjects.ElementAt(r).Value;
     }
 
 }

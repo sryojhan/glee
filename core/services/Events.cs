@@ -4,8 +4,8 @@ using Glee.Engine;
 
 namespace Glee;
 
-
 public class GleeEvent : GleeObject { }
+
 
 public class Events : CoreService
 {
@@ -92,7 +92,7 @@ public class Events : CoreService
             return component.world;
         }
 
-        else if (obj is EntityRaw entity)
+        else if (obj is GleeEntityRaw entity)
         {
             return entity.world;
         }
@@ -114,14 +114,14 @@ public class Events : CoreService
     }
 
 
-    private static EntityRaw GetEntity(GleeObject obj)
+    private static GleeEntityRaw GetEntity(GleeObject obj)
     {
         if (obj is Component component)
         {
             return component.entity;
         }
 
-        else if (obj is EntityRaw entity)
+        else if (obj is GleeEntityRaw entity)
         {
             return entity;
         }

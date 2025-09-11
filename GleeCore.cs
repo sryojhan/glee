@@ -145,8 +145,10 @@ public abstract class GleeCore : Game
         Content.RootDirectory = "Content";
 
         Services = new Services();
+        Services.RunInternal<Events>();
         Services.RunInternal<Log>();
         Services.RunInternal<Resources>();
+        Services.RunInternal<Cleanup>();
 
         GleeConfiguration config = GleeConfiguration.Create();
         Services.AppendInternal<GleeConfiguration>(config);
@@ -175,7 +177,6 @@ public abstract class GleeCore : Game
         GameTime = new GameTime();
 
         Services.RunInternal<InputManager>();
-        Services.RunInternal<Events>();
         Services.RunInternal<CoroutineManager>();
 
         WorldManager worldManager = Services.RunInternal<WorldManager>();

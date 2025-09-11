@@ -1,12 +1,16 @@
 using System;
 namespace Glee.Engine;
 
-
+//TODO: show line and file the error originated from
 
 //TODO: try catch before each update call in components, entities and worlds
 public class GleeError : Exception
 {
     //TODO: 3 Modes: Strict, Normal, Permissive
+
+    /// <summary>
+    /// Permissive mode contains a call to 
+    /// </summary>
     public enum ToleranceMode
     {
         Permissive, Normal, Strict
@@ -50,6 +54,14 @@ public class GleeError : Exception
         }
     }
 
+    public static void TryIfPermissive(Callback func)
+    {
+        if (Tolerance == ToleranceMode.Permissive)
+            Try(func);
+        else func?.Invoke();
+    }
+
+
     public static void Throw(string message, ErrorType type = ErrorType.Generic)
     {
         Last = new() { Message = message, Type = type };
@@ -61,6 +73,8 @@ public class GleeError : Exception
             Services.Fetch<Log>().Error(message);
     }
 
+
+    //TODO: move all exceptions to GleeExceptions and leave glee error
 
     public static void InvalidGleeObject()
     {

@@ -3,6 +3,7 @@ namespace Glee.Templates.Platformer;
 using System.Collections;
 using Glee.Behaviours;
 using Glee.Components;
+using Glee.Engine;
 using Glee.Graphics;
 using Glee.Input;
 using Controller = PlatformerCharacterController;
@@ -21,6 +22,8 @@ public class PlatformerMainWorld : World, IUpdatable, IInitializable
 
     public override void CreateWorld()
     {
+        GleeError.Tolerance = GleeError.ToleranceMode.Permissive;
+
         physicsWorld.CollisionMatrix.RegisterLayer(CollisionLayers.Player);
         physicsWorld.CollisionMatrix.RegisterLayer(CollisionLayers.Ground);
 
@@ -36,9 +39,9 @@ public class PlatformerMainWorld : World, IUpdatable, IInitializable
         InitialiseScenery();
     }
 
-    private Entity CreatePlatform(Vector position, Vector size)
+    private GleeEntity CreatePlatform(Vector position, Vector size)
     {
-        Entity platform = CreateEntity("Platform", position, size);
+        GleeEntity platform = CreateEntity("Platform", position, size);
 
         Collider collider = platform.CreateComponent<Collider>();
         collider.Friction = 2;
@@ -71,15 +74,16 @@ public class PlatformerMainWorld : World, IUpdatable, IInitializable
         bool isJumping = Input.IsJustDown("jump");
         float horizontal = Input.Value("horizontal");
 
-        Body playerBody = Player.BodyComponent;
-        //playerBody.SetHorizontalVelocity(horizontal * 10);
-
-        playerBody.Accelerate(Utils.Right * horizontal * 10);
+        // Body playerBody = Player.BodyComponent;
+        // playerBody.Accelerate(Utils.Right * horizontal * 10);
 
 
         if (isJumping)
         {
-            playerBody.SetVerticalVelocity(10);
+            //playerBody.SetVerticalVelocity(10);
+            var a = worldObjects.Random();
+            Print((a as GleeEntityRaw).Name);
+            Destroy(a);
         }
     }
 
@@ -90,9 +94,9 @@ public class PlatformerMainWorld : World, IUpdatable, IInitializable
 
     IEnumerator MiCorrutina()
     {
-        Print("Hola");
+        //Print("Hola");
         yield return new WaitCondition(()=> Input.IsJustDown("jump"));
-        Print("Adios");
+        //Print("Adios");
     }
 
 }

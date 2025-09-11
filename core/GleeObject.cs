@@ -46,13 +46,13 @@ public partial class GleeObject
         return obj == null || !obj.IsValid;       
     }
 
-    internal void Remove()
+    internal void Delete()
     {
         if (CheckValid()) return;
 
-        if (this is ICleanable cleanable)
+        if (this is IDestroyable cleanable)
         {
-            cleanable.CleanUp();
+            cleanable.OnDestroy();
         }
 
         IsValid = false;

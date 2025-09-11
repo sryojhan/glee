@@ -5,7 +5,7 @@ using Glee.Physics;
 namespace Glee.Components;
 
 
-public class Collider : ComponentRaw, IInitializable, ICleanable
+public class Collider : ComponentRaw, IInitializable, IDestroyable
 {
     public string Layer { get; set; }
     public float Friction { get; set; } = 0.5f;
@@ -31,7 +31,7 @@ public class Collider : ComponentRaw, IInitializable, ICleanable
         PhysicsWorld.RegisterCollider(this);
     }
 
-    public void CleanUp()
+    public void OnDestroy()
     {
         PhysicsWorld.UnregisterCollider(this);
     }

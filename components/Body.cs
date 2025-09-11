@@ -6,7 +6,7 @@ namespace Glee.Components;
 
 
 [DependsOn(typeof(Collider))]
-public class Body : ComponentRaw, IInitializable, ICleanable
+public class Body : ComponentRaw, IInitializable, IDestroyable
 {
     public Vector Velocity { get; set; }
     public float GravityMultiplier { get; set; } = 1;
@@ -22,7 +22,7 @@ public class Body : ComponentRaw, IInitializable, ICleanable
         PhysicsWorld.RegisterBody(this);
     }
 
-    public void CleanUp()
+    public void OnDestroy()
     {
         PhysicsWorld.UnregisterBody(this);
     }
