@@ -123,6 +123,12 @@ public class PhysicsWorld
 
         foreach (Body body in bodies)
         {
+            if (body.IsValid)
+            {
+                //TODO: custom error
+                GleeError.Throw("Glee physics. Tried to update invalid body");
+                continue;
+            }
             //Apply gravity
             body.AddInstantVelocity(Gravity * (body.GravityMultiplier * world.Time.physicsDeltaTime));
 
@@ -192,6 +198,11 @@ public class PhysicsWorld
 
         foreach (Collider collider in colliders)
         {
+            if (!collider.IsValid)
+            {
+                GleeError.Throw("PhysicsWorld. Tried to collide with an invalid collider");
+                continue;
+            }
             if (body.collider == collider) continue;
 
             //This way if both layers are null (default case), they will still collider

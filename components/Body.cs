@@ -17,6 +17,7 @@ public class Body : ComponentRaw, IInitializable, IDestroyable
 
     public void Initialize()
     {
+        CheckValid();
         collider ??= TryGetComponent<Collider>();
 
         PhysicsWorld.RegisterBody(this);
@@ -24,27 +25,32 @@ public class Body : ComponentRaw, IInitializable, IDestroyable
 
     public void OnDestroy()
     {
+        CheckValid();
         PhysicsWorld.UnregisterBody(this);
     }
 
     public void Accelerate(Vector acceleration)
     {
+        CheckValid();
         Velocity += acceleration * Time.physicsDeltaTime;
     }
 
     public void AddInstantVelocity(Vector velocity)
     {
+        CheckValid();
         Velocity += velocity;
     }
 
 
     public void SetHorizontalVelocity(float velocity)
     {
+        CheckValid();
         Velocity = new Vector(velocity, Velocity.Y);
     }
 
     public void SetVerticalVelocity(float velocity)
     {
+        CheckValid();
         Velocity = new Vector(Velocity.X, velocity);
     }
 
@@ -54,6 +60,7 @@ public class Body : ComponentRaw, IInitializable, IDestroyable
     /// </summary>
     public void AddResistance(float resistanceScale)
     {
+        CheckValid();
         Velocity -= Velocity * (resistanceScale * Time.physicsDeltaTime);
     }
 }

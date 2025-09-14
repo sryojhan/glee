@@ -26,6 +26,7 @@ public class Collider : ComponentRaw, IInitializable, IDestroyable
 
     public void Initialize()
     {
+        CheckValid();
         bounds ??= new Rect();
 
         PhysicsWorld.RegisterCollider(this);
@@ -33,12 +34,14 @@ public class Collider : ComponentRaw, IInitializable, IDestroyable
 
     public void OnDestroy()
     {
+        CheckValid();
         PhysicsWorld.UnregisterCollider(this);
     }
 
 
     public bool IsGrounded()
     {
+        CheckValid();
         Vector bottom = Utils.Alignment.Bottom(entity);
         return Physics.Physics.Raycast(bottom, Utils.Down, distance: 0.01f, exclusionList: [entity]);
     }

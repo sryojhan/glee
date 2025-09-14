@@ -14,6 +14,7 @@ public class Text : ComponentRaw, IRenderizable
 
     public virtual void Render()
     {
+        CheckValid();
         if (font == null || string.IsNullOrWhiteSpace(Content)) return;
 
     

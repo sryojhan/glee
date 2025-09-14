@@ -36,11 +36,13 @@ public class Flipbook : ComponentRaw, IUpdatable, IInitializable
 
     public void Initialize()
     {
+        CheckValid();
         image ??= TryGetComponent<Image>();
     }
 
     public void Update()
     {
+        CheckValid();
         if (animation == null) return;
         if (Target == null) return;
 
@@ -57,6 +59,7 @@ public class Flipbook : ComponentRaw, IUpdatable, IInitializable
 
     public void AdvanceFrame()
     {
+        CheckValid();
         if (animation == null) return;
         if (Target == null) return;
 

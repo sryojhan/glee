@@ -15,6 +15,7 @@ public class Image : ComponentRaw, IRenderizable
 
     public void Render()
     {
+        CheckValid();
         if (texture == null) return;
 
         texture.Render(entity.Position, entity.Size, entity.Rotation, material);
@@ -23,6 +24,7 @@ public class Image : ComponentRaw, IRenderizable
 
     public void SetNativeSize()
     {
+        CheckValid();
         entity.Size = new Vector2(texture.Width, texture.Height);
     }
 

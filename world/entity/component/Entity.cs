@@ -109,6 +109,7 @@ public class GleeEntity : GleeEntityRaw, IInitializable, IUpdatable, IRenderizab
 
     public void Initialize()
     {
+        CheckValid();
         foreach (ComponentRaw comp in components)
         {
             if (comp is IInitializable initializable)
@@ -122,6 +123,7 @@ public class GleeEntity : GleeEntityRaw, IInitializable, IUpdatable, IRenderizab
 
     public void Update()
     {
+        CheckValid();
         foreach (IUpdatable updatable in updatables)
         {
             if (((ComponentRaw)updatable).Enabled) //TODO: remove casting
@@ -131,6 +133,7 @@ public class GleeEntity : GleeEntityRaw, IInitializable, IUpdatable, IRenderizab
 
     public void Render()
     {
+        CheckValid();
         foreach (IRenderizable renderizable in renderizables)
         {
             if (((ComponentRaw)renderizable).Enabled)
@@ -142,32 +145,35 @@ public class GleeEntity : GleeEntityRaw, IInitializable, IUpdatable, IRenderizab
 
     public void OnCollisionBegin(Collider other)
     {
+        CheckValid();
         foreach (ComponentRaw component in components)
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.TryIfPermissive(() =>{ observer.OnCollisionBegin(other);});
+                GleeError.TryIfPermissive(() => { observer.OnCollisionBegin(other); });
             }
         }
     }
 
     public void OnCollision(Collider other)
     {
+        CheckValid();
         foreach (ComponentRaw component in components)
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.TryIfPermissive(() =>{ observer.OnCollision(other);});
+                GleeError.TryIfPermissive(() => { observer.OnCollision(other); });
             }
         }
     }
     public void OnCollisionEnd(Collider other)
     {
+        CheckValid();
         foreach (ComponentRaw component in components)
         {
             if (component is ICollisionObserver observer)
             {
-                GleeError.TryIfPermissive(() =>{ observer.OnCollisionEnd(other);});
+                GleeError.TryIfPermissive(() => { observer.OnCollisionEnd(other); });
             }
         }
     }
